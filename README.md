@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MLA — Mentorship & Leadership Academy
 
-## Getting Started
+A single web app for students, mentors, and staff of Nigerian higher
+institutions: AI Literacy / Vibe Coding courses, blog, mentorship matching,
+events, and licensed digital products — with institutions handled as data and
+isolated by database Row Level Security.
 
-First, run the development server:
+## Stack
+
+- **Next.js 15** (App Router, TypeScript, Tailwind CSS v4)
+- **Supabase** — Postgres, Auth, Storage
+- **Cloudflare R2** — nightly Storage backup
+- **Resend** — transactional email (1-to-1)
+- **Brevo** — broadcast email (1-to-many)
+- **Paystack** — payments
+- Hosted on **Vercel**
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill in real values
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project map
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Path | Purpose |
+|---|---|
+| `app/` | Next.js App Router pages + API routes |
+| `lib/supabase/` | Supabase browser/server/admin clients + session middleware |
+| `lib/email/` | Resend (transactional) + Brevo (broadcast) helpers |
+| `supabase/migrations/` | SQL migrations (applied via `npm run db:migrate`) |
+| `scripts/` | migrate, verify-schema, seed:super-admin, r2-backup |
+| `app/api/cron/backup` | nightly R2 backup endpoint (Vercel Cron) |
+| `docs/RLS_POLICIES.md` | every security policy in plain English |
+| `docs/OPERATOR_CHECKLIST.md` | Phase 0 account steps only you can do |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+```bash
+npm run dev                # dev server
+npm run build              # production build
+npm run lint               # lint
+npm run db:migrate         # apply SQL migrations
+npm run seed:super-admin   # promote SUPER_ADMIN_SEED_EMAIL to super_admin
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Security notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- RLS is enabled on every table (see `docs/RLS_POLICIES.md`).
+- `SUPABASE_SERVICE_ROLE_KEY` lives server-side only — never in client bundles.
+- Secrets live in `.env.local` (gitignored) and Vercel env vars — never commit.
