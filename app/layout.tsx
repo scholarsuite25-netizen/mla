@@ -1,6 +1,8 @@
 import { Fraunces, Sora } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
+import { Nav } from "@/components/nav";
+import { Footer } from "@/components/footer";
 
 const fraunces = Fraunces({
   variable: "--font-display",
@@ -25,8 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${fraunces.variable} ${sora.variable} antialiased`}>
-        {children}
+      <body className={`${fraunces.variable} ${sora.variable} flex min-h-screen flex-col antialiased`}>
+        <Nav />
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );

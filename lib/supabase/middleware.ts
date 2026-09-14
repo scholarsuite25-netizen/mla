@@ -26,7 +26,9 @@ export async function updateSession(request: NextRequest) {
   );
 
   // Do not run code between createServerClient and supabase.auth.getUser().
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return supabaseResponse;
+  return { supabaseResponse, user };
 }

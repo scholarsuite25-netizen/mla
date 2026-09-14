@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@plugin "@tailwindcss/typography";
+
 @theme inline {
   --color-ink: #1b1410;
   --color-panel: #2a211b;

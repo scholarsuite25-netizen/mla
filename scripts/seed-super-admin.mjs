@@ -57,7 +57,7 @@ async function main() {
   }
 
   // 3. upsert profile as super_admin
-  const { data: profile, error: profileError } = await supabase
+  const { error: profileError } = await supabase
     .from("profiles")
     .update({ role: "super_admin", full_name: "Super Admin" })
     .eq("id", target.id)
