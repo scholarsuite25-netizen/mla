@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export type ActionResult = { error?: string };
 
@@ -52,5 +53,77 @@ export async function updateSettingsAction(formData: FormData): Promise<ActionRe
 
   revalidatePath("/settings");
   revalidatePath("/dashboard");
+  return {};
+}
+
+// Mentor accepts a pending request -> status 'accepted', awaiting Super Admin
+// final approval (RLS: only the mentor can flip pending -> accepted).
+export async function acceptRequestAction(requestId: string): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not signed in." };
+
+  const { data: request } = await supabase
+    .from("mentorship_requests")
+    .select("mentee_id, mentor_id")
+    .eq("id", requestId)
+    .maybeSingle();
+  if (!request) return { error: "Request not found." };
+
+  const { error } = await supabase
+    .from("mentorship_requests")
+    .update({ status: "accepted" })
+    .eq("id", requestId)
+    .eq("mentor_id", user.id)
+    .eq("status", "pending");
+  if (error) return { error: error.message };
+
+  // Notify the mentee.
+  const admin = createAdminClient();
+  await admin.from("notifications").insert({
+    profile_id: request.mentee_id,
+    type: "mentorship",
+    reference_id: requestId,
+    message: "A mentor accepted your request — awaiting final approval.",
+  });
+
+  revalidatePath("/dashboard/requests");
+  return {};
+}
+
+// Mentor declines a pending request.
+export async function rejectRequestAction(requestId: string): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not signed in." };
+
+  const { data: request } = await supabase
+    .from("mentorship_requests")
+    .select("mentee_id")
+    .eq("id", requestId)
+    .maybeSingle();
+  if (!request) return { error: "Request not found." };
+
+  const { error } = await supabase
+    .from("mentorship_requests")
+    .update({ status: "rejected" })
+    .eq("id", requestId)
+    .eq("mentor_id", user.id)
+    .eq("status", "pending");
+  if (error) return { error: error.message };
+
+  const admin = createAdminClient();
+  await admin.from("notifications").insert({
+    profile_id: request.mentee_id,
+    type: "mentorship",
+    reference_id: requestId,
+    message: "A mentor declined your request.",
+  });
+
+  revalidatePath("/dashboard/requests");
   return {};
 }
