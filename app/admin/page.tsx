@@ -17,26 +17,32 @@ export default function AdminIndexPage() {
       />
       <AdminCard
         title="Shop"
-        description="Digital products and orders."
-        href="/admin/shop"
+        description="Products, files, and orders."
+        href="/admin/products"
+        ready
+      />
+      <AdminCard
+        title="Licences"
+        description="Reset activations or revoke keys."
+        href="/admin/licenses"
+        ready
+      />
+      <AdminCard
+        title="Institution Admin Requests"
+        description="Approve or reject self-requests."
+        href="/admin/requests"
+        ready
+      />
+      <AdminCard
+        title="Audit Log"
+        description="Who did what, when."
+        href="/admin/audit"
         ready={false}
       />
       <AdminCard
         title="Members"
         description="Promote admins, suspend users."
         href="/admin/members"
-        ready={false}
-      />
-      <AdminCard
-        title="Institution Admin Requests"
-        description="Approve or reject self-requests."
-        href="/admin/requests"
-        ready={false}
-      />
-      <AdminCard
-        title="Audit Log"
-        description="Who did what, when."
-        href="/admin/audit"
         ready={false}
       />
     </div>

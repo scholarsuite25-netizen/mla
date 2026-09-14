@@ -48,7 +48,7 @@ export default async function DashboardPage() {
         />
         <DashboardCard title="My Learning" href="/dashboard/learning" note="Course progress (Phase 2)" />
         <DashboardCard title="My Requests" href="/dashboard/requests" note="Mentorship + admin requests" />
-        <DashboardCard title="My Licenses" href="/dashboard/licenses" note="Purchased products (Phase 5)" />
+        <DashboardCard title="My Library" href="/dashboard/library" note="Licences, downloads, device activations" />
         <DashboardCard title="Settings" href="/settings" note="Profile and notification preferences" />
         {profile?.role === "super_admin" && (
           <DashboardCard title="Admin" href="/admin" note="Blog CMS, courses, shop, members" accent />

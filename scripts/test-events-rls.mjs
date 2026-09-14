@@ -19,10 +19,8 @@ const anon = createClient(URL, ANON, {
 });
 
 let failures = 0;
-let step = 0;
 
 function check(name, ok, extra = "") {
-  step++;
   if (ok) {
     console.log(`PASS: ${name}`);
   } else {
