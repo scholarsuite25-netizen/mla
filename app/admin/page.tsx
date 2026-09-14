@@ -13,7 +13,7 @@ export default function AdminIndexPage() {
         title="Courses"
         description="Manage courses and modules."
         href="/admin/courses"
-        ready={false}
+        ready
       />
       <AdminCard
         title="Shop"

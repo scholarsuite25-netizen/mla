@@ -5,9 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendBroadcastEmail } from "@/lib/email/brevo";
-
-const MAX_BROADCAST_PER_DAY = 300;
+import { notifyAndBroadcast } from "@/lib/publish";
 
 export type ActionResult = { error?: string };
 
@@ -119,78 +117,15 @@ export async function publishPostAction(postId: string): Promise<ActionResult> {
     .eq("id", postId);
   if (pubError) return { error: pubError.message };
 
-  // 1. In-app notification for every member.
-  const { data: profiles } = await admin
-    .from("profiles")
-    .select("id")
-    .eq("is_active", true);
-  if (profiles && profiles.length > 0) {
-    await admin.from("notifications").insert(
-      profiles.map((p) => ({
-        profile_id: p.id,
-        type: "blog",
-        reference_id: post.id,
-        message: `New blog post: ${post.title}`,
-      }))
-    );
-  }
+  await notifyAndBroadcast({
+    targetType: "blog",
+    targetId: post.id,
+    message: `New blog post: ${post.title}`,
+    title: post.title,
+    path: `/blog/${post.slug}`,
+  });
 
-  // 2. Brevo broadcast to opted-in members + newsletter subscribers (capped).
-  const brevoKey = process.env.BREVO_API_KEY;
-  if (brevoKey) {
-    // All auth users (paginated) — profiles has no email column.
-    const allUsers: { id: string; email?: string }[] = [];
-    let page = 0;
-    for (;;) {
-      const {
-        data: { users: pageUsers },
-      } = await admin.auth.admin.listUsers({ page: page + 1, perPage: 1000 });
-      allUsers.push(...pageUsers);
-      if (pageUsers.length < 1000) break;
-      page++;
-    }
-
-    const { data: optedIn } = await admin
-      .from("profiles")
-      .select("id")
-      .eq("email_notifications_enabled", true)
-      .eq("is_active", true);
-
-    const { data: subscribers } = await admin.from("subscribers").select("email");
-
-    const optedIds = new Set(optedIn?.map((p) => p.id) ?? []);
-    const emailSet = new Set<string>();
-    for (const u of allUsers) {
-      if (u.email && optedIds.has(u.id)) emailSet.add(u.email.toLowerCase());
-    }
-    for (const s of subscribers ?? []) {
-      emailSet.add(s.email.toLowerCase());
-    }
-
-    const emails = [...emailSet];
-    const batch = emails.slice(0, MAX_BROADCAST_PER_DAY);
-    if (batch.length > 0) {
-      try {
-        await sendBroadcastEmail({
-          to: batch,
-          subject: `New on MLA: ${post.title}`,
-          html: `<p>New blog post on MLA: <strong>${post.title}</strong></p>
-<p><a href="${process.env.NEXT_PUBLIC_SITE_URL}/blog/${post.slug}">Read it here</a></p>`,
-        });
-      } catch (err) {
-        console.error("Brevo broadcast failed:", err);
-      }
-    }
-    if (emails.length > MAX_BROADCAST_PER_DAY) {
-      console.warn(
-        `Broadcast truncated: ${emails.length} recipients exceeds the ${MAX_BROADCAST_PER_DAY}/day cap.`
-      );
-    }
-  } else {
-    console.warn("BREVO_API_KEY missing — broadcast skipped.");
-  }
-
-  // 3. Audit trail.
+  // Audit trail.
   await admin.from("audit_log").insert({
     actor_id: user.id,
     action: "blog.publish",
