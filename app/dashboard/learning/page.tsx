@@ -8,8 +8,19 @@ type EnrollmentCourse = {
   id: string;
   title: string;
   description: string;
-  module_count: number;
+  module_count: { count: number }[] | { count: number } | number | null;
 };
+
+function getModuleCount(raw: unknown): number {
+  if (typeof raw === "number") return raw;
+  if (Array.isArray(raw) && raw.length > 0 && typeof raw[0]?.count === "number") {
+    return raw[0].count;
+  }
+  if (raw && typeof raw === "object" && "count" in raw && typeof (raw as { count: unknown }).count === "number") {
+    return (raw as { count: number }).count;
+  }
+  return 0;
+}
 
 export default async function LearningPage() {
   const supabase = await createClient();
@@ -57,7 +68,7 @@ export default async function LearningPage() {
           {enrollments.map((enr) => {
             const course = enr.courses as unknown as EnrollmentCourse | null;
             if (!course) return null;
-            const total = course.module_count;
+            const total = getModuleCount(course.module_count);
             const done = doneByCourse.get(course.id) ?? 0;
             const pct = total ? Math.round((done / total) * 100) : 0;
             return (

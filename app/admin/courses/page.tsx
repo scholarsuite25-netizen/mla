@@ -9,8 +9,19 @@ type CourseRow = {
   title: string;
   status: string;
   updated_at: string;
-  module_count: number;
+  module_count: { count: number }[] | { count: number } | number | null;
 };
+
+function getModuleCount(raw: unknown): number {
+  if (typeof raw === "number") return raw;
+  if (Array.isArray(raw) && raw.length > 0 && typeof raw[0]?.count === "number") {
+    return raw[0].count;
+  }
+  if (raw && typeof raw === "object" && "count" in raw && typeof (raw as { count: unknown }).count === "number") {
+    return (raw as { count: number }).count;
+  }
+  return 0;
+}
 
 export default async function AdminCoursesPage() {
   const admin = createAdminClient();
@@ -38,42 +49,45 @@ export default async function AdminCoursesPage() {
       </div>
 
       <div className="mt-6 space-y-3">
-        {(courses as unknown as CourseRow[] | null)?.map((course) => (
-          <div
-            key={course.id}
-            className="flex items-center justify-between gap-4 rounded-md border border-parchment/10 bg-panel p-4"
-          >
-            <div className="min-w-0">
-              <p className="truncate font-display text-lg text-parchment">
-                {course.title}
-              </p>
-              <p className="mt-1 text-xs text-parchment/50">
-                {course.module_count} module{course.module_count === 1 ? "" : "s"} ·{" "}
-                <span
-                  className={
-                    course.status === "published"
-                      ? "text-gold"
-                      : "text-parchment/40"
-                  }
+        {(courses as unknown as CourseRow[] | null)?.map((course) => {
+          const modCount = getModuleCount(course.module_count);
+          return (
+            <div
+              key={course.id}
+              className="flex items-center justify-between gap-4 rounded-md border border-parchment/10 bg-panel p-4"
+            >
+              <div className="min-w-0">
+                <p className="truncate font-display text-lg text-parchment">
+                  {course.title}
+                </p>
+                <p className="mt-1 text-xs text-parchment/50">
+                  {modCount} module{modCount === 1 ? "" : "s"} ·{" "}
+                  <span
+                    className={
+                      course.status === "published"
+                        ? "text-gold"
+                        : "text-parchment/40"
+                    }
+                  >
+                    {course.status}
+                  </span>
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  href={`/admin/courses/${course.id}/edit`}
+                  className="rounded-sm border border-parchment/20 px-3 py-1.5 text-xs text-parchment/80 hover:border-gold/60 hover:text-gold"
                 >
-                  {course.status}
-                </span>
-              </p>
+                  Edit
+                </Link>
+                <CourseActions
+                  courseId={course.id}
+                  status={course.status}
+                />
+              </div>
             </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <Link
-                href={`/admin/courses/${course.id}/edit`}
-                className="rounded-sm border border-parchment/20 px-3 py-1.5 text-xs text-parchment/80 hover:border-gold/60 hover:text-gold"
-              >
-                Edit
-              </Link>
-              <CourseActions
-                courseId={course.id}
-                status={course.status}
-              />
-            </div>
-          </div>
-        ))}
+          );
+        })}
         {(!courses || courses.length === 0) && (
           <p className="text-parchment/60">No courses yet. Create your first one.</p>
         )}

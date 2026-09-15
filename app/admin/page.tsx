@@ -37,13 +37,13 @@ export default function AdminIndexPage() {
         title="Audit Log"
         description="Who did what, when."
         href="/admin/audit"
-        ready={false}
+        ready
       />
       <AdminCard
         title="Members"
         description="Promote admins, suspend users."
         href="/admin/members"
-        ready={false}
+        ready
       />
     </div>
   );
