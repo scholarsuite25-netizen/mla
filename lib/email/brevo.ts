@@ -15,7 +15,7 @@ export async function sendBroadcastEmail({
   const senderEmail =
     process.env.BREVO_SENDER_EMAIL ??
     process.env.SUPER_ADMIN_SEED_EMAIL ??
-    "hello@mla.org.ng";
+    "enquiries@mla.org.ng";
   const senderName = process.env.BREVO_SENDER_NAME ?? "MLA Academy";
 
   if (!apiKey) {

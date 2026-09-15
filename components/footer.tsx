@@ -219,11 +219,11 @@ export async function Footer() {
             </a>
 
             <a
-              href="mailto:hello@mla.org.ng"
+              href="mailto:enquiries@mla.org.ng"
               className="inline-flex items-center gap-1.5 text-parchment/70 hover:text-gold transition-colors"
             >
               <Mail size={12} />
-              <span>hello@mla.org.ng</span>
+              <span>enquiries@mla.org.ng</span>
             </a>
           </div>
         </div>

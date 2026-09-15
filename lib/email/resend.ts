@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const FROM = "MLA <no-reply@mail.mla.org.ng>";
+const FROM = process.env.TRANSACTIONAL_EMAIL_FROM ?? "MLA <enquiries@mla.org.ng>";
 
 let cached: Resend | null = null;
 
