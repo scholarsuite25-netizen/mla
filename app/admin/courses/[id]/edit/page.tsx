@@ -4,13 +4,6 @@ import { CourseForm } from "@/components/admin/course-form";
 
 export const dynamic = "force-dynamic";
 
-type Module = {
-  id: string;
-  title: string;
-  content: string;
-  order_index: number;
-};
-
 export default async function EditCoursePage({
   params,
 }: {
@@ -20,24 +13,24 @@ export default async function EditCoursePage({
   const admin = createAdminClient();
   const { data: course, error } = await admin
     .from("courses")
-    .select("id,title,description,status")
+    .select(
+      "id,title,description,status,cover_image_url,category,level,estimated_duration,instructor_name,instructor_title,certificate_enabled,featured"
+    )
     .eq("id", id)
     .single();
   if (error || !course) notFound();
 
   const { data: modules } = await admin
     .from("course_modules")
-    .select("id,title,content,order_index")
+    .select(
+      "id,title,content,order_index,lesson_type,video_url,duration_minutes,is_free_preview,resources"
+    )
     .eq("course_id", id)
     .order("order_index", { ascending: true });
 
   return (
     <div>
-      <h2 className="font-display text-2xl text-parchment">Edit course</h2>
-      <CourseForm
-        course={{ id: course.id, title: course.title, description: course.description, status: course.status }}
-        modules={(modules as Module[] | null) ?? []}
-      />
+      <CourseForm course={course} modules={modules ?? []} />
     </div>
   );
 }
