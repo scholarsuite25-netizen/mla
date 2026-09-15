@@ -11,8 +11,8 @@ const eventSchema = z.object({
   title: z.string().trim().min(3, "Title must be at least 3 characters."),
   description: z.string().trim().max(5000, "Description is too long."),
   start_time: z.string().min(1, "Start time is required."),
-  end_time: z.string().min(1),
-  location_or_link: z.string().trim().max(500, "Location is too long."),
+  end_time: z.string().optional().nullable(),
+  location_or_link: z.string().trim().max(500, "Location is too long.").optional().nullable(),
   institution_id: z.string().uuid().nullable(),
 });
 
@@ -20,11 +20,13 @@ function getEventInput(formData: FormData) {
   const title = String(formData.get("title") ?? "");
   const description = String(formData.get("description") ?? "");
   const start_time = String(formData.get("start_time") ?? "");
-  const end_time = String(formData.get("end_time") ?? "");
-  const location = String(formData.get("location_or_link") ?? "");
+  const end_time_raw = String(formData.get("end_time") ?? "").trim();
+  const end_time = end_time_raw.length > 0 ? end_time_raw : null;
+  const loc_raw = String(formData.get("location_or_link") ?? "").trim();
+  const location_or_link = loc_raw.length > 0 ? loc_raw : null;
   const instRaw = String(formData.get("institution_id") ?? "").trim();
   const institution_id = instRaw === "" || instRaw === "platform" ? null : instRaw;
-  return { title, description, start_time, end_time, location, institution_id };
+  return { title, description, start_time, end_time, location_or_link, institution_id };
 }
 
 export async function createEventAction(formData: FormData): Promise<ActionResult> {

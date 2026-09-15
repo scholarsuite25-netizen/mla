@@ -67,6 +67,7 @@ export async function POST(req: Request) {
         const licenseKey = generateLicenseKey(order.product_id, order.buyer_id);
 
         const { error: licError } = await admin.from("product_licenses").insert({
+          order_id: order.id,
           product_id: order.product_id,
           buyer_id: order.buyer_id,
           license_key: licenseKey,
@@ -80,15 +81,9 @@ export async function POST(req: Request) {
             .eq("id", order.id);
           await admin.from("audit_log").insert({
             actor_id: order.buyer_id,
-            actor_name: buyerName,
             action: "order.paid",
-            entity_type: "orders",
-            entity_id: order.id,
-            metadata: {
-              product: product?.title,
-              reference,
-              license_key: licenseKey,
-            },
+            target_table: "orders",
+            target_id: order.id,
           });
 
           const site =

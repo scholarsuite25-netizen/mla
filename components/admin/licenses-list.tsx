@@ -12,6 +12,7 @@ export type LicenseItem = {
   is_revoked: boolean;
   created_at: string;
   buyer?: { full_name: string | null } | null;
+  digital_products?: { title: string } | { title: string }[] | null;
   products?: { title: string } | { title: string }[] | null;
 };
 
@@ -26,9 +27,10 @@ export function LicensesList({ licenses }: { licenses: LicenseItem[] }) {
   return (
     <div className="space-y-3">
       {licenses.map((lic) => {
-        const product = Array.isArray(lic.products)
-          ? lic.products[0]?.title
-          : (lic.products as { title: string } | null)?.title ?? "—";
+        const prodRaw = lic.digital_products ?? lic.products;
+        const product = Array.isArray(prodRaw)
+          ? prodRaw[0]?.title
+          : (prodRaw as { title: string } | null)?.title ?? "—";
         return (
           <div
             key={lic.id}

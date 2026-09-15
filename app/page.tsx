@@ -83,24 +83,40 @@ export default async function Home() {
         )}
       </section>
 
-      {/* Teaser strip */}
+      {/* Feature showcase */}
       <section className="border-t border-parchment/10 bg-panel">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-2">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-gold">Coming next</p>
-            <h2 className="mt-3 font-display text-3xl text-parchment">Courses &amp; mentorship</h2>
-            <p className="mt-4 text-parchment/70">
-              Structured AI Literacy and Vibe Coding modules, followed by
-              one-to-one mentorship that matches learners across institutions.
+          <div className="rounded-md border border-parchment/10 bg-ink/40 p-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-gold">Learn &amp; Connect</p>
+            <h2 className="mt-3 font-display text-2xl text-parchment">Courses &amp; Mentorship</h2>
+            <p className="mt-3 text-sm leading-relaxed text-parchment/70">
+              Structured AI Literacy and Vibe Coding modules with progress tracking,
+              followed by 1-to-1 mentorship that connects learners across Nigerian institutions.
             </p>
+            <div className="mt-5 flex gap-4">
+              <Link href="/courses" className="text-xs uppercase tracking-wider text-gold hover:underline">
+                Course Catalog →
+              </Link>
+              <Link href="/mentorship/find" className="text-xs uppercase tracking-wider text-parchment/70 hover:text-gold">
+                Find Mentors →
+              </Link>
+            </div>
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-gold">Coming next</p>
-            <h2 className="mt-3 font-display text-3xl text-parchment">Events &amp; the shop</h2>
-            <p className="mt-4 text-parchment/70">
-              Institution-scoped events, RSVPs, and a licensed digital products
-              shop with key-protected downloads.
+          <div className="rounded-md border border-parchment/10 bg-ink/40 p-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-gold">Community &amp; Resources</p>
+            <h2 className="mt-3 font-display text-2xl text-parchment">Events &amp; Digital Shop</h2>
+            <p className="mt-3 text-sm leading-relaxed text-parchment/70">
+              Institution-scoped workshops, platform-wide webinars, and a licensed
+              digital products library with cryptographic key protection and personalized watermarking.
             </p>
+            <div className="mt-5 flex gap-4">
+              <Link href="/events" className="text-xs uppercase tracking-wider text-gold hover:underline">
+                Upcoming Events →
+              </Link>
+              <Link href="/shop" className="text-xs uppercase tracking-wider text-parchment/70 hover:text-gold">
+                Visit Shop →
+              </Link>
+            </div>
           </div>
         </div>
       </section>

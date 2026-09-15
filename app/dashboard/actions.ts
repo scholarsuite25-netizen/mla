@@ -127,3 +127,50 @@ export async function rejectRequestAction(requestId: string): Promise<ActionResu
   revalidatePath("/dashboard/requests");
   return {};
 }
+
+// A member requests to administer their registered institution (spec §5).
+export async function requestInstitutionAdminAction(): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Please sign in." };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role,institution_id")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.institution_id) {
+    return { error: "You must be associated with an institution to request admin rights." };
+  }
+  if (profile.role === "institution_admin" || profile.role === "super_admin") {
+    return { error: "You are already an administrator." };
+  }
+
+  // Check for an existing pending request
+  const { data: existing } = await supabase
+    .from("institution_admin_requests")
+    .select("id,status")
+    .eq("profile_id", user.id)
+    .eq("institution_id", profile.institution_id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (existing && existing.status === "pending") {
+    return { error: "You already have a pending request for your institution." };
+  }
+
+  const { error } = await supabase.from("institution_admin_requests").insert({
+    profile_id: user.id,
+    institution_id: profile.institution_id,
+    status: "pending",
+  });
+  if (error) return { error: error.message };
+
+  revalidatePath("/dashboard/requests");
+  revalidatePath("/dashboard");
+  return {};
+}

@@ -45,11 +45,9 @@ export async function resetActivationsAction(licenseId: string): Promise<ActionR
     .eq("id", licenseId);
   await admin.from("audit_log").insert({
     actor_id: who.id,
-    actor_name: who.name,
     action: "license.activation_reset",
-    entity_type: "product_licenses",
-    entity_id: licenseId,
-    metadata: { license_key: lic.license_key },
+    target_table: "product_licenses",
+    target_id: licenseId,
   });
 
   revalidatePath("/admin/licenses");
@@ -74,11 +72,9 @@ export async function revokeLicenseAction(licenseId: string): Promise<ActionResu
     .eq("id", licenseId);
   await admin.from("audit_log").insert({
     actor_id: who.id,
-    actor_name: who.name,
     action: lic.is_revoked ? "license.unrevoked" : "license.revoked",
-    entity_type: "product_licenses",
-    entity_id: licenseId,
-    metadata: { license_key: lic.license_key },
+    target_table: "product_licenses",
+    target_id: licenseId,
   });
 
   revalidatePath("/admin/licenses");

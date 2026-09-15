@@ -15,7 +15,10 @@ export default async function LoginPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (user) redirect("/dashboard");
+  if (user) {
+    const dest = next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+    redirect(dest);
+  }
 
   return (
     <div className="mx-auto max-w-md px-4 py-20">

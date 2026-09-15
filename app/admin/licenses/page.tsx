@@ -14,7 +14,7 @@ export default async function AdminLicensesPage({
   let query = admin
     .from("product_licenses")
     .select(
-      "id,license_key,max_activations,activation_count,is_revoked,created_at,buyer_id,buyer:profiles(full_name),products(title),orders(paystack_reference)"
+      "id,license_key,max_activations,activation_count,is_revoked,created_at,buyer_id,buyer:profiles(full_name),digital_products(title),orders(paystack_reference)"
     )
     .order("created_at", { ascending: false });
 

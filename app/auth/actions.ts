@@ -23,7 +23,10 @@ export async function signInAction(formData: FormData): Promise<ActionResult> {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
   if (error) return { error: "Invalid email or password." };
-  redirect("/dashboard");
+
+  const nextRaw = formData.get("next");
+  const next = typeof nextRaw === "string" && nextRaw.startsWith("/") && !nextRaw.startsWith("//") ? nextRaw : "/dashboard";
+  redirect(next);
 }
 
 export async function signOutAction() {

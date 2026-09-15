@@ -11,7 +11,7 @@ type LibraryRow = {
   activation_count: number;
   is_revoked: boolean;
   created_at: string;
-  products: { title: string; type: string } | { title: string; type: string }[];
+  digital_products: { title: string; type: string } | { title: string; type: string }[];
   orders: { paystack_reference: string | null; amount: number } | { paystack_reference: string | null; amount: number }[];
 };
 
@@ -32,7 +32,7 @@ export default async function LibraryPage() {
   const { data: licenses } = await supabase
     .from("product_licenses")
     .select(
-      "id,license_key,max_activations,activation_count,is_revoked,created_at,products(title,type),orders(paystack_reference,amount)"
+      "id,license_key,max_activations,activation_count,is_revoked,created_at,digital_products(title,type),orders(paystack_reference,amount)"
     )
     .eq("buyer_id", user.id)
     .order("created_at", { ascending: false });
@@ -60,9 +60,9 @@ export default async function LibraryPage() {
         )}
 
         {rows.map((lic) => {
-          const product = Array.isArray(lic.products)
-            ? lic.products[0]
-            : (lic.products as { title: string; type: string });
+          const product = Array.isArray(lic.digital_products)
+            ? lic.digital_products[0]
+            : (lic.digital_products as { title: string; type: string });
           const order = Array.isArray(lic.orders)
             ? lic.orders[0]
             : (lic.orders as { paystack_reference: string | null; amount: number });

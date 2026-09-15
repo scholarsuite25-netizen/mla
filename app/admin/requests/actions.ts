@@ -1,23 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTransactionalEmail } from "@/lib/email/resend";
+import { assertSuperAdmin } from "@/lib/auth-guard";
 
 export type ActionResult = { error?: string };
 
 // Super Admin final approval of a mentorship match (spec §8 Phase 3).
-// Sets status 'approved', records audit, notifies both parties and sends
-// transactional email via Resend.
 export async function approveRequestAction(requestId: string): Promise<ActionResult> {
-  const admin = createAdminClient();
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in." };
+  let actor;
+  try {
+    actor = await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
 
+  const admin = createAdminClient();
   const { data: request } = await admin
     .from("mentorship_requests")
     .select("id,status,mentee_id,mentor_id")
@@ -34,7 +33,7 @@ export async function approveRequestAction(requestId: string): Promise<ActionRes
 
   // Audit trail.
   await admin.from("audit_log").insert({
-    actor_id: user.id,
+    actor_id: actor.id,
     action: "mentorship.approve",
     target_table: "mentorship_requests",
     target_id: request.id,
@@ -83,6 +82,113 @@ export async function approveRequestAction(requestId: string): Promise<ActionRes
       console.error("Resend to mentor failed:", e)
     );
   }
+
+  revalidatePath("/admin/requests");
+  revalidatePath("/dashboard/requests");
+  return {};
+}
+
+// Super Admin approves a member's self-request to administer their institution.
+export async function approveInstitutionAdminRequestAction(requestId: string): Promise<ActionResult> {
+  let actor;
+  try {
+    actor = await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
+  const admin = createAdminClient();
+  const { data: req } = await admin
+    .from("institution_admin_requests")
+    .select("id,profile_id,institution_id,status,institutions(name)")
+    .eq("id", requestId)
+    .single();
+  if (!req) return { error: "Request not found." };
+  if (req.status !== "pending") return { error: "This request is no longer pending." };
+
+  const { error: upReqError } = await admin
+    .from("institution_admin_requests")
+    .update({ status: "approved" })
+    .eq("id", requestId);
+  if (upReqError) return { error: upReqError.message };
+
+  // Promote the member to institution_admin.
+  const { error: profError } = await admin
+    .from("profiles")
+    .update({ role: "institution_admin", institution_id: req.institution_id })
+    .eq("id", req.profile_id);
+  if (profError) return { error: profError.message };
+
+  const instRaw = req.institutions;
+  const instName = Array.isArray(instRaw)
+    ? instRaw[0]?.name
+    : (instRaw as { name: string } | null)?.name ?? "your institution";
+
+  // Audit trail.
+  await admin.from("audit_log").insert({
+    actor_id: actor.id,
+    action: "institution_admin.approve",
+    target_table: "institution_admin_requests",
+    target_id: req.id,
+  });
+
+  // Notify member.
+  await admin.from("notifications").insert({
+    profile_id: req.profile_id,
+    type: "admin_role",
+    reference_id: req.id,
+    message: `Congratulations! Your request to administer ${instName} has been approved.`,
+  });
+
+  revalidatePath("/admin/requests");
+  revalidatePath("/dashboard/requests");
+  revalidatePath("/dashboard");
+  return {};
+}
+
+// Super Admin rejects a member's request to administer an institution.
+export async function rejectInstitutionAdminRequestAction(requestId: string): Promise<ActionResult> {
+  let actor;
+  try {
+    actor = await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
+  const admin = createAdminClient();
+  const { data: req } = await admin
+    .from("institution_admin_requests")
+    .select("id,profile_id,institutions(name)")
+    .eq("id", requestId)
+    .single();
+  if (!req) return { error: "Request not found." };
+
+  const { error: upReqError } = await admin
+    .from("institution_admin_requests")
+    .update({ status: "rejected" })
+    .eq("id", requestId);
+  if (upReqError) return { error: upReqError.message };
+
+  const instRaw = req.institutions;
+  const instName = Array.isArray(instRaw)
+    ? instRaw[0]?.name
+    : (instRaw as { name: string } | null)?.name ?? "your institution";
+
+  // Audit trail.
+  await admin.from("audit_log").insert({
+    actor_id: actor.id,
+    action: "institution_admin.reject",
+    target_table: "institution_admin_requests",
+    target_id: req.id,
+  });
+
+  // Notify member.
+  await admin.from("notifications").insert({
+    profile_id: req.profile_id,
+    type: "admin_role",
+    reference_id: req.id,
+    message: `Your request to administer ${instName} was not approved.`,
+  });
 
   revalidatePath("/admin/requests");
   revalidatePath("/dashboard/requests");

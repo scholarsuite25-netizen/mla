@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { RequestActions } from "@/components/mentorship/request-actions";
 import { StatusBadge } from "@/components/mentorship/status-badge";
+import { RequestAdminButton } from "@/components/dashboard/request-admin-button";
 
 export const dynamic = "force-dynamic";
 
@@ -61,9 +62,38 @@ export default async function DashboardRequestsPage() {
     institutionRequests = (data as unknown as RequestRow[]) ?? [];
   }
 
+  const { data: institution } = profile?.institution_id
+    ? await supabase.from("institutions").select("name").eq("id", profile.institution_id).single()
+    : { data: null };
+
+  const { data: myAdminReq } = await supabase
+    .from("institution_admin_requests")
+    .select("id,status,created_at")
+    .eq("profile_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 space-y-14">
       <h1 className="font-display text-3xl text-parchment">My Requests</h1>
+
+      {/* Institution Administration Request */}
+      <section>
+        <h2 className="font-display text-xl text-parchment">
+          Institution Administration
+        </h2>
+        <p className="mt-1 text-sm text-parchment/50">
+          Request or manage your administration status for {institution?.name ?? "your institution"}.
+        </p>
+        <div className="mt-4">
+          <RequestAdminButton
+            institutionName={institution?.name ?? null}
+            hasPendingRequest={myAdminReq?.status === "pending"}
+            isAlreadyAdmin={role === "institution_admin" || role === "super_admin"}
+          />
+        </div>
+      </section>
 
       {/* Where I'm the mentor */}
       <section>

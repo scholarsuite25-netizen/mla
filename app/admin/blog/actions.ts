@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notifyAndBroadcast } from "@/lib/publish";
+import { assertSuperAdmin } from "@/lib/auth-guard";
 
 export type ActionResult = { error?: string };
 
@@ -42,21 +42,47 @@ function getPostInput(formData: FormData) {
   };
 }
 
-// Save as draft (create or update).
+// Save as draft or update existing post without losing publish status.
 export async function savePostAction(
   postId: string | null,
   formData: FormData
 ): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const input = getPostInput(formData);
   const parsed = postSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
   const admin = createAdminClient();
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in." };
+
+  if (postId) {
+    const updatePayload = {
+      title: parsed.data.title,
+      slug: parsed.data.slug,
+      body: parsed.data.body,
+      cover_image_url: parsed.data.cover_image_url ?? null,
+    };
+
+    const { data, error } = await admin
+      .from("blog_posts")
+      .update(updatePayload)
+      .eq("id", postId)
+      .select("id")
+      .single();
+    if (error) {
+      if (error.code === "23505") {
+        return { error: "That slug is already taken — pick another." };
+      }
+      return { error: error.message };
+    }
+    revalidatePath(`/blog/${parsed.data.slug}`);
+    revalidatePath(`/admin/blog/${postId}/edit`);
+    redirect(`/admin/blog/${data!.id}/edit`);
+  }
 
   const row = {
     title: parsed.data.title,
@@ -66,18 +92,6 @@ export async function savePostAction(
     status: "draft",
     published_at: null,
   };
-
-  if (postId) {
-    const { data, error } = await admin
-      .from("blog_posts")
-      .update(row)
-      .eq("id", postId)
-      .select("id")
-      .single();
-    if (error) return { error: error.message };
-    revalidatePath(`/admin/blog/${postId}/edit`);
-    redirect(`/admin/blog/${data!.id}/edit`);
-  }
 
   const { data, error } = await admin
     .from("blog_posts")
@@ -96,13 +110,14 @@ export async function savePostAction(
 
 // Publish: flip to published, then fan out notifications + email.
 export async function publishPostAction(postId: string): Promise<ActionResult> {
-  const admin = createAdminClient();
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in." };
+  let actor;
+  try {
+    actor = await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
 
+  const admin = createAdminClient();
   const { data: post } = await admin
     .from("blog_posts")
     .select("id,title,slug,status")
@@ -127,7 +142,7 @@ export async function publishPostAction(postId: string): Promise<ActionResult> {
 
   // Audit trail.
   await admin.from("audit_log").insert({
-    actor_id: user.id,
+    actor_id: actor.id,
     action: "blog.publish",
     target_table: "blog_posts",
     target_id: post.id,
@@ -140,6 +155,12 @@ export async function publishPostAction(postId: string): Promise<ActionResult> {
 }
 
 export async function deletePostAction(postId: string): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const admin = createAdminClient();
   const { error } = await admin.from("blog_posts").delete().eq("id", postId);
   if (error) return { error: error.message };
@@ -150,6 +171,12 @@ export async function deletePostAction(postId: string): Promise<ActionResult> {
 
 // Cover image upload — validated server-side (type + size) per spec §9.
 export async function uploadCoverAction(formData: FormData): Promise<{ url?: string; error?: string }> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
     return { error: "No file received." };

@@ -45,7 +45,7 @@ try {
       console.log(`skip:     ${file}`);
       continue;
     }
-    const sql = readFileSync(join(migrationsDir, file), "utf8");
+    const sql = readFileSync(join(migrationsDir, file), "utf8").replace(/^\uFEFF/, "");
     await client.query("begin");
     try {
       await client.query(sql);

@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notifyAndBroadcast } from "@/lib/publish";
+import { assertSuperAdmin } from "@/lib/auth-guard";
 
 export type ActionResult = { error?: string };
 
@@ -23,30 +23,41 @@ export async function saveCourseAction(
   courseId: string | null,
   formData: FormData
 ): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const title = String(formData.get("title") ?? "");
   const description = String(formData.get("description") ?? "");
   const parsed = courseSchema.safeParse({ title, description });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
   const admin = createAdminClient();
+
+  if (courseId) {
+    const { data, error } = await admin
+      .from("courses")
+      .update({
+        title: parsed.data.title,
+        description: parsed.data.description,
+      })
+      .eq("id", courseId)
+      .select("id")
+      .single();
+    if (error) return { error: error.message };
+    revalidatePath(`/courses/${data!.id}`);
+    revalidatePath(`/admin/courses/${data!.id}/edit`);
+    redirect(`/admin/courses/${data!.id}/edit`);
+  }
+
   const row = {
     title: parsed.data.title,
     description: parsed.data.description,
     status: "draft",
     published_at: null,
   };
-
-  if (courseId) {
-    const { data, error } = await admin
-      .from("courses")
-      .update(row)
-      .eq("id", courseId)
-      .select("id")
-      .single();
-    if (error) return { error: error.message };
-    revalidatePath(`/admin/courses/${data!.id}/edit`);
-    redirect(`/admin/courses/${data!.id}/edit`);
-  }
 
   const { data, error } = await admin
     .from("courses")
@@ -59,12 +70,14 @@ export async function saveCourseAction(
 }
 
 export async function publishCourseAction(courseId: string): Promise<ActionResult> {
+  let actor;
+  try {
+    actor = await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const admin = createAdminClient();
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in." };
 
   const { data: course } = await admin
     .from("courses")
@@ -88,8 +101,9 @@ export async function publishCourseAction(courseId: string): Promise<ActionResul
     path: `/courses/${course.id}`,
   });
 
+  // Audit trail.
   await admin.from("audit_log").insert({
-    actor_id: user.id,
+    actor_id: actor.id,
     action: "course.publish",
     target_table: "courses",
     target_id: course.id,
@@ -103,6 +117,12 @@ export async function publishCourseAction(courseId: string): Promise<ActionResul
 }
 
 export async function deleteCourseAction(courseId: string): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const admin = createAdminClient();
   const { error } = await admin.from("courses").delete().eq("id", courseId);
   if (error) return { error: error.message };
@@ -116,6 +136,12 @@ export async function saveModuleAction(
   moduleId: string | null,
   formData: FormData
 ): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const title = String(formData.get("title") ?? "");
   const content = String(formData.get("content") ?? "");
   const parsed = moduleSchema.safeParse({ title, content });
@@ -156,6 +182,12 @@ export async function deleteModuleAction(
   courseId: string,
   moduleId: string
 ): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const admin = createAdminClient();
   const { error } = await admin
     .from("course_modules")
@@ -174,6 +206,12 @@ export async function moveModuleAction(
   moduleId: string,
   direction: "up" | "down"
 ): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
   const admin = createAdminClient();
   const { data: all } = await admin
     .from("course_modules")
