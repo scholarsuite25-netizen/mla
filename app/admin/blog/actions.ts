@@ -17,9 +17,16 @@ const postSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase letters, numbers and dashes only."),
   body: z.string(),
   cover_image_url: z.string().url().nullable().optional(),
+  category: z.string().trim().min(1, "Category is required."),
+  tags: z.array(z.string()).default([]),
+  excerpt: z.string().nullable().optional(),
+  seo_title: z.string().nullable().optional(),
+  seo_description: z.string().nullable().optional(),
+  allow_comments: z.boolean().default(true),
+  featured: z.boolean().default(false),
 });
 
-const FILE_LIMIT = 5 * 1024 * 1024; // 5MB
+const FILE_LIMIT = 10 * 1024 * 1024; // 10MB
 const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
 
 function slugify(title: string): string {
@@ -32,13 +39,34 @@ function slugify(title: string): string {
     .slice(0, 80);
 }
 
+function parseTags(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw.map(String).map((s) => s.trim()).filter(Boolean);
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed.map(String).map((s) => s.trim()).filter(Boolean);
+    } catch {
+      return raw.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+  }
+  return [];
+}
+
 function getPostInput(formData: FormData) {
   const title = String(formData.get("title") ?? "");
+  const tagsRaw = formData.get("tags");
   return {
     title,
     slug: String(formData.get("slug") ?? "").trim() || slugify(title) || "untitled",
     body: String(formData.get("body") ?? ""),
     cover_image_url: String(formData.get("cover_image_url") ?? "") || null,
+    category: String(formData.get("category") ?? "Leadership").trim() || "Leadership",
+    tags: parseTags(tagsRaw),
+    excerpt: String(formData.get("excerpt") ?? "").trim() || null,
+    seo_title: String(formData.get("seo_title") ?? "").trim() || null,
+    seo_description: String(formData.get("seo_description") ?? "").trim() || null,
+    allow_comments: formData.get("allow_comments") === "on" || formData.get("allow_comments") === "true",
+    featured: formData.get("featured") === "on" || formData.get("featured") === "true",
   };
 }
 
@@ -65,6 +93,13 @@ export async function savePostAction(
       slug: parsed.data.slug,
       body: parsed.data.body,
       cover_image_url: parsed.data.cover_image_url ?? null,
+      category: parsed.data.category,
+      tags: parsed.data.tags,
+      excerpt: parsed.data.excerpt ?? null,
+      seo_title: parsed.data.seo_title ?? null,
+      seo_description: parsed.data.seo_description ?? null,
+      allow_comments: parsed.data.allow_comments,
+      featured: parsed.data.featured,
     };
 
     const { data, error } = await admin
@@ -79,6 +114,7 @@ export async function savePostAction(
       }
       return { error: error.message };
     }
+    revalidatePath("/blog");
     revalidatePath(`/blog/${parsed.data.slug}`);
     revalidatePath(`/admin/blog/${postId}/edit`);
     redirect(`/admin/blog/${data!.id}/edit`);
@@ -89,6 +125,13 @@ export async function savePostAction(
     slug: parsed.data.slug,
     body: parsed.data.body,
     cover_image_url: parsed.data.cover_image_url ?? null,
+    category: parsed.data.category,
+    tags: parsed.data.tags,
+    excerpt: parsed.data.excerpt ?? null,
+    seo_title: parsed.data.seo_title ?? null,
+    seo_description: parsed.data.seo_description ?? null,
+    allow_comments: parsed.data.allow_comments,
+    featured: parsed.data.featured,
     status: "draft",
     published_at: null,
   };
@@ -196,7 +239,7 @@ export async function deletePostAction(postId: string): Promise<ActionResult> {
   return {};
 }
 
-// Cover image upload — validated server-side (type + size) per spec §9.
+// Cover or embedded image upload — validated server-side (type + size)
 export async function uploadCoverAction(formData: FormData): Promise<{ url?: string; error?: string }> {
   try {
     await assertSuperAdmin();
@@ -212,7 +255,7 @@ export async function uploadCoverAction(formData: FormData): Promise<{ url?: str
     return { error: "Only JPEG, PNG, WebP, GIF or AVIF images are allowed." };
   }
   if (file.size > FILE_LIMIT) {
-    return { error: "Image must be 5MB or smaller." };
+    return { error: "Image must be 10MB or smaller." };
   }
 
   const admin = createAdminClient();
@@ -228,4 +271,40 @@ export async function uploadCoverAction(formData: FormData): Promise<{ url?: str
 
   const url = admin.storage.from("covers").getPublicUrl(path).data.publicUrl;
   return { url };
+}
+
+// Moderation of blog comments
+export async function moderateCommentAction(
+  commentId: string,
+  status: "approved" | "pending" | "spam"
+): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("blog_comments")
+    .update({ status })
+    .eq("id", commentId);
+
+  if (error) return { error: error.message };
+  revalidatePath("/blog");
+  return {};
+}
+
+export async function deleteCommentAction(commentId: string): Promise<ActionResult> {
+  try {
+    await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
+  const admin = createAdminClient();
+  const { error } = await admin.from("blog_comments").delete().eq("id", commentId);
+  if (error) return { error: error.message };
+  revalidatePath("/blog");
+  return {};
 }

@@ -13,14 +13,15 @@ export default async function EditPostPage({
   const admin = createAdminClient();
   const { data: post, error } = await admin
     .from("blog_posts")
-    .select("id,title,slug,body,cover_image_url,status")
+    .select(
+      "id,title,slug,body,cover_image_url,status,category,tags,excerpt,seo_title,seo_description,allow_comments,featured,published_at"
+    )
     .eq("id", id)
     .single();
   if (error || !post) notFound();
 
   return (
     <div>
-      <h2 className="font-display text-2xl text-parchment">Edit post</h2>
       <PostForm post={post} />
     </div>
   );
