@@ -8,8 +8,8 @@ const publicLinks: NavLink[] = [
     label: "About",
     href: "/about",
     children: [
-      { label: "Our Mission", href: "/about", description: "Academic integrity & pillars" },
-      { label: "Institutions", href: "/institutions", description: "Participating universities" },
+      { label: "Our Mission", href: "/about", description: "Leadership & career pillars" },
+      { label: "Institutions & Hubs", href: "/institutions", description: "Universities & enterprise networks" },
     ],
   },
   {
@@ -24,8 +24,8 @@ const publicLinks: NavLink[] = [
     label: "Mentorship",
     href: "/mentorship/find",
     children: [
-      { label: "Find a Mentor", href: "/mentorship/find", description: "1-on-1 cross-institution guidance" },
-      { label: "Become a Mentor", href: "/mentorship/become", description: "Share expertise with peers" },
+      { label: "Find a Mentor", href: "/mentorship/find", description: "1-on-1 industry & academic guidance" },
+      { label: "Become a Mentor", href: "/mentorship/become", description: "Share expertise with learners" },
       { label: "My Requests", href: "/dashboard/requests", description: "Track mentorship applications" },
     ],
   },

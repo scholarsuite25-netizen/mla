@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "MLA — Mentorship & Leadership Academy",
   description:
-    "Learn, mentor, and lead across Nigerian higher institutions and independent learning networks. AI Literacy and Vibe Coding courses, mentorship matching, events, and a curated digital products shop.",
+    "Accelerate your career, business, and craft with applied AI and verified mentorship. Purpose-built tracks for working professionals, fresh graduates, job seekers, entrepreneurs, and campus scholars nationwide.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

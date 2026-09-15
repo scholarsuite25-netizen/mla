@@ -10,29 +10,39 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   {
-    question: "How does cross-institution mentorship work?",
+    question: "Who can join MLA? Is it only for university students?",
     answer:
-      "Once you register under your university or polytechnic, you can browse verified student leaders and faculty mentors from any participating Nigerian institution. Submit a request detailing your goals, and once approved, you gain direct 1-to-1 mentorship channels.",
+      "No. While higher institutions are one of our key learning tracks, MLA is built for everyone: working professionals upskilling in AI, fresh graduates and NYSC corps members launching their careers, job seekers transitioning into tech, self-employed entrepreneurs building digital businesses, and campus scholars. Everyone gets dedicated mentorship and practical curriculum.",
   },
   {
-    question: "Are the AI Literacy & Vibe Coding courses completely free?",
+    question: "I work full-time. Can I learn and receive mentorship on my own schedule?",
     answer:
-      "Yes. All core curriculum modules — including AI Literacy, prompt workflows, vibe coding with Next.js, and autonomous tools — are completely free for registered members with automated progress tracking.",
+      "Yes. All AI Literacy, vibe coding, and leadership curriculum modules are 100% self-paced. Mentorship sessions, office hours, and masterclasses are scheduled flexibly with evening and weekend options to accommodate busy corporate work schedules.",
   },
   {
-    question: "How does my higher institution get officially recognized?",
+    question: "How does MLA help fresh graduates and job seekers get hired?",
     answer:
-      "When registering, type your institution name. If it's already active, you join immediately. If new, it is provisioned instantly on the platform. Student leaders or faculty members can then request Institution Admin rights to oversee their campus hub.",
+      "MLA focuses on proof-of-work rather than just theory. Through our vibe coding and AI workflows, you will build and deploy real applications, automated tools, and digital solutions that serve as an unassailable portfolio. You also connect 1-on-1 with industry mentors who review CVs and provide interview guidance.",
   },
   {
-    question: "How are digital shop materials and license keys protected?",
+    question: "I am self-employed or run a business. How will this help me?",
     answer:
-      "Digital textbooks and software in the MLA shop are cryptographically signed with unique HMAC license keys. Downloaded PDFs are personalized with dynamic watermarks containing your name and email, with hardware activation limits enforced.",
+      "Entrepreneurs and freelancers use MLA's vibe coding and agentic AI courses to automate customer support, build custom internal tools, launch software products without hiring expensive engineering teams, and scale their businesses with minimal overhead.",
   },
   {
-    question: "Can I be both a learner and a mentor?",
+    question: "How does cross-sector and cross-institution mentorship work?",
     answer:
-      "Absolutely. Many fellows study advanced AI modules while simultaneously mentoring junior students in their campus or across neighboring institutions in areas where they excel.",
+      "You can search verified mentors across industry verticals (Fintech, Corporate Leadership, Tech, Design) as well as university faculty. Submit a request stating your objectives, and once accepted, you unlock 1-on-1 coaching, progress milestones, and collaborative channels.",
+  },
+  {
+    question: "Are the AI Literacy & Vibe Coding courses free?",
+    answer:
+      "Yes. All core curriculum modules — from prompt workflows and LLM architectures to full-stack vibe coding with Next.js and autonomous agents — are completely free for registered members with verifiable completion certificates.",
+  },
+  {
+    question: "How are digital shop tools and license keys protected?",
+    answer:
+      "Textbooks, starter code kits, and software tools in the MLA store are cryptographically secured with unique HMAC license keys. Downloads feature dynamic personalization watermarks and hardware activation limits to safeguard intellectual property.",
   },
 ];
 
@@ -58,7 +68,11 @@ export function FaqAccordion() {
                 <HelpCircle size={16} className="text-gold shrink-0 opacity-70 group-hover:opacity-100" />
                 {faq.question}
               </span>
-              <div className={`ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 transition-transform duration-200 ${isOpen ? "rotate-180 border-gold/40 text-gold" : "text-parchment/50"}`}>
+              <div
+                className={`ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 transition-transform duration-200 ${
+                  isOpen ? "rotate-180 border-gold/40 text-gold" : "text-parchment/50"
+                }`}
+              >
                 <ChevronDown size={14} />
               </div>
             </button>

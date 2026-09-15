@@ -7,7 +7,6 @@ import {
   ArrowRight,
   GraduationCap,
   Users,
-  Building2,
   Sparkles,
   Award,
   BookOpen,
@@ -16,6 +15,10 @@ import {
   CheckCircle2,
   Star,
   Compass,
+  Briefcase,
+  Rocket,
+  Zap,
+  Building,
   ArrowUpRight,
 } from "lucide-react";
 
@@ -42,21 +45,22 @@ export default async function Home() {
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            {/* National Trust Pill */}
+            {/* Nationwide Trust Pill */}
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3.5 py-1.5 text-xs font-semibold text-gold-light backdrop-blur-md">
               <Sparkles size={14} className="text-gold animate-pulse" />
-              <span>Nigeria&apos;s Premier Higher Education Academy</span>
+              <span>Applied AI &amp; Nationwide Mentorship Academy</span>
             </div>
 
-            {/* Headline */}
+            {/* Universal Headline */}
             <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-parchment sm:text-5xl lg:text-6xl lg:leading-[1.12]">
-              Lead where you study —{" "}
-              <span className="text-gradient-gold">mentor anyone, anywhere.</span>
+              Accelerate your career, business &amp; craft —{" "}
+              <span className="text-gradient-gold">with applied AI and mentorship.</span>
             </h1>
 
             <p className="mt-6 text-base leading-relaxed text-parchment/75 sm:text-lg">
-              Master state-of-the-art AI literacy and vibe coding, then share your skills by mentoring
-              students across 20+ Nigerian universities — all within one prestigious, collaborative academy.
+              Purpose-built for working professionals, fresh graduates, job seekers, entrepreneurs,
+              and campus scholars. Master autonomous vibe coding, modern AI literacy, and 1-on-1 industry
+              mentorship across Nigeria.
             </p>
 
             {/* Social Proof Stars */}
@@ -67,19 +71,19 @@ export default async function Home() {
                 ))}
               </div>
               <span className="text-xs font-semibold text-parchment/80">
-                4.9/5 Rating across Nigerian Higher Institutions
+                4.9/5 Rating across corporate, startup &amp; campus cohorts
               </span>
             </div>
 
             {/* Action CTAs */}
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link href="/courses" className="btn-primary">
-                <span>Browse Courses</span>
+              <Link href="/register" className="btn-primary">
+                <span>Start Learning Free</span>
                 <ArrowRight size={16} />
               </Link>
               <Link href="/mentorship/find" className="btn-secondary">
                 <Users size={16} className="text-gold" />
-                <span>Find a Mentor</span>
+                <span>Find an Industry Mentor</span>
               </Link>
             </div>
 
@@ -87,11 +91,11 @@ export default async function Home() {
             <div className="mt-14 grid grid-cols-3 gap-4 border-t border-white/[0.08] pt-8">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gold/10">
-                  <Building2 size={18} className="text-gold" />
+                  <Briefcase size={18} className="text-gold" />
                 </div>
                 <div>
-                  <p className="font-display text-2xl font-bold text-parchment">{institutions}</p>
-                  <p className="text-[11px] uppercase tracking-wider text-parchment/50">Institutions</p>
+                  <p className="font-display text-2xl font-bold text-parchment">{institutions} Networks</p>
+                  <p className="text-[11px] uppercase tracking-wider text-parchment/50">Hubs &amp; Campus</p>
                 </div>
               </div>
 
@@ -111,13 +115,13 @@ export default async function Home() {
                 </div>
                 <div>
                   <p className="font-display text-2xl font-bold text-parchment">100%</p>
-                  <p className="text-[11px] uppercase tracking-wider text-parchment/50">Free Access</p>
+                  <p className="text-[11px] uppercase tracking-wider text-parchment/50">Free Curriculum</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Real High-End Photography Hero Visual with Floating Glass Overlays */}
+          {/* High-End Photography Hero Visual with Floating Glass Overlays */}
           <div className="relative">
             {/* Glow Aura */}
             <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-gold/25 via-crest-red/25 to-transparent blur-2xl opacity-60" />
@@ -127,7 +131,7 @@ export default async function Home() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/hero-mentor.jpg"
-                alt="Nigerian student mentor reviewing AI materials in university library"
+                alt="Nigerian professional and scholar collaborating on AI workflows"
                 className="aspect-[4/3] w-full object-cover brightness-[0.92] contrast-[1.05]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0E0B08] via-transparent to-black/20" />
@@ -138,7 +142,7 @@ export default async function Home() {
                   <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
                   <span className="text-xs font-semibold text-parchment">Verified Mentor Available</span>
                   <span className="rounded bg-gold/20 px-1.5 py-0.5 text-[10px] font-bold text-gold">
-                    98% Match
+                    Executive Match
                   </span>
                 </div>
               </div>
@@ -148,11 +152,11 @@ export default async function Home() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gold/15 text-gold border border-gold/30">
-                      <GraduationCap size={18} />
+                      <Zap size={18} />
                     </div>
                     <div>
                       <p className="text-xs font-bold text-parchment">AI Literacy &amp; Vibe Coding</p>
-                      <p className="text-[10px] text-parchment/60">Module 2: Autonomous Tools · Free</p>
+                      <p className="text-[10px] text-parchment/60">Module 2: Autonomous Agent Workflows</p>
                     </div>
                   </div>
                   <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/20">
@@ -165,18 +169,277 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 2. CONTINUOUS TICKER: TOP NIGERIAN UNIVERSITIES */}
+      {/* 2. CONTINUOUS TICKER: MULTI-SECTOR ECOSYSTEM */}
       <InstitutionTicker />
 
-      {/* 3. NUMBERED 4-PILLAR SOLUTIONS (Inspired by Leadify Pro Framework) */}
+      {/* 3. NEW DEDICATED SECTION: "TAILORED FOR EVERY STAGE OF YOUR CAREER" */}
+      <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
+        <div className="text-center max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold mb-3">
+            <Sparkles size={12} />
+            <span>Inclusive Nationwide Pathways</span>
+          </div>
+          <h2 className="font-display text-3xl font-bold text-parchment sm:text-4xl">
+            Tailored for every stage of your career
+          </h2>
+          <p className="mt-3 text-sm text-parchment/65 leading-relaxed">
+            Whether you are climbing the corporate ladder, launching after graduation, switching fields,
+            scaling an enterprise, or studying on campus — MLA delivers tailored tools and mentorship.
+          </p>
+        </div>
+
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Card 1: Working Professionals */}
+          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-gold/40 transition-all">
+            <div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/10 text-gold mb-5 group-hover:scale-105 transition-transform">
+                <Briefcase size={22} />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-gold">Corporate Track</span>
+              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
+                Working Professionals
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
+                Supercharge workplace productivity, master executive AI workflows, and automate daily tasks.
+                Connect with senior executive mentors to advance into leadership roles.
+              </p>
+              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <span>Executive AI &amp; workflow automation</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <span>1-on-1 industry leadership mentors</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <span>Flexible evening &amp; weekend pacing</span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light"
+              >
+                <span>Join Corporate Track</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 2: Fresh Graduates & NYSC */}
+          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-crest-red/40 transition-all">
+            <div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-crest-red/30 bg-crest-red/10 text-red-400 mb-5 group-hover:scale-105 transition-transform">
+                <GraduationCap size={22} />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-red-400">Launch Track</span>
+              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-red-400 transition-colors">
+                Fresh Graduates &amp; NYSC
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
+                Bridge the transition from school to high-paying careers. Build proof-of-work with vibe coding
+                and get mentored directly by industry hiring leaders.
+              </p>
+              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-red-400 shrink-0" />
+                  <span>Real deployed proof-of-work portfolio</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-red-400 shrink-0" />
+                  <span>CV reviews &amp; mock technical interviews</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-red-400 shrink-0" />
+                  <span>Direct alumni &amp; recruiter networking</span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-400 group-hover:text-red-300"
+              >
+                <span>Join Graduate Track</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 3: Job Seekers & Career Switchers */}
+          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-emerald-500/40 transition-all">
+            <div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 mb-5 group-hover:scale-105 transition-transform">
+                <Rocket size={22} />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400">Transition Track</span>
+              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-emerald-400 transition-colors">
+                Job Seekers &amp; Switchers
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
+                Transition smoothly into high-demand AI and tech roles without a computer science degree.
+                Master modern tools that companies are actively hiring for.
+              </p>
+              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                  <span>High-income practical skill acquisition</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                  <span>1-on-1 career transition coaching</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                  <span>Remote job and freelance positioning</span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 group-hover:text-emerald-300"
+              >
+                <span>Join Career Switch Track</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 4: Self-Employed & Entrepreneurs */}
+          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-gold/40 transition-all">
+            <div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/10 text-gold mb-5 group-hover:scale-105 transition-transform">
+                <Zap size={22} />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-gold">Enterprise Track</span>
+              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
+                Entrepreneurs &amp; Founders
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
+                Build software MVPs, automate client deliverables, and deploy custom AI agents for your business
+                without hiring an expensive technical team.
+              </p>
+              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <span>Autonomous AI agents for business</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <span>Digital product monetization &amp; Paystack</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <span>Scale revenue with minimum overhead</span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light"
+              >
+                <span>Join Founder Track</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 5: Campus Scholars & Students */}
+          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-blue-500/40 transition-all">
+            <div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-400 mb-5 group-hover:scale-105 transition-transform">
+                <Building size={22} />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">Campus Track</span>
+              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-blue-400 transition-colors">
+                Campus Scholars (Students)
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
+                Excel in your academic coursework, build inter-university peer networks across 20+ institutions,
+                and graduate with a battle-tested technical edge.
+              </p>
+              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
+                  <span>Inter-university student leader networks</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
+                  <span>Faculty &amp; senior fellow guidance</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
+                  <span>Campus hackathons and masterclasses</span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 group-hover:text-blue-300"
+              >
+                <span>Join Campus Track</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 6: Lifelong Learners & Independent Scholars */}
+          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-purple-500/40 transition-all">
+            <div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-purple-500/30 bg-purple-500/10 text-purple-400 mb-5 group-hover:scale-105 transition-transform">
+                <Compass size={22} />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-purple-400">Open Track</span>
+              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-purple-400 transition-colors">
+                Independent Scholars
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
+                Self-directed innovators, researchers, and creators. Enjoy unrestricted access to all courses,
+                expert directories, and collaborative community groups.
+              </p>
+              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <span>No academic prerequisites required</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <span>Direct access to mentor directory</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <span>Protected digital tools &amp; resources</span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-400 group-hover:text-purple-300"
+              >
+                <span>Join Open Track</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. NUMBERED 4-PILLAR SOLUTIONS */}
       <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
         <div className="text-center max-w-2xl mx-auto">
           <p className="text-xs uppercase font-semibold tracking-widest text-gold">The MLA Architecture</p>
           <h2 className="mt-2 font-display text-3xl font-bold text-parchment sm:text-4xl">
-            Everything designed for leadership &amp; academic mastery
+            Everything designed for leadership &amp; practical mastery
           </h2>
           <p className="mt-3 text-sm text-parchment/65">
-            Four pillars integrated into a single unified workspace to empower you at every stage.
+            Four pillars integrated into a single unified workspace to empower you at every career stage.
           </p>
         </div>
 
@@ -194,7 +457,7 @@ export default async function Home() {
                 AI &amp; Vibe Coding
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Practical, modular courses covering prompt workflows, autonomous agent coding, and applied machine learning.
+                Practical, modular courses covering prompt workflows, autonomous agent coding, and applied business automation.
               </p>
               <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
                 <li className="flex items-center gap-2">
@@ -203,11 +466,11 @@ export default async function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Interactive module milestones</span>
+                  <span>Real-world interactive projects</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>100% Free for students</span>
+                  <span>100% Free core curriculum</span>
                 </li>
               </ul>
             </div>
@@ -230,20 +493,20 @@ export default async function Home() {
                 1-on-1 Mentorship
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Cross-institution mentor matching pairing undergraduate learners with senior student fellows and faculty.
+                Cross-industry and cross-campus mentor matching pairing learners with verified corporate leads and senior fellows.
               </p>
               <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Peer &amp; faculty guidance</span>
+                  <span>Executive &amp; technical coaching</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Super Admin vetted profiles</span>
+                  <span>Vetted mentor credentials</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Direct request &amp; approval</span>
+                  <span>Direct request &amp; milestone approval</span>
                 </li>
               </ul>
             </div>
@@ -266,20 +529,20 @@ export default async function Home() {
                 Masterclass Events
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Virtual webinars and campus-scoped technical workshops with instant RSVP and recording archives.
+                Virtual webinars, technical deep dives, and corporate leadership workshops with live RSVP and recording archives.
               </p>
               <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Platform-wide webinars</span>
+                  <span>Nationwide webinar broadcasts</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Campus-scoped meetups</span>
+                  <span>Industry technical masterclasses</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Official session recaps</span>
+                  <span>Archived session recordings</span>
                 </li>
               </ul>
             </div>
@@ -302,7 +565,7 @@ export default async function Home() {
                 Protected Shop
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Curated digital textbooks, software, and tools secured by Paystack, HMAC keys, and personalized watermarking.
+                Curated digital textbooks, software starter kits, and professional tools secured with Paystack and HMAC licensing.
               </p>
               <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
                 <li className="flex items-center gap-2">
@@ -315,7 +578,7 @@ export default async function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Paystack checkout in NGN</span>
+                  <span>Instant Paystack checkout in NGN</span>
                 </li>
               </ul>
             </div>
@@ -327,61 +590,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 4. "HOW IT WORKS" 3-STEP ROADMAP (Inspired by Leadify Pro) */}
-      <section className="relative border-y border-white/[0.08] bg-[#0E0B08]/80 py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="text-center max-w-xl mx-auto">
-            <p className="text-xs uppercase font-semibold tracking-widest text-gold">The Journey</p>
-            <h2 className="mt-2 font-display text-3xl font-bold text-parchment">How MLA Works for You</h2>
-            <p className="mt-3 text-xs sm:text-sm text-parchment/65">
-              Three simple steps to transform from a learner into an empowered campus leader.
-            </p>
-          </div>
-
-          <div className="mt-14 grid gap-8 md:grid-cols-3">
-            {/* Step 1 */}
-            <div className="relative rounded-xl border border-white/[0.08] bg-black/40 p-6 backdrop-blur-md">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/15 text-gold font-bold font-display text-lg border border-gold/30">
-                1
-              </span>
-              <h3 className="mt-5 font-display text-lg font-bold text-parchment">
-                Join Under Your Campus
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Register with your university or polytechnic. Row-level security automatically connects you to your institution&apos;s verified peer network.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="relative rounded-xl border border-white/[0.08] bg-black/40 p-6 backdrop-blur-md">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-crest-red/20 text-red-400 font-bold font-display text-lg border border-crest-red/30">
-                2
-              </span>
-              <h3 className="mt-5 font-display text-lg font-bold text-parchment">
-                Master AI &amp; Vibe Coding
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Complete structured, interactive modules at your own pace. Gain practical coding skills and understand prompt architecture.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="relative rounded-xl border border-white/[0.08] bg-black/40 p-6 backdrop-blur-md">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/15 text-gold font-bold font-display text-lg border border-gold/30">
-                3
-              </span>
-              <h3 className="mt-5 font-display text-lg font-bold text-parchment">
-                Connect, Mentor &amp; Lead
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Pair 1-on-1 with fellows across Nigeria. Attend exclusive masterclasses, share your skills, and earn leadership recognition.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. MENTOR & FELLOW SPOTLIGHT (Showcasing Real Photography) */}
+      {/* 5. SPOTLIGHT FELLOW & MENTOR */}
       <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1A1410] to-[#0D0A08] p-8 md:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.7)]">
           <div className="grid items-center gap-10 lg:grid-cols-2">
@@ -389,17 +598,17 @@ export default async function Home() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/mentor-spotlight.jpg"
-                alt="Featured Nigerian fellow and mentor in technology lab"
+                alt="Featured Nigerian tech executive and mentor"
                 className="aspect-square w-full object-cover brightness-[0.95]"
               />
               <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/20 bg-black/80 p-3.5 backdrop-blur-xl">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs font-bold text-parchment">Dr. Chioma Nnamdi</p>
-                    <p className="text-[10px] text-parchment/60">Senior AI Mentor · FUTA &amp; Covenant</p>
+                    <p className="text-[10px] text-parchment/60">Senior AI Mentor &amp; Tech Executive</p>
                   </div>
                   <span className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
-                    Active Fellow
+                    Active Mentor
                   </span>
                 </div>
               </div>
@@ -408,28 +617,26 @@ export default async function Home() {
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">
                 <Sparkles size={13} />
-                <span>Featured Fellow Spotlight</span>
+                <span>Mentor Spotlight</span>
               </div>
-
               <h2 className="font-display text-3xl font-bold text-parchment sm:text-4xl">
-                &ldquo;Mentorship transforms theoretical skills into campus leadership.&rdquo;
+                “Mentorship transforms practical AI skills into industry leadership.”
               </h2>
-
               <p className="text-sm leading-relaxed text-parchment/75">
-                &ldquo;At MLA, we bridge the divide between universities. A student in Zaria can learn
-                vibe coding alongside a mentor in Ibadan. That cross-pollination of ideas is what will
-                power Nigeria&apos;s digital future.&rdquo;
+                “At MLA, we bridge the divide between corporate offices, independent startups, and university campuses.
+                A banker in Lagos can learn vibe coding alongside an engineer in Abuja. That cross-pollination of ideas
+                powers real career breakthroughs.”
               </p>
 
               <div className="flex flex-wrap gap-2 pt-2">
                 <span className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-parchment/80">
-                  #VibeCoding
+                  #WorkflowAutomation
                 </span>
                 <span className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-parchment/80">
                   #AutonomousAgents
                 </span>
                 <span className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-parchment/80">
-                  #AcademicEthics
+                  #CareerElevation
                 </span>
               </div>
 
@@ -444,7 +651,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 6. LATEST FROM THE BLOG */}
+      {/* 6. BLOG DISPATCHES */}
       <section className="relative border-t border-white/[0.08] bg-[#0E0B08]/60 py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -462,7 +669,7 @@ export default async function Home() {
           </div>
 
           {posts.length > 0 ? (
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
                 <BlogCard key={post.id} post={post} />
               ))}
@@ -478,20 +685,20 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 7. FREQUENTLY ASKED QUESTIONS (Leadify Pro Pattern) */}
+      {/* 7. FREQUENTLY ASKED QUESTIONS */}
       <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
         <div className="text-center max-w-xl mx-auto mb-14">
           <p className="text-xs uppercase font-semibold tracking-widest text-gold">Have Questions?</p>
           <h2 className="mt-2 font-display text-3xl font-bold text-parchment">Frequently Asked Questions</h2>
           <p className="mt-3 text-xs sm:text-sm text-parchment/65">
-            Everything you need to know about joining MLA, mentorship matching, and courses.
+            Everything you need to know about joining MLA, career tracks, and mentorship.
           </p>
         </div>
 
         <FaqAccordion />
       </section>
 
-      {/* 8. HIGH-CONVERSION BENTO CTA BANNER (Leadify Pro Pattern) */}
+      {/* 8. HIGH-CONVERSION BENTO CTA BANNER */}
       <section className="relative mx-auto max-w-6xl px-4 pb-24 sm:px-6">
         <div className="relative overflow-hidden rounded-3xl border border-gold/30 bg-gradient-to-r from-[#1E1712] via-[#2A1F18] to-[#16110D] p-8 sm:p-14 text-center shadow-[0_20px_60px_rgba(212,175,55,0.1)]">
           {/* Ambient Accent Light */}
@@ -504,12 +711,12 @@ export default async function Home() {
             </span>
 
             <h2 className="font-display text-3xl font-bold text-parchment sm:text-4xl lg:text-5xl leading-tight">
-              Ready to lead where you study?
+              Ready to lead your field with AI?
             </h2>
 
             <p className="text-sm leading-relaxed text-parchment/75 sm:text-base">
-              Join thousands of students and mentors from universities across Nigeria. Build your AI portfolio,
-              receive verified 1-on-1 mentorship, and accelerate your career.
+              Join working professionals, ambitious graduates, job seekers, entrepreneurs, and campus scholars
+              across Nigeria. Build your proof-of-work portfolio, receive 1-on-1 mentorship, and take the lead.
             </p>
 
             <div className="pt-4 flex flex-wrap justify-center items-center gap-4">
@@ -529,7 +736,7 @@ export default async function Home() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle2 size={13} className="text-gold" />
-                Immediate campus onboarding
+                Instant personalized onboarding
               </span>
             </div>
           </div>

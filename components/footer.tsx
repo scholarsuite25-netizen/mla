@@ -37,7 +37,7 @@ export async function Footer() {
       <div className="relative mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 lg:px-8">
         {/* UPPER CALLOUT: Non-Tertiary Membership & Helpline Cards */}
         <div className="mb-14 grid gap-6 lg:grid-cols-3">
-          {/* Card 1: Inclusive Membership Notice (Non-Tertiary welcome) */}
+          {/* Card 1: Inclusive Multitrack Pathway Notice */}
           <div className="lg:col-span-2 relative overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-[#1C140E] to-[#120D09] p-6 shadow-xl">
             <div className="absolute top-0 right-0 -mr-12 -mt-12 h-36 w-36 rounded-full bg-gold/10 blur-2xl" />
             <div className="flex flex-col sm:flex-row sm:items-center gap-5">
@@ -47,15 +47,15 @@ export async function Footer() {
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Inclusive Open Membership
+                  Inclusive Multitrack Academy
                 </div>
                 <h4 className="mt-2 font-display text-lg font-bold text-parchment">
-                  Not in a tertiary institution? You are fully welcome.
+                  Tailored for professionals, graduates, founders &amp; scholars
                 </h4>
                 <p className="mt-1 text-xs leading-relaxed text-parchment/70">
-                  MLA membership is not restricted to university students. Independent scholars,
-                  freelancers, self-taught developers, and career changers can register as
-                  accredited MLA Independent Members with full access to mentorship, vibe coding, and our resource vault.
+                  Whether you are in the corporate working class, a fresh graduate or NYSC fellow, a job seeker
+                  switching to tech, a self-employed founder, or a campus student — MLA provides dedicated
+                  learning tracks, 1-on-1 mentorship, and vibe coding capabilities.
                 </p>
               </div>
               <div className="shrink-0 pt-2 sm:pt-0">
@@ -63,7 +63,7 @@ export async function Footer() {
                   href="/register"
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-gold px-4 py-2.5 text-xs font-bold text-ink shadow-[0_4px_15px_rgba(212,175,55,0.3)] transition-all hover:bg-gold-light hover:scale-105"
                 >
-                  <span>Join as Independent Scholar</span>
+                  <span>Explore Your Track</span>
                   <ArrowRight size={14} />
                 </Link>
               </div>
@@ -133,9 +133,9 @@ export async function Footer() {
             </Link>
 
             <p className="max-w-sm text-xs leading-relaxed text-parchment/65">
-              Empowering students, researchers, and self-directed innovators across Nigeria with
-              pioneering AI literacy, vibe coding capabilities, verified cross-campus mentorship, and
-              protected educational digital toolkits.
+              Empowering working professionals, fresh graduates, job seekers, entrepreneurs, and
+              campus scholars across Nigeria with applied AI literacy, vibe coding capabilities, verified
+              industry mentorship, and protected digital toolkits.
             </p>
 
             <div className="flex flex-wrap gap-2 pt-2">
@@ -145,7 +145,7 @@ export async function Footer() {
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-parchment/80">
                 <GraduationCap size={12} className="text-crest-red" />
-                <span>Open for Tertiary &amp; Non-Tertiary</span>
+                <span>Corporate, Graduate &amp; Campus Tracks</span>
               </span>
             </div>
           </div>
