@@ -19,20 +19,27 @@ export default async function AdminLicensesPage({
     .order("created_at", { ascending: false });
 
   if (product) query = query.eq("product_id", product);
-  const { data: licenses } = await query;
+
+  const [{ data: licenses }, { data: products }, { data: members }] =
+    await Promise.all([
+      query,
+      admin.from("digital_products").select("id, title").order("title"),
+      admin.from("profiles").select("id, full_name").order("full_name"),
+    ]);
 
   return (
     <div>
       <h2 className="font-display text-2xl text-parchment">Product Licences</h2>
       <p className="mt-1 text-xs text-parchment/50">
-        All licences issued from paid orders. Reset a buyer&apos;s device
-        activations or revoke a licence from here.
+        All cryptographic licences issued from paid orders or manual administrative assignment. Reset device activations, revoke keys, or issue manual licences.
       </p>
       <div className="mt-6">
         <LicensesList
           licenses={
             (licenses as unknown as Parameters<typeof LicensesList>[0]["licenses"]) ?? []
           }
+          products={products || []}
+          members={members || []}
         />
       </div>
     </div>

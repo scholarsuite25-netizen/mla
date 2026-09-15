@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { deletePostAction, publishPostAction } from "@/app/admin/blog/actions";
+import { deletePostAction, publishPostAction, unpublishPostAction } from "@/app/admin/blog/actions";
 
 export function PublishButton({ postId }: { postId: string }) {
   const [pending, startTransition] = useTransition();
@@ -20,6 +20,26 @@ export function PublishButton({ postId }: { postId: string }) {
       className="rounded-sm bg-crest-red px-3 py-1.5 text-xs font-medium text-white hover:bg-crest-red/90 disabled:opacity-50"
     >
       {pending ? "…" : "Publish"}
+    </button>
+  );
+}
+
+export function UnpublishButton({ postId }: { postId: string }) {
+  const [pending, startTransition] = useTransition();
+  const router = useRouter();
+
+  return (
+    <button
+      disabled={pending}
+      onClick={() =>
+        startTransition(async () => {
+          await unpublishPostAction(postId);
+          router.refresh();
+        })
+      }
+      className="rounded-sm border border-gold/30 px-3 py-1.5 text-xs font-medium text-gold hover:bg-gold/10 disabled:opacity-50"
+    >
+      {pending ? "…" : "Unpublish"}
     </button>
   );
 }

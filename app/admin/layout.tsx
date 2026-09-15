@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { AdminNav } from "@/components/admin/admin-nav";
 
 export const dynamic = "force-dynamic";
 
-// Every /admin page is locked to the Super Admin (server-side check).
 export default async function AdminLayout({
   children,
 }: {
@@ -24,12 +24,11 @@ export default async function AdminLayout({
   if (profile?.role !== "super_admin") redirect("/dashboard");
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
-      <div className="flex items-center gap-3 border-b border-parchment/10 pb-4">
-        <span className="inline-block h-2.5 w-2.5 rotate-45 bg-gold" aria-hidden />
-        <h1 className="font-display text-2xl text-parchment">Admin</h1>
-      </div>
-      <div className="mt-8">{children}</div>
+    <div className="min-h-screen bg-[#0A0806] flex flex-col lg:flex-row">
+      <AdminNav />
+      <main className="flex-1 overflow-x-hidden p-4 sm:p-8 lg:p-10 max-w-7xl">
+        {children}
+      </main>
     </div>
   );
 }

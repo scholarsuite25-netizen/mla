@@ -116,6 +116,35 @@ export async function publishCourseAction(courseId: string): Promise<ActionResul
   return {};
 }
 
+export async function unpublishCourseAction(courseId: string): Promise<ActionResult> {
+  let actor;
+  try {
+    actor = await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("courses")
+    .update({ status: "draft" })
+    .eq("id", courseId);
+  if (error) return { error: error.message };
+
+  await admin.from("audit_log").insert({
+    actor_id: actor.id,
+    action: "course.unpublish",
+    target_table: "courses",
+    target_id: courseId,
+  });
+
+  revalidatePath("/courses");
+  revalidatePath("/admin/courses");
+  revalidatePath("/");
+  revalidatePath("/dashboard/learning");
+  return {};
+}
+
 export async function deleteCourseAction(courseId: string): Promise<ActionResult> {
   try {
     await assertSuperAdmin();

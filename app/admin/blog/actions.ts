@@ -154,6 +154,33 @@ export async function publishPostAction(postId: string): Promise<ActionResult> {
   return {};
 }
 
+export async function unpublishPostAction(postId: string): Promise<ActionResult> {
+  let actor;
+  try {
+    actor = await assertSuperAdmin();
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unauthorized." };
+  }
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("blog_posts")
+    .update({ status: "draft" })
+    .eq("id", postId);
+  if (error) return { error: error.message };
+
+  await admin.from("audit_log").insert({
+    actor_id: actor.id,
+    action: "blog.unpublish",
+    target_table: "blog_posts",
+    target_id: postId,
+  });
+
+  revalidatePath("/blog");
+  revalidatePath("/admin/blog");
+  return {};
+}
+
 export async function deletePostAction(postId: string): Promise<ActionResult> {
   try {
     await assertSuperAdmin();
