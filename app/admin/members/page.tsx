@@ -105,12 +105,11 @@ export default async function AdminMembersPage() {
                     <td className="px-4 py-3.5 text-right">
                       <div className="inline-flex items-center gap-2">
                         {/* Role Selector Form */}
-                        <form action={updateMemberRole} className="inline-flex items-center">
+                        <form action={updateMemberRole} className="inline-flex items-center gap-1.5">
                           <input type="hidden" name="profileId" value={m.id} />
                           <select
                             name="role"
                             defaultValue={m.role}
-                            onChange={(e) => e.target.form?.requestSubmit()}
                             className="rounded-md border border-white/10 bg-[#0E0A08] px-2 py-1 text-[11px] text-parchment focus:border-gold focus:outline-none"
                           >
                             <option value="member">member</option>
@@ -118,6 +117,12 @@ export default async function AdminMembersPage() {
                             <option value="institution_admin">institution_admin</option>
                             <option value="super_admin">super_admin</option>
                           </select>
+                          <button
+                            type="submit"
+                            className="rounded-md border border-gold/30 px-2 py-1 text-[10px] font-semibold text-gold hover:bg-gold/10"
+                          >
+                            Save
+                          </button>
                         </form>
 
                         {/* Suspend / Activate Form */}
