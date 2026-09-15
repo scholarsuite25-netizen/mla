@@ -21,12 +21,27 @@ export async function signInAction(formData: FormData): Promise<ActionResult> {
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
-  if (error) return { error: "Invalid email or password." };
+  const { data: authData, error } = await supabase.auth.signInWithPassword(parsed.data);
+  if (error) return { error: "Invalid email or password. Please check your credentials." };
 
   const nextRaw = formData.get("next");
-  const next = typeof nextRaw === "string" && nextRaw.startsWith("/") && !nextRaw.startsWith("//") ? nextRaw : "/dashboard";
-  redirect(next);
+  if (typeof nextRaw === "string" && nextRaw.startsWith("/") && !nextRaw.startsWith("//")) {
+    redirect(nextRaw);
+  }
+
+  if (authData?.user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", authData.user.id)
+      .single();
+
+    if (profile?.role === "super_admin") {
+      redirect("/admin");
+    }
+  }
+
+  redirect("/dashboard");
 }
 
 export async function signOutAction() {
