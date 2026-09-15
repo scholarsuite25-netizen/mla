@@ -52,15 +52,14 @@ export default async function Home() {
             </div>
 
             {/* Universal Headline */}
-            <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-parchment sm:text-5xl lg:text-6xl lg:leading-[1.12]">
-              Accelerate your career, business &amp; craft —{" "}
-              <span className="text-gradient-gold">with applied AI and mentorship.</span>
+            <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-parchment sm:text-5xl lg:text-6xl leading-[1.12]">
+              Accelerate your career, business &amp; craft — with applied AI and mentorship.
             </h1>
 
-            <p className="mt-6 text-base leading-relaxed text-parchment/75 sm:text-lg">
-              Purpose-built for working professionals, fresh graduates, job seekers, entrepreneurs,
-              and campus scholars. Master autonomous vibe coding, modern AI literacy, and 1-on-1 industry
-              mentorship across Nigeria.
+            <p className="mt-5 text-base leading-relaxed text-parchment/75 sm:text-lg">
+              Nigeria&apos;s premier multitrack leadership academy. Tailored for working professionals, ambitious
+              graduates, entrepreneurs, career switchers, pre- &amp; post-retirees, and campus scholars.
+              Master career planning, business setup and management, applied AI, and purposeful second-act occupations.
             </p>
 
             {/* Social Proof Stars */}
@@ -197,20 +196,20 @@ export default async function Home() {
               </div>
               <span className="text-[11px] font-bold uppercase tracking-wider text-gold">Corporate Track</span>
               <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
-                Working Professionals
+                Career Planning &amp; Professionals
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Supercharge workplace productivity, master executive AI workflows, and automate daily tasks.
-                Connect with senior executive mentors to advance into leadership roles.
+                Strategic career planning, executive presence, high-stakes negotiation, and AI workflow automation
+                to accelerate your trajectory into C-suite and senior management.
               </p>
               <ul className="mt-4 space-y-2 text-xs text-parchment/75">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold shrink-0" />
-                  <span>Executive AI &amp; workflow automation</span>
+                  <span>Executive career planning &amp; promotion roadmaps</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold shrink-0" />
-                  <span>1-on-1 industry leadership mentors</span>
+                  <span>1-on-1 industry C-suite &amp; director mentors</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold shrink-0" />
@@ -240,8 +239,8 @@ export default async function Home() {
                 Fresh Graduates &amp; NYSC
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Bridge the transition from school to high-paying careers. Build proof-of-work with vibe coding
-                and get mentored directly by industry hiring leaders.
+                Early-career planning and corporate readiness. Build proof-of-work with vibe coding,
+                master ATS-optimized CVs, and receive direct mock interview coaching.
               </p>
               <ul className="mt-4 space-y-2 text-xs text-parchment/75">
                 <li className="flex items-center gap-2">
@@ -250,7 +249,7 @@ export default async function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-red-400 shrink-0" />
-                  <span>CV reviews &amp; mock technical interviews</span>
+                  <span>CV reviews &amp; mock interview drills</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-red-400 shrink-0" />
@@ -269,32 +268,32 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Card 3: Job Seekers & Career Switchers */}
+          {/* Card 3: Entrepreneurs & Founders */}
           <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-emerald-500/40 transition-all">
             <div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 mb-5 group-hover:scale-105 transition-transform">
-                <Rocket size={22} />
+                <Zap size={22} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400">Transition Track</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400">Enterprise Track</span>
               <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-emerald-400 transition-colors">
-                Job Seekers &amp; Switchers
+                Entrepreneurship &amp; Business Setup
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Transition smoothly into high-demand AI and tech roles without a computer science degree.
-                Master modern tools that companies are actively hiring for.
+                Comprehensive business formalization: CAC registration, unit economics, Paystack checkout integration,
+                operating procedures (SOPs), and autonomous AI agent operations.
               </p>
               <ul className="mt-4 space-y-2 text-xs text-parchment/75">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
-                  <span>High-income practical skill acquisition</span>
+                  <span>CAC setup, governance &amp; legal structure</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
-                  <span>1-on-1 career transition coaching</span>
+                  <span>Unit economics, pricing &amp; Paystack setup</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
-                  <span>Remote job and freelance positioning</span>
+                  <span>Autonomous AI agents &amp; team management</span>
                 </li>
               </ul>
             </div>
@@ -303,38 +302,78 @@ export default async function Home() {
                 href="/register"
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 group-hover:text-emerald-300"
               >
-                <span>Join Career Switch Track</span>
+                <span>Join Founder Track</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
           </div>
 
-          {/* Card 4: Self-Employed & Entrepreneurs */}
+          {/* Card 4: Retirement Planning & Post-Retirement Occupation */}
+          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-purple-500/40 transition-all">
+            <div>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-purple-500/30 bg-purple-500/10 text-purple-400 mb-5 group-hover:scale-105 transition-transform">
+                <Award size={22} />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-purple-400">Second-Act Track</span>
+              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-purple-400 transition-colors">
+                Retirement Planning &amp; Legacy
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
+                Structured transition for senior leaders: pension optimization, wealth preservation, board advisory directorships,
+                high-ticket consulting, and second-act venture building.
+              </p>
+              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <span>Pension strategy &amp; wealth preservation</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <span>High-ticket consulting &amp; advisory practice</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <span>Board directorship &amp; angel syndicates</span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-400 group-hover:text-purple-300"
+              >
+                <span>Join Second-Act Track</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 5: Job Seekers & Career Switchers */}
           <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-gold/40 transition-all">
             <div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/10 text-gold mb-5 group-hover:scale-105 transition-transform">
-                <Zap size={22} />
+                <Rocket size={22} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-gold">Enterprise Track</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-gold">Transition Track</span>
               <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
-                Entrepreneurs &amp; Founders
+                Job Seekers &amp; Switchers
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Build software MVPs, automate client deliverables, and deploy custom AI agents for your business
-                without hiring an expensive technical team.
+                Transition smoothly into high-demand AI and tech roles without a computer science degree.
+                Master modern tools that companies are actively hiring for.
               </p>
               <ul className="mt-4 space-y-2 text-xs text-parchment/75">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold shrink-0" />
-                  <span>Autonomous AI agents for business</span>
+                  <span>High-income practical skill acquisition</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold shrink-0" />
-                  <span>Digital product monetization &amp; Paystack</span>
+                  <span>1-on-1 career transition coaching</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold shrink-0" />
-                  <span>Scale revenue with minimum overhead</span>
+                  <span>Remote job and freelance positioning</span>
                 </li>
               </ul>
             </div>
@@ -343,13 +382,13 @@ export default async function Home() {
                 href="/register"
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light"
               >
-                <span>Join Founder Track</span>
+                <span>Join Career Switch Track</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
           </div>
 
-          {/* Card 5: Campus Scholars & Students */}
+          {/* Card 6: Campus Scholars & Students */}
           <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-blue-500/40 transition-all">
             <div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-400 mb-5 group-hover:scale-105 transition-transform">
@@ -388,46 +427,6 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-
-          {/* Card 6: Lifelong Learners & Independent Scholars */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-purple-500/40 transition-all">
-            <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-purple-500/30 bg-purple-500/10 text-purple-400 mb-5 group-hover:scale-105 transition-transform">
-                <Compass size={22} />
-              </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-purple-400">Open Track</span>
-              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-purple-400 transition-colors">
-                Independent Scholars
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Self-directed innovators, researchers, and creators. Enjoy unrestricted access to all courses,
-                expert directories, and collaborative community groups.
-              </p>
-              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
-                  <span>No academic prerequisites required</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
-                  <span>Direct access to mentor directory</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
-                  <span>Protected digital tools &amp; resources</span>
-                </li>
-              </ul>
-            </div>
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <Link
-                href="/register"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-400 group-hover:text-purple-300"
-              >
-                <span>Join Open Track</span>
-                <ArrowRight size={13} />
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -454,23 +453,23 @@ export default async function Home() {
                 <BookOpen size={22} />
               </div>
               <h3 className="mt-5 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
-                AI &amp; Vibe Coding
+                Curriculum &amp; Capstones
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Practical, modular courses covering prompt workflows, autonomous agent coding, and applied business automation.
+                Structured modules in Career Planning, Business Setup &amp; Management, Retirement Strategy, and Applied AI Vibe Coding.
               </p>
               <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Self-paced progress tracking</span>
+                  <span>Executive &amp; founder roadmaps</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Real-world interactive projects</span>
+                  <span>Real-world practical projects</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>100% Free core curriculum</span>
+                  <span>100% Free core syllabus</span>
                 </li>
               </ul>
             </div>

@@ -11,13 +11,15 @@ import {
   Zap,
   Building,
   User,
+  Award,
 } from "lucide-react";
 
 type Pathway =
   | "working_professional"
   | "fresh_graduate"
-  | "job_seeker"
   | "self_employed"
+  | "job_seeker"
+  | "retiree_executive"
   | "campus_student"
   | "independent_scholar";
 
@@ -62,6 +64,14 @@ const pathways: PathwayOption[] = [
     defaultAffiliation: "Career Switcher / Job Seeker",
     placeholder: "e.g. Career Transition to AI, Tech, Product, or Remote Work",
     helperText: "Acquire high-income digital capabilities and 1-on-1 career coaching.",
+  },
+  {
+    id: "retiree_executive",
+    label: "Retirement & Second-Act",
+    icon: Award,
+    defaultAffiliation: "Retiree / Executive Advisory",
+    placeholder: "e.g. Retired Director, Board Advisor, Senior Consultant, Second-Act Founder",
+    helperText: "Post-retirement occupation, board advisory, wealth preservation, and mentorship.",
   },
   {
     id: "campus_student",

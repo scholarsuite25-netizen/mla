@@ -25,9 +25,19 @@ const faqs: FaqItem[] = [
       "MLA focuses on proof-of-work rather than just theory. Through our vibe coding and AI workflows, you will build and deploy real applications, automated tools, and digital solutions that serve as an unassailable portfolio. You also connect 1-on-1 with industry mentors who review CVs and provide interview guidance.",
   },
   {
-    question: "I am self-employed or run a business. How will this help me?",
+    question: "I am self-employed or run a business. How will this help me with setup and management?",
     answer:
-      "Entrepreneurs and freelancers use MLA's vibe coding and agentic AI courses to automate customer support, build custom internal tools, launch software products without hiring expensive engineering teams, and scale their businesses with minimal overhead.",
+      "Our Entrepreneurship, Business Setup & Management track covers everything from Corporate Affairs Commission (CAC) formalization, legal structures, and unit economics to Paystack payment integration and digital marketing. Founders also learn how to leverage autonomous AI agents to automate operations and manage teams effectively without massive overhead.",
+  },
+  {
+    question: "Do you offer Retirement Planning and Post-Retirement Occupation support?",
+    answer:
+      "Yes. Our 'Executive Legacy & Second-Act' track is specially designed for pre-retirees and retired professionals. It covers pension optimization, wealth preservation, and structuring post-retirement occupations — including high-ticket consulting, board advisory roles, angel syndicates, and legacy enterprise creation.",
+  },
+  {
+    question: "How is Career Planning and Professional Development integrated?",
+    answer:
+      "Career planning is woven into every track. Whether you are navigating your first graduate job or gunning for executive C-suite promotion, we provide structured progression roadmaps, high-stakes negotiation frameworks, CV/portfolio reviews, and 1-on-1 coaching with industry executives.",
   },
   {
     question: "How does cross-sector and cross-institution mentorship work?",
