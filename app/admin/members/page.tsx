@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { revalidatePath } from "next/cache";
+import { updateMemberRole, toggleMemberStatus } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -10,31 +10,6 @@ interface ProfileItem {
   is_active: boolean;
   created_at: string;
   institutions?: { name: string } | { name: string }[] | null;
-}
-
-export async function updateMemberRole(formData: FormData) {
-  "use server";
-  const profileId = formData.get("profileId") as string;
-  const newRole = formData.get("role") as string;
-  if (!profileId || !newRole) return;
-
-  const admin = createAdminClient();
-  await admin.from("profiles").update({ role: newRole }).eq("id", profileId);
-  revalidatePath("/admin/members");
-}
-
-export async function toggleMemberStatus(formData: FormData) {
-  "use server";
-  const profileId = formData.get("profileId") as string;
-  const currentActive = formData.get("isActive") === "true";
-  if (!profileId) return;
-
-  const admin = createAdminClient();
-  await admin
-    .from("profiles")
-    .update({ is_active: !currentActive })
-    .eq("id", profileId);
-  revalidatePath("/admin/members");
 }
 
 export default async function AdminMembersPage() {
