@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { signUpAction } from "@/app/auth/actions";
 import { inputClass } from "@/components/login-form";
+import { Check, School, User } from "lucide-react";
 
 export function RegisterForm() {
   const [query, setQuery] = useState("");
@@ -39,18 +40,25 @@ export function RegisterForm() {
     }
   }
 
+  function selectAffiliation(name: string) {
+    setQuery(name);
+    setMatches([]);
+    setOpen(false);
+    dirty.current = false;
+  }
+
   return (
     <form onSubmit={onSubmit} className="mt-6 space-y-4">
       <label className="block">
-        <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60">
+        <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60 font-medium">
           Full name
         </span>
         <input name="full_name" required autoComplete="name" className={inputClass} />
       </label>
 
       <label className="block">
-        <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60">
-          Email
+        <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60 font-medium">
+          Email address
         </span>
         <input
           type="email"
@@ -61,10 +69,61 @@ export function RegisterForm() {
         />
       </label>
 
-      <label className="block">
-        <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60">
-          Institution
-        </span>
+      {/* Institution / Affiliation Field with Quick Chips */}
+      <div className="block">
+        <div className="mb-1 flex items-center justify-between">
+          <span className="text-xs uppercase tracking-widest text-parchment/60 font-medium">
+            Institution or Affiliation
+          </span>
+          <span className="text-[11px] text-gold font-medium">
+            Non-tertiary learners welcome
+          </span>
+        </div>
+
+        {/* Quick select chips for easy 1-click selection */}
+        <div className="mb-2.5 flex flex-wrap gap-1.5">
+          <button
+            type="button"
+            onClick={() => selectAffiliation("Independent Scholar (Non-Tertiary)")}
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium transition-all ${
+              query.includes("Independent Scholar")
+                ? "border border-gold bg-gold/20 text-gold"
+                : "border border-white/10 bg-white/5 text-parchment/70 hover:border-gold/40 hover:text-gold"
+            }`}
+          >
+            <User size={11} />
+            <span>Independent Scholar (Non-Tertiary)</span>
+            {query.includes("Independent Scholar") && <Check size={11} />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => selectAffiliation("University of Lagos (UNILAG)")}
+            className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-parchment/70 hover:border-gold/40 hover:text-gold transition-all"
+          >
+            <School size={11} />
+            <span>UNILAG</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => selectAffiliation("University of Ibadan (UI)")}
+            className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-parchment/70 hover:border-gold/40 hover:text-gold transition-all"
+          >
+            <School size={11} />
+            <span>UI</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => selectAffiliation("Ahmadu Bello University (ABU)")}
+            className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-parchment/70 hover:border-gold/40 hover:text-gold transition-all"
+          >
+            <School size={11} />
+            <span>ABU</span>
+          </button>
+        </div>
+
         <div className="relative">
           <input
             name="institution"
@@ -75,23 +134,18 @@ export function RegisterForm() {
               setQuery(e.target.value);
             }}
             onFocus={() => matches.length > 0 && setOpen(true)}
-            placeholder="Search or type a new institution"
+            placeholder="e.g. Independent Scholar, UNILAG, FUTO, or type your school"
             autoComplete="off"
             className={inputClass}
           />
           {open && matches.length > 0 && (
-            <ul className="absolute z-10 mt-1 w-full rounded-sm border border-parchment/10 bg-panel shadow-xl">
+            <ul className="absolute z-10 mt-1 max-h-48 overflow-y-auto w-full rounded-md border border-parchment/15 bg-panel shadow-2xl">
               {matches.map((m) => (
                 <li key={m}>
                   <button
                     type="button"
-                    onClick={() => {
-                      setQuery(m);
-                      setMatches([]);
-                      setOpen(false);
-                      dirty.current = false;
-                    }}
-                    className="block w-full px-3 py-2 text-left text-sm text-parchment/90 hover:bg-ink hover:text-gold"
+                    onClick={() => selectAffiliation(m)}
+                    className="block w-full px-3 py-2 text-left text-sm text-parchment/90 hover:bg-ink hover:text-gold transition-colors"
                   >
                     {m}
                   </button>
@@ -100,13 +154,13 @@ export function RegisterForm() {
             </ul>
           )}
         </div>
-        <span className="mt-1 block text-xs text-parchment/40">
-          Type a school that isn&apos;t listed — it will be created for you.
-        </span>
-      </label>
+        <p className="mt-1.5 text-xs text-parchment/50">
+          Not in university? Choose <strong className="text-gold font-normal">&quot;Independent Scholar (Non-Tertiary)&quot;</strong> or type any custom affiliation.
+        </p>
+      </div>
 
       <label className="block">
-        <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60">
+        <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60 font-medium">
           Password
         </span>
         <input
@@ -119,30 +173,35 @@ export function RegisterForm() {
         />
       </label>
 
-      <label className="flex items-center gap-2 text-sm text-parchment/70">
+      <label className="flex items-center gap-2 text-xs text-parchment/70 cursor-pointer pt-1">
         <input
           type="checkbox"
           name="email_notifications"
           value="on"
           defaultChecked
-          className="h-4 w-4 accent-gold"
+          className="h-4 w-4 accent-gold rounded"
         />
-        Email me when new posts or courses are published
+        Receive notifications when new courses, events, or workshops are published
       </label>
 
-      {error && <p className="text-sm text-crest-red">{error}</p>}
+      {error && (
+        <div className="rounded-lg border border-red-500/30 bg-red-950/40 p-3 text-xs text-red-300">
+          {error}
+        </div>
+      )}
 
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-sm bg-crest-red px-4 py-3 text-sm font-medium text-white hover:bg-crest-red/90 disabled:opacity-60"
+        className="w-full rounded-lg bg-crest-red py-3.5 text-sm font-bold text-white shadow-lg shadow-crest-red/30 transition-all hover:bg-crest-red/90 hover:shadow-crest-red/50 active:scale-[0.99] disabled:opacity-60 cursor-pointer"
       >
-        {pending ? "Creating account…" : "Create account"}
+        {pending ? "Creating member account…" : "Create MLA Account"}
       </button>
-      <p className="text-sm text-parchment/60">
+
+      <p className="text-center text-xs text-parchment/60 pt-2">
         Already registered?{" "}
-        <Link href="/login" className="text-gold hover:underline">
-          Sign in
+        <Link href="/login" className="font-semibold text-gold hover:underline">
+          Sign in to your dashboard
         </Link>
       </p>
     </form>
