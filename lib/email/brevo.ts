@@ -12,13 +12,14 @@ export async function sendBroadcastEmail({
   html: string;
 }) {
   const apiKey = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL;
-  const senderName = process.env.BREVO_SENDER_NAME ?? "MLA";
+  const senderEmail =
+    process.env.BREVO_SENDER_EMAIL ??
+    process.env.SUPER_ADMIN_SEED_EMAIL ??
+    "hello@mla.org.ng";
+  const senderName = process.env.BREVO_SENDER_NAME ?? "MLA Academy";
 
-  if (!apiKey || !senderEmail) {
-    throw new Error(
-      "BREVO_API_KEY and BREVO_SENDER_EMAIL must be set before broadcasting."
-    );
+  if (!apiKey) {
+    throw new Error("BREVO_API_KEY must be set before broadcasting.");
   }
 
   const res = await fetch(BREVO_API_URL, {
