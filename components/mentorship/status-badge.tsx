@@ -1,14 +1,14 @@
 export function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { text: string; cls: string }> = {
-    pending: { text: "Pending mentor", cls: "border-parchment/30 text-parchment/70" },
-    accepted: { text: "Accepted — pending approval", cls: "border-gold/50 text-gold" },
-    rejected: { text: "Declined", cls: "border-parchment/20 text-parchment/40" },
-    approved: { text: "Approved", cls: "border-gold text-gold" },
+    pending: { text: "Pending Review", cls: "border-parchment/30 text-parchment/70 bg-white/5" },
+    accepted: { text: "Accepted (Pending Admin Approval)", cls: "border-amber-500/40 text-amber-400 bg-amber-500/10" },
+    rejected: { text: "Declined", cls: "border-rose-500/30 text-rose-400 bg-rose-500/10" },
+    approved: { text: "Active Match (Approved)", cls: "border-emerald-500/40 text-emerald-400 bg-emerald-500/10 font-semibold" },
   };
-  const { text, cls } = map[status] ?? { text: status, cls: "" };
+  const { text, cls } = map[status] ?? { text: status, cls: "border-parchment/20 text-parchment/60" };
   return (
     <span
-      className={`inline-block rounded-full border px-3 py-0.5 text-xs ${cls}`}
+      className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${cls}`}
     >
       {text}
     </span>
