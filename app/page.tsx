@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 import { getInstitutionCount, getMentorCount, getPublishedPosts } from "@/lib/blog";
 import { BlogCard } from "@/components/blog-card";
 import { InstitutionTicker } from "@/components/institution-ticker";
@@ -23,7 +24,9 @@ import {
 } from "lucide-react";
 
 export default async function Home() {
-  const [institutions, mentors, posts] = await Promise.all([
+  const supabase = await createClient();
+  const [{ data: { user } }, institutions, mentors, posts] = await Promise.all([
+    supabase.auth.getUser(),
     getInstitutionCount(),
     getMentorCount(),
     getPublishedPosts(3),
@@ -76,8 +79,8 @@ export default async function Home() {
 
             {/* Action CTAs */}
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link href="/register" className="btn-primary">
-                <span>Start Learning Free</span>
+              <Link href={user ? "/dashboard" : "/register"} className="btn-primary">
+                <span>{user ? "Open My Dashboard" : "Start Learning Free"}</span>
                 <ArrowRight size={16} />
               </Link>
               <Link href="/mentorship/find" className="btn-secondary">
@@ -219,10 +222,10 @@ export default async function Home() {
             </div>
             <div className="mt-6 pt-4 border-t border-white/10">
               <Link
-                href="/register"
+                href={user ? "/courses#career-planning" : "/register"}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light"
               >
-                <span>Join Corporate Track</span>
+                <span>{user ? "Access Corporate Track" : "Join Corporate Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
@@ -259,10 +262,10 @@ export default async function Home() {
             </div>
             <div className="mt-6 pt-4 border-t border-white/10">
               <Link
-                href="/register"
+                href={user ? "/courses#graduate-planning" : "/register"}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-400 group-hover:text-red-300"
               >
-                <span>Join Graduate Track</span>
+                <span>{user ? "Access Graduate Track" : "Join Graduate Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
@@ -299,10 +302,10 @@ export default async function Home() {
             </div>
             <div className="mt-6 pt-4 border-t border-white/10">
               <Link
-                href="/register"
+                href={user ? "/courses#entrepreneurship-management" : "/register"}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 group-hover:text-emerald-300"
               >
-                <span>Join Founder Track</span>
+                <span>{user ? "Access Founder Track" : "Join Founder Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
@@ -339,10 +342,10 @@ export default async function Home() {
             </div>
             <div className="mt-6 pt-4 border-t border-white/10">
               <Link
-                href="/register"
+                href={user ? "/courses#retirement-planning" : "/register"}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-400 group-hover:text-purple-300"
               >
-                <span>Join Second-Act Track</span>
+                <span>{user ? "Access Second-Act Track" : "Join Second-Act Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
@@ -379,10 +382,10 @@ export default async function Home() {
             </div>
             <div className="mt-6 pt-4 border-t border-white/10">
               <Link
-                href="/register"
+                href={user ? "/courses#career-planning" : "/register"}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light"
               >
-                <span>Join Career Switch Track</span>
+                <span>{user ? "Access Transition Track" : "Join Career Switch Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
@@ -419,10 +422,10 @@ export default async function Home() {
             </div>
             <div className="mt-6 pt-4 border-t border-white/10">
               <Link
-                href="/register"
+                href={user ? "/courses#ai-vibe-coding" : "/register"}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 group-hover:text-blue-300"
               >
-                <span>Join Campus Track</span>
+                <span>{user ? "Access Student Track" : "Join Campus Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
@@ -719,8 +722,8 @@ export default async function Home() {
             </p>
 
             <div className="pt-4 flex flex-wrap justify-center items-center gap-4">
-              <Link href="/register" className="btn-primary !px-7 !py-3.5 !text-sm">
-                <span>Join MLA for Free</span>
+              <Link href={user ? "/dashboard" : "/register"} className="btn-primary !px-7 !py-3.5 !text-sm">
+                <span>{user ? "Open My Dashboard" : "Join MLA for Free"}</span>
                 <ArrowRight size={16} />
               </Link>
               <Link href="/about" className="btn-secondary !px-7 !py-3.5 !text-sm">

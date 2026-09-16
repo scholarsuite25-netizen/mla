@@ -1,5 +1,9 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import { RegisterForm } from "@/components/register-form";
 import { Sparkles, CheckCircle2 } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Register & Join — MLA Academy",
@@ -7,7 +11,16 @@ export const metadata = {
     "Join the Mentorship & Leadership Academy. Tailored pathways for working professionals, fresh graduates, job seekers, entrepreneurs, and campus scholars.",
 };
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="relative mx-auto max-w-2xl px-4 py-16 sm:px-6">
       {/* Decorative ambient background */}

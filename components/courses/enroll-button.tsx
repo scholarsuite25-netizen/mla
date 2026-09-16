@@ -14,11 +14,18 @@ export function EnrollButton({ courseId }: { courseId: string }) {
       onClick={() =>
         startTransition(async () => {
           const res = await enrollAction(courseId);
-          if (res?.error) alert(res.error);
+          if (res?.error) {
+            if (res.error.includes("sign in")) {
+              router.push(`/login?next=/courses/${courseId}`);
+              return;
+            }
+            alert(res.error);
+            return;
+          }
           router.refresh();
         })
       }
-      className="rounded-sm bg-crest-red px-6 py-2.5 text-sm font-medium text-white hover:bg-crest-red/90 disabled:opacity-60"
+      className="w-full rounded-xl bg-gradient-to-r from-crest-red to-amber-700 py-3 text-xs font-bold text-white shadow-lg hover:brightness-110 disabled:opacity-60 transition"
     >
       {pending ? "Enrolling…" : "Enroll to track progress"}
     </button>

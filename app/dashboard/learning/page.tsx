@@ -44,10 +44,10 @@ export default async function LearningPage() {
       .select("course_module_id, course_modules(course_id)")
       .eq("profile_id", user.id);
     for (const p of progress ?? []) {
-      const courseRef = p.course_modules as unknown as
-        | { course_id: string }[]
-        | null;
-      const courseId = courseRef?.[0]?.course_id ?? null;
+      const cmRaw = p.course_modules as unknown;
+      const courseId = Array.isArray(cmRaw)
+        ? (cmRaw[0] as { course_id?: string } | undefined)?.course_id
+        : (cmRaw as { course_id?: string } | null)?.course_id;
       if (courseId) doneByCourse.set(courseId, (doneByCourse.get(courseId) ?? 0) + 1);
     }
   }
