@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { assertSuperAdmin } from "@/lib/auth-guard";
+import { logAuditEvent } from "@/lib/audit";
 
 export type ActionResult = { error?: string };
 
@@ -20,8 +21,9 @@ export async function saveProductAction(
   productId: string | null,
   formData: FormData
 ): Promise<ActionResult> {
+  let actor;
   try {
-    await assertSuperAdmin();
+    actor = await assertSuperAdmin();
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unauthorized." };
   }
@@ -37,32 +39,40 @@ export async function saveProductAction(
 
   const admin = createAdminClient();
 
-  if (productId) {
-    const { data, error } = await admin
-      .from("digital_products")
-      .update({
-        title: parsed.data.title,
-        type: parsed.data.type,
-        description: parsed.data.description,
-        price: parsed.data.price,
-        cover_image_url: parsed.data.cover_image_url || null,
-      })
-      .eq("id", productId)
-      .select("id")
-      .single();
-    if (error) return { error: error.message };
-    revalidatePath("/admin/products");
-    revalidatePath(`/admin/products/${data!.id}`);
-    revalidatePath("/shop");
-    redirect(`/admin/products/${data!.id}`);
-  }
-
-  const row = {
+  const productData = {
     title: parsed.data.title,
     type: parsed.data.type,
     description: parsed.data.description,
     price: parsed.data.price,
     cover_image_url: parsed.data.cover_image_url || null,
+  };
+
+  if (productId) {
+    const { error } = await admin
+      .from("digital_products")
+      .update(productData)
+      .eq("id", productId);
+    if (error) return { error: error.message };
+
+    await logAuditEvent({
+      action: "product.updated",
+      targetTable: "digital_products",
+      targetId: productId,
+      actorId: actor.id,
+      actorEmail: actor.email,
+      category: "shop",
+      severity: "info",
+      details: { title: productData.title, type: productData.type, price: productData.price },
+    });
+
+    revalidatePath("/admin/products");
+    revalidatePath(`/admin/products/${productId}`);
+    revalidatePath("/shop");
+    redirect(`/admin/products/${productId}`);
+  }
+
+  const row = {
+    ...productData,
     status: "draft" as const,
   };
 
@@ -72,13 +82,26 @@ export async function saveProductAction(
     .select("id")
     .single();
   if (error) return { error: error.message };
+
+  await logAuditEvent({
+    action: "product.created",
+    targetTable: "digital_products",
+    targetId: data!.id,
+    actorId: actor.id,
+    actorEmail: actor.email,
+    category: "shop",
+    severity: "info",
+    details: { title: row.title, type: row.type, price: row.price },
+  });
+
   revalidatePath("/admin/products");
   redirect(`/admin/products/${data!.id}`);
 }
 
 export async function publishProductAction(productId: string): Promise<ActionResult> {
+  let actor;
   try {
-    await assertSuperAdmin();
+    actor = await assertSuperAdmin();
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unauthorized." };
   }
@@ -95,9 +118,22 @@ export async function publishProductAction(productId: string): Promise<ActionRes
     return { error: "Upload the product file before publishing." };
   }
 
+  const newStatus = product.status === "published" ? "draft" : "published";
+
   await admin.from("digital_products").update({
-    status: product.status === "published" ? "draft" : "published",
+    status: newStatus,
   }).eq("id", productId);
+
+  await logAuditEvent({
+    action: newStatus === "published" ? "product.published" : "product.unpublished",
+    targetTable: "digital_products",
+    targetId: productId,
+    actorId: actor.id,
+    actorEmail: actor.email,
+    category: "shop",
+    severity: "notice",
+    details: { title: product.title, status: newStatus },
+  });
 
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${productId}`);
@@ -106,8 +142,9 @@ export async function publishProductAction(productId: string): Promise<ActionRes
 }
 
 export async function deleteProductAction(productId: string): Promise<ActionResult> {
+  let actor;
   try {
-    await assertSuperAdmin();
+    actor = await assertSuperAdmin();
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unauthorized." };
   }
@@ -115,6 +152,18 @@ export async function deleteProductAction(productId: string): Promise<ActionResu
   const admin = createAdminClient();
   const { error } = await admin.from("digital_products").delete().eq("id", productId);
   if (error) return { error: error.message };
+
+  await logAuditEvent({
+    action: "product.deleted",
+    targetTable: "digital_products",
+    targetId: productId,
+    actorId: actor.id,
+    actorEmail: actor.email,
+    category: "shop",
+    severity: "warning",
+    details: { productId },
+  });
+
   revalidatePath("/admin/products");
   revalidatePath("/shop");
   redirect("/admin/products");
