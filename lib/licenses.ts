@@ -13,9 +13,9 @@ export type LicenseRow = {
 };
 
 /**
- * Signed license key: MLA-XXXX-XXXX-SSSSSSSS where the last 32 hex chars
- * are HMAC-SHA256(secret, RAND8) so the key can be validated offline and
- * is unguessable (spec §9: not sequential/guessable IDs).
+ * Signed license key: MLA-XXXX-XXXX-SSSSSSSS-SSSSSSSS where the signature
+ * is HMAC-SHA256(secret, productId:buyerId:randHex) so the key can be validated
+ * cryptographically and is unguessable.
  */
 export function generateLicenseKey(productId: string, buyerId: string): string {
   const randomHex = randomBytes(4).toString("hex").toUpperCase();
@@ -27,7 +27,28 @@ export function generateLicenseKey(productId: string, buyerId: string): string {
 }
 
 export function isValidLicenseFormat(key: string): boolean {
-  return /^MLA-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{8}-[A-F0-9]{8}$/.test(key);
+  return /^MLA-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{8}-[A-F0-9]{8}$/.test(key.trim());
+}
+
+/**
+ * Cryptographically verifies that a license key was issued by MLA for a specific product and buyer.
+ */
+export function verifyLicenseKey(
+  key: string,
+  productId: string,
+  buyerId: string
+): boolean {
+  if (!isValidLicenseFormat(key)) return false;
+  const parts = key.trim().split("-");
+  if (parts.length !== 5) return false;
+  const randHex = parts[1] + parts[2];
+  const providedMac = parts[3] + parts[4];
+  const expectedMac = createHmac("sha256", process.env.LICENSE_KEY_SECRET ?? "mla-dev-key")
+    .update(`${productId}:${buyerId}:${randHex}`)
+    .digest("hex")
+    .toUpperCase()
+    .slice(0, 16);
+  return providedMac === expectedMac;
 }
 
 /** Look up the buyer's license and materialise its order reference. */
