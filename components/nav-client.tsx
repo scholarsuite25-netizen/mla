@@ -39,6 +39,7 @@ export type NavLink = {
 const iconMap: Record<string, React.ReactNode> = {
   "Our Mission": <BookOpen size={16} className="text-gold" />,
   "Institutions": <Building2 size={16} className="text-gold" />,
+  "Institutions & Hubs": <Building2 size={16} className="text-gold" />,
   "Course Catalog": <GraduationCap size={16} className="text-gold" />,
   "My Learning": <Compass size={16} className="text-gold" />,
   "Find a Mentor": <Users size={16} className="text-gold" />,
@@ -46,7 +47,10 @@ const iconMap: Record<string, React.ReactNode> = {
   "My Requests": <FileText size={16} className="text-gold" />,
   "Blog": <Sparkles size={16} className="text-gold" />,
   "Events": <Calendar size={16} className="text-gold" />,
+  "Events & Summits": <Calendar size={16} className="text-gold" />,
   "Shop": <ShoppingBag size={16} className="text-gold" />,
+  "Digital Storefront": <ShoppingBag size={16} className="text-gold" />,
+  "My Downloads": <FileText size={16} className="text-gold" />,
 };
 
 function Dropdown({ link }: { link: NavLink }) {

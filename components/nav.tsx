@@ -5,33 +5,33 @@ import { NavClient, NavLink } from "@/components/nav-client";
 const publicLinks: NavLink[] = [
   { label: "Home", href: "/" },
   {
-    label: "About",
-    href: "/about",
-    children: [
-      { label: "Our Mission", href: "/about", description: "Leadership & career pillars" },
-      { label: "Institutions & Hubs", href: "/institutions", description: "Universities & enterprise networks" },
-    ],
-  },
-  {
-    label: "Learn",
+    label: "Courses",
     href: "/courses",
     children: [
-      { label: "Course Catalog", href: "/courses", description: "AI Literacy & Vibe Coding" },
-      { label: "My Learning", href: "/dashboard/learning", description: "Continue your modules" },
+      { label: "Course Catalog", href: "/courses", description: "AI Literacy, Vibe Coding & Leadership" },
+      { label: "My Learning", href: "/dashboard/learning", description: "Track your enrolled modules & progress" },
+    ],
+  },
+  { label: "Blog", href: "/blog" },
+  {
+    label: "Shop",
+    href: "/shop",
+    children: [
+      { label: "Digital Storefront", href: "/shop", description: "Ebooks, templates & licensed kits" },
+      { label: "My Downloads", href: "/dashboard/library", description: "Access purchased files & signed links" },
     ],
   },
   {
-    label: "Mentorship",
+    label: "Community",
     href: "/mentorship/find",
     children: [
       { label: "Find a Mentor", href: "/mentorship/find", description: "1-on-1 industry & academic guidance" },
       { label: "Become a Mentor", href: "/mentorship/become", description: "Share expertise with learners" },
-      { label: "My Requests", href: "/dashboard/requests", description: "Track mentorship applications" },
+      { label: "Events & Summits", href: "/events", description: "Leadership sessions & workshops" },
+      { label: "Institutions & Hubs", href: "/institutions", description: "Partner universities & enterprise networks" },
+      { label: "Our Mission", href: "/about", description: "Leadership & career pillars" },
     ],
   },
-  { label: "Blog", href: "/blog" },
-  { label: "Events", href: "/events" },
-  { label: "Shop", href: "/shop" },
 ];
 
 export async function Nav() {
