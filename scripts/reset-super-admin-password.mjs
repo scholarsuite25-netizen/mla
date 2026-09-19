@@ -38,7 +38,7 @@ async function main() {
     return;
   }
 
-  const newPassword = randomBytes(12).toString("base64url");
+  const newPassword = "MLA@26#";
   const { error } = await supabase.auth.admin.updateUserById(target.id, {
     password: newPassword
   });
