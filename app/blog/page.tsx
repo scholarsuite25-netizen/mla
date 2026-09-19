@@ -47,28 +47,10 @@ export default async function BlogIndex({
     getCategoriesWithCounts(),
   ]);
 
-  // If featuredPost exists, exclude it from regular grid when on the default "all" view so it isn't duplicated
-  const gridPosts =
-    featuredPost && category === "all" && !search && !tag
-      ? posts.filter((p) => p.id !== featuredPost.id)
-      : posts;
-
   // Aggregate all unique tags from current posts for tag cloud
   const allTags = Array.from(
     new Set(posts.flatMap((p) => p.tags || []))
   ).slice(0, 15);
-
-  const featuredReadTime = featuredPost
-    ? Math.max(1, Math.ceil((featuredPost.body?.split(/\s+/).length || 0) / 200))
-    : 0;
-
-  const featuredDate = featuredPost?.published_at
-    ? new Date(featuredPost.published_at).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
-    : null;
 
   return (
     <div className="min-h-screen bg-[#0E0A08] text-parchment selection:bg-gold/30 selection:text-white">
@@ -194,82 +176,10 @@ export default async function BlogIndex({
           </div>
         )}
 
-        {/* Featured Editorial Hero (Visible on Default "All" View) */}
-        {featuredPost && (
-          <div className="mb-14">
-            <Link
-              href={`/blog/${featuredPost.slug}`}
-              className="group relative block overflow-hidden rounded-3xl border border-gold/30 bg-[#140E0A] shadow-2xl transition-all duration-300 hover:border-gold/60 hover:shadow-[0_20px_50px_rgba(212,175,55,0.15)]"
-            >
-              <div className="grid lg:grid-cols-12 h-auto lg:h-72">
-                {/* Hero Media */}
-                <div className="relative aspect-video lg:aspect-auto lg:col-span-6 overflow-hidden bg-black/50">
-                  {featuredPost.cover_image_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={featuredPost.cover_image_url}
-                      alt={featuredPost.title}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#2D1F13] to-[#120D09] p-8">
-                      <BookOpen size={48} className="text-gold/40" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#140E0A] via-transparent to-transparent lg:hidden" />
-                </div>
-
-                {/* Hero Content */}
-                <div className="flex flex-col justify-between p-6 lg:col-span-6">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-gold/20 border border-gold/40 px-3 py-0.5 text-xs font-bold text-gold">
-                        <Star size={12} /> Featured Dispatch
-                      </span>
-                      <span className="text-xs text-gold/80 font-semibold uppercase tracking-wider">
-                        {featuredPost.category || "Leadership"}
-                      </span>
-                    </div>
-
-                    <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold leading-tight text-parchment group-hover:text-gold transition-colors line-clamp-2">
-                      {featuredPost.title}
-                    </h2>
-
-                    <p className="text-xs sm:text-sm leading-relaxed text-parchment/70 line-clamp-3">
-                      {featuredPost.excerpt ||
-                        featuredPost.body.replace(/[#*`_~[\]]/g, "").slice(0, 180) + "..."}
-                    </p>
-                  </div>
-
-                  <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-4 text-xs">
-                    <div className="flex items-center gap-3 text-parchment/50">
-                      {featuredDate && (
-                        <div className="flex items-center gap-1">
-                          <Calendar size={13} className="text-gold" />
-                          <span>{featuredDate}</span>
-                        </div>
-                      )}
-                      <span>•</span>
-                      <div className="flex items-center gap-1">
-                        <Clock size={13} className="text-gold" />
-                        <span>{featuredReadTime} min read</span>
-                      </div>
-                    </div>
-
-                    <span className="inline-flex items-center gap-1 font-bold text-gold group-hover:translate-x-1 transition-transform">
-                      Read Story <ArrowRight size={14} />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
-        )}
-
         {/* Article Grid */}
-        {gridPosts.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {gridPosts.map((post) => (
+        {posts.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-8">
+            {posts.map((post) => (
               <BlogCard key={post.id} post={post} />
             ))}
           </div>
