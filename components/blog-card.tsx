@@ -17,11 +17,11 @@ export function BlogCard({ post }: { post: PublishedPost }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="glass-card group flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.08] bg-[#120D09]/80 backdrop-blur-xl transition-all duration-300 hover:border-gold/40 hover:-translate-y-1 hover:shadow-[0_16px_35px_rgba(0,0,0,0.7)]"
+      className="glass-card group flex flex-col justify-between overflow-hidden rounded-xl border border-white/[0.08] bg-[#120D09]/80 backdrop-blur-xl transition-all duration-300 hover:border-gold/40 hover:-translate-y-1 hover:shadow-[0_16px_35px_rgba(0,0,0,0.7)]"
     >
       <div>
         {/* Cover Image Container */}
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-black/40">
+        <div className="relative h-32 w-full overflow-hidden bg-black/40">
           {post.cover_image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -48,32 +48,32 @@ export function BlogCard({ post }: { post: PublishedPost }) {
         </div>
 
         {/* Card Body */}
-        <div className="p-6">
-          <div className="flex items-center gap-3 text-xs text-parchment/50 mb-3">
+        <div className="p-4">
+          <div className="flex items-center gap-3 text-[10px] text-parchment/50 mb-2">
             {date && (
-              <div className="flex items-center gap-1.5">
-                <Calendar size={13} className="text-gold" />
+              <div className="flex items-center gap-1">
+                <Calendar size={11} className="text-gold" />
                 <span>{date}</span>
               </div>
             )}
             <span className="text-white/20">•</span>
             <div className="flex items-center gap-1">
-              <Clock size={13} className="text-gold" />
+              <Clock size={11} className="text-gold" />
               <span>{readTime} min read</span>
             </div>
           </div>
 
-          <h3 className="font-display text-xl font-bold leading-snug text-parchment transition-colors group-hover:text-gold line-clamp-2">
+          <h3 className="font-display text-base font-bold leading-snug text-parchment transition-colors group-hover:text-gold line-clamp-2">
             {post.title}
           </h3>
 
           {post.excerpt ? (
-            <p className="mt-2.5 text-xs leading-relaxed text-parchment/65 line-clamp-2">
+            <p className="mt-1.5 text-[11px] leading-relaxed text-parchment/65 line-clamp-2">
               {post.excerpt}
             </p>
           ) : (
-            <p className="mt-2.5 text-xs leading-relaxed text-parchment/50 line-clamp-2">
-              {post.body.replace(/[#*`_~[\]]/g, "").slice(0, 120)}...
+            <p className="mt-1.5 text-[11px] leading-relaxed text-parchment/50 line-clamp-2">
+              {post.body.replace(/[#*`_~[\]]/g, "").slice(0, 80)}...
             </p>
           )}
 
@@ -99,10 +99,10 @@ export function BlogCard({ post }: { post: PublishedPost }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-white/[0.06] px-6 py-3.5 text-xs font-semibold text-gold">
-        <span>Read full article</span>
+      <div className="flex items-center justify-between border-t border-white/[0.06] px-4 py-2.5 text-[11px] font-semibold text-gold">
+        <span>Read article</span>
         <ArrowUpRight
-          size={15}
+          size={13}
           className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
         />
       </div>

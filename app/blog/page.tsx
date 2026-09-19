@@ -201,9 +201,9 @@ export default async function BlogIndex({
               href={`/blog/${featuredPost.slug}`}
               className="group relative block overflow-hidden rounded-3xl border border-gold/30 bg-[#140E0A] shadow-2xl transition-all duration-300 hover:border-gold/60 hover:shadow-[0_20px_50px_rgba(212,175,55,0.15)]"
             >
-              <div className="grid lg:grid-cols-12">
+              <div className="grid lg:grid-cols-12 h-auto lg:h-72">
                 {/* Hero Media */}
-                <div className="relative aspect-[16/9] lg:aspect-auto lg:col-span-7 overflow-hidden bg-black/50">
+                <div className="relative aspect-video lg:aspect-auto lg:col-span-6 overflow-hidden bg-black/50">
                   {featuredPost.cover_image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -220,9 +220,9 @@ export default async function BlogIndex({
                 </div>
 
                 {/* Hero Content */}
-                <div className="flex flex-col justify-between p-6 sm:p-10 lg:col-span-5">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2.5">
+                <div className="flex flex-col justify-between p-6 lg:col-span-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
                       <span className="inline-flex items-center gap-1 rounded-full bg-gold/20 border border-gold/40 px-3 py-0.5 text-xs font-bold text-gold">
                         <Star size={12} /> Featured Dispatch
                       </span>
@@ -231,7 +231,7 @@ export default async function BlogIndex({
                       </span>
                     </div>
 
-                    <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-parchment group-hover:text-gold transition-colors">
+                    <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold leading-tight text-parchment group-hover:text-gold transition-colors line-clamp-2">
                       {featuredPost.title}
                     </h2>
 
@@ -268,7 +268,7 @@ export default async function BlogIndex({
 
         {/* Article Grid */}
         {gridPosts.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {gridPosts.map((post) => (
               <BlogCard key={post.id} post={post} />
             ))}

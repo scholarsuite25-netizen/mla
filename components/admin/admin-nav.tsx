@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Menu,
   X,
+  Send,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -49,6 +50,11 @@ const navItems = [
     label: "Members (CRM)",
     href: "/admin/members",
     icon: Users,
+  },
+  {
+    label: "Broadcast & Emails",
+    href: "/admin/emails",
+    icon: Send,
   },
   {
     label: "Requests",

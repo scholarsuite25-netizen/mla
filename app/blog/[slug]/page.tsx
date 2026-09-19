@@ -184,7 +184,7 @@ export default async function BlogPostPage({
             )}
           </div>
 
-          <h1 className="font-display text-3xl font-bold leading-tight text-parchment sm:text-4xl md:text-5xl">
+          <h1 className="font-display text-2xl font-bold leading-tight text-parchment sm:text-3xl md:text-4xl">
             {post.title}
           </h1>
 
@@ -245,7 +245,7 @@ export default async function BlogPostPage({
             <img
               src={post.cover_image_url}
               alt={post.title}
-              className="aspect-[21/9] w-full object-cover"
+              className="h-64 md:h-80 w-full object-cover"
             />
           </div>
         )}

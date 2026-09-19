@@ -34,7 +34,14 @@ export function LoginForm({ next }: { next?: string }) {
           className={inputClass}
         />
       </Field>
-      <Field label="Password">
+      <Field 
+        label="Password"
+        action={
+          <Link href="/forgot-password" className="text-gold hover:underline">
+            Forgot?
+          </Link>
+        }
+      >
         <input
           type="password"
           name="password"
@@ -66,16 +73,25 @@ export const inputClass =
 
 function Field({
   label,
+  action,
   children,
 }: {
   label: string;
+  action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60">
-        {label}
-      </span>
+      <div className="mb-1 flex items-center justify-between">
+        <span className="block text-xs uppercase tracking-widest text-parchment/60">
+          {label}
+        </span>
+        {action && (
+          <span className="text-xs">
+            {action}
+          </span>
+        )}
+      </div>
       {children}
     </label>
   );

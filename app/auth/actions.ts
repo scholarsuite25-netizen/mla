@@ -106,3 +106,34 @@ export async function signUpAction(formData: FormData): Promise<ActionResult> {
   revalidatePath("/");
   redirect("/login?registered=1");
 }
+
+export async function forgotPasswordAction(formData: FormData): Promise<ActionResult> {
+  const parsed = z.object({ email }).safeParse({ email: formData.get("email") });
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message };
+
+  const supabase = await createClient();
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+  const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
+    redirectTo: `${origin}/auth/callback?next=/reset-password`,
+  });
+
+  if (error) return { error: error.message };
+
+  return {};
+}
+
+export async function resetPasswordAction(formData: FormData): Promise<ActionResult> {
+  const parsed = z.object({ password }).safeParse({ password: formData.get("password") });
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message };
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  });
+
+  if (error) return { error: error.message };
+
+  redirect("/dashboard");
+}
