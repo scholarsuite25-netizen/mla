@@ -151,9 +151,12 @@ export function MembersManager({ initialMembers }: { initialMembers: ProfileItem
     const res = await sendPasswordResetAction(member.id, member.email);
     if (res.error) {
       alert(res.error);
+      if (res.resetLink) {
+        navigator.clipboard.writeText(res.resetLink);
+      }
     } else if (res.resetLink) {
       navigator.clipboard.writeText(res.resetLink);
-      setResetMsg("Recovery link generated and copied to your clipboard!");
+      setResetMsg("Password reset email sent to the member. A backup link was also copied to your clipboard.");
     } else {
       setResetMsg("Password reset email sent to the member.");
     }

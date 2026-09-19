@@ -13,7 +13,7 @@ const productSchema = z.object({
   title: z.string().trim().min(3, "Title must be at least 3 characters."),
   type: z.enum(["ebook", "software", "pdf"]),
   description: z.string().trim().max(10000, "Description is too long."),
-  price: z.coerce.number().min(0, "Price cannot be negative."),
+  price: z.coerce.number().min(100, "Minimum price is ₦100 — Paystack rejects ₦0. Use license manual issue for complimentary access."),
   cover_image_url: z.string().trim().max(2000),
 });
 
@@ -150,6 +150,37 @@ export async function deleteProductAction(productId: string): Promise<ActionResu
   }
 
   const admin = createAdminClient();
+
+  const { data: product } = await admin
+    .from("digital_products")
+    .select("id,title,file_url")
+    .eq("id", productId)
+    .maybeSingle();
+  if (!product) return { error: "Product not found." };
+
+  // Never allow deleting a product with sales/licence history: orders hold an
+  // FK (no cascade) so this protects revenue records and issued DRM keys.
+  const { count: orderCount } = await admin
+    .from("orders")
+    .select("id", { count: "exact", head: true })
+    .eq("product_id", productId);
+  if (orderCount && orderCount > 0) {
+    return {
+      error:
+        "This product has orders and licences on record. Unpublish it to hide it from the shop instead of deleting.",
+    };
+  }
+
+  // Remove the stored asset from private storage so no orphaned blob remains.
+  if (product.file_url) {
+    const { error: rmErr } = await admin.storage
+      .from("product-files")
+      .remove([product.file_url]);
+    if (rmErr) {
+      return { error: `Could not remove the stored file: ${rmErr.message}` };
+    }
+  }
+
   const { error } = await admin.from("digital_products").delete().eq("id", productId);
   if (error) return { error: error.message };
 
@@ -161,7 +192,7 @@ export async function deleteProductAction(productId: string): Promise<ActionResu
     actorEmail: actor.email,
     category: "shop",
     severity: "warning",
-    details: { productId },
+    details: { title: product.title },
   });
 
   revalidatePath("/admin/products");
@@ -170,6 +201,33 @@ export async function deleteProductAction(productId: string): Promise<ActionResu
 }
 
 const FILE_LIMIT = 50 * 1024 * 1024; // 50 MB
+const allowedFileTypes = [
+  // Documents
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "text/plain",
+  "text/csv",
+  "text/markdown",
+  "application/rtf",
+  // Study aids
+  "application/epub+zip",
+  "application/zip",
+  // Audio/video
+  "audio/mpeg",
+  "audio/mp4",
+  "audio/wav",
+  "video/mp4",
+  "video/webm",
+  // Images (for workbook covers/guides)
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
 
 // Product file upload — private bucket, server-validated type + size (§9).
 export async function uploadProductFileAction(formData: FormData): Promise<{ path?: string; error?: string }> {
@@ -182,6 +240,12 @@ export async function uploadProductFileAction(formData: FormData): Promise<{ pat
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) return { error: "No file received." };
   if (file.size > FILE_LIMIT) return { error: "File must be 50MB or smaller." };
+  if (!allowedFileTypes.includes(file.type)) {
+    return {
+      error:
+        "Unsupported file type. Only PDFs, Word, Excel, PowerPoint, CSV, TXT, Markdown, EPUB, archives, audio/video and images are allowed.",
+    };
+  }
 
   const admin = createAdminClient();
   const { data: bucket } = await admin.storage.getBucket("product-files").catch(() => ({ data: null }));

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  MessageSquare,
   LayoutDashboard,
   FileText,
   BookOpen,
@@ -30,6 +31,11 @@ const navItems = [
     label: "Blog (CMS)",
     href: "/admin/blog",
     icon: FileText,
+  },
+  {
+    label: "Comments",
+    href: "/admin/blog/comments",
+    icon: MessageSquare,
   },
   {
     label: "Courses (LMS)",

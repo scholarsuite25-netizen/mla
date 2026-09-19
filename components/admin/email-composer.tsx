@@ -42,7 +42,7 @@ export function EmailComposer() {
           <select
             name="recipientType"
             value={recipientType}
-            onChange={(e) => setRecipientType(e.target.value as any)}
+            onChange={(e) => setRecipientType(e.target.value as "individual" | "broadcast" | "broadcast_all")}
             className={inputClass}
           >
             <option value="individual">Specific User (Individual Email)</option>

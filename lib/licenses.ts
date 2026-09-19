@@ -12,6 +12,16 @@ export type LicenseRow = {
   orders?: { paystack_reference: string | null }[];
 };
 
+// Fail closed: if LICENSE_KEY_SECRET is unset, license signing/verification
+// refuses to operate rather than falling back to a hardcoded dev key.
+function licenseSecret(): string {
+  const secret = process.env.LICENSE_KEY_SECRET;
+  if (!secret) {
+    throw new Error("LICENSE_KEY_SECRET is not configured.");
+  }
+  return secret;
+}
+
 /**
  * Signed license key: MLA-XXXX-XXXX-SSSSSSSS-SSSSSSSS where the signature
  * is HMAC-SHA256(secret, productId:buyerId:randHex) so the key can be validated
@@ -19,7 +29,7 @@ export type LicenseRow = {
  */
 export function generateLicenseKey(productId: string, buyerId: string): string {
   const randomHex = randomBytes(4).toString("hex").toUpperCase();
-  const mac = createHmac("sha256", process.env.LICENSE_KEY_SECRET ?? "mla-dev-key")
+  const mac = createHmac("sha256", licenseSecret())
     .update(`${productId}:${buyerId}:${randomHex}`)
     .digest("hex")
     .toUpperCase();
@@ -43,11 +53,16 @@ export function verifyLicenseKey(
   if (parts.length !== 5) return false;
   const randHex = parts[1] + parts[2];
   const providedMac = parts[3] + parts[4];
-  const expectedMac = createHmac("sha256", process.env.LICENSE_KEY_SECRET ?? "mla-dev-key")
-    .update(`${productId}:${buyerId}:${randHex}`)
-    .digest("hex")
-    .toUpperCase()
-    .slice(0, 16);
+  let expectedMac: string;
+  try {
+    expectedMac = createHmac("sha256", licenseSecret())
+      .update(`${productId}:${buyerId}:${randHex}`)
+      .digest("hex")
+      .toUpperCase()
+      .slice(0, 16);
+  } catch {
+    return false;
+  }
   return providedMac === expectedMac;
 }
 

@@ -22,15 +22,39 @@ const courseSchema = z.object({
   featured: z.boolean().default(false),
 });
 
+const lessonTypes = ["video", "reading", "workshop", "assignment"] as const;
+
 const moduleSchema = z.object({
   title: z.string().trim().min(1, "Module title is required."),
   content: z.string().default(""),
-  lesson_type: z.string().trim().default("video"),
-  video_url: z.string().trim().nullable().optional(),
-  duration_minutes: z.number().min(1).default(15),
+  lesson_type: z.enum(lessonTypes, {
+    message: "Invalid lesson format.",
+  }),
+  video_url: z
+    .string()
+    .trim()
+    .refine((v) => v === "" || URL.canParse(v), "Video URL must be a valid URL.")
+    .transform((v) => v || null)
+    .nullable()
+    .optional(),
+  duration_minutes: z.number().min(1).max(600).default(15),
   is_free_preview: z.boolean().default(false),
-  resources: z.array(z.object({ title: z.string(), url: z.string() })).default([]),
-});
+  resources: z
+    .array(
+      z.object({
+        title: z.string().trim().min(1, "Resource titles cannot be empty."),
+        url: z
+          .string()
+          .trim()
+          .refine((u) => URL.canParse(u), "Every resource URL must be valid."),
+      })
+    )
+    .max(20, "A module can hold at most 20 resources.")
+    .default([]),
+}).refine(
+  (m) => m.lesson_type !== "video" || m.video_url,
+  "Video lectures require a video URL."
+);
 
 const FILE_LIMIT = 10 * 1024 * 1024; // 10MB
 const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];

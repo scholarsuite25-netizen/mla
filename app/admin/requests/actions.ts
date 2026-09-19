@@ -55,30 +55,26 @@ export async function approveRequestAction(requestId: string): Promise<ActionRes
     },
   ]);
 
-  // Emails (Resend, transactional).
-  const { data: usersResp } = await admin.auth.admin.listUsers();
-  const users = (usersResp?.users ?? []) as {
-    id: string;
-    email?: string;
-    user_metadata?: { full_name?: string };
-  }[];
-  const byId = new Map(
-    users.map((u) => [u.id, { email: u.email ?? "", full_name: u.user_metadata?.full_name ?? "" }])
-  );
-  const mentee = byId.get(request.mentee_id);
-  const mentor = byId.get(request.mentor_id);
+  // Emails (Resend, transactional). Direct lookups avoid the listUsers first-page
+  // truncation bug (default page would miss recipients once >50 users exist).
+  const [menteeIdentity, mentorIdentity] = await Promise.all([
+    admin.auth.admin.getUserById(request.mentee_id).catch(() => ({ data: { user: null } })),
+    admin.auth.admin.getUserById(request.mentor_id).catch(() => ({ data: { user: null } })),
+  ]);
+  const menteeEmail = (menteeIdentity.data as { user?: { email?: string } | null } | null)?.user?.email;
+  const mentorEmail = (mentorIdentity.data as { user?: { email?: string } | null } | null)?.user?.email;
 
   const subject = "Your MLA mentorship match is approved";
   const html = `<p>Congratulations — your mentorship match on MLA has been approved.</p>
-<p><a href="${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/requests">View it in your dashboard</a></p>`;
+<p><a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://mla.org.ng"}/dashboard/requests">View it in your dashboard</a></p>`;
 
-  if (mentee?.email && process.env.RESEND_API_KEY) {
-    await sendTransactionalEmail({ to: mentee.email, subject, html }).catch((e) =>
+  if (menteeEmail && process.env.RESEND_API_KEY) {
+    await sendTransactionalEmail({ to: menteeEmail, subject, html }).catch((e) =>
       console.error("Resend to mentee failed:", e)
     );
   }
-  if (mentor?.email && process.env.RESEND_API_KEY) {
-    await sendTransactionalEmail({ to: mentor.email, subject, html }).catch((e) =>
+  if (mentorEmail && process.env.RESEND_API_KEY) {
+    await sendTransactionalEmail({ to: mentorEmail, subject, html }).catch((e) =>
       console.error("Resend to mentor failed:", e)
     );
   }

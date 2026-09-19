@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { assertSuperAdmin } from "@/lib/auth-guard";
-import { generateLicenseKey, isValidLicenseFormat } from "@/lib/licenses";
+import { generateLicenseKey, isValidLicenseFormat, verifyLicenseKey } from "@/lib/licenses";
 
 export type ActionResult = { error?: string };
 
@@ -158,7 +158,15 @@ export async function issueManualLicenseAction(formData: FormData): Promise<Acti
   if (orderError) return { error: orderError.message };
 
   // 2. Generate signed cryptographic key
-  const licenseKey = generateLicenseKey(productId, buyerId);
+  let licenseKey: string;
+  try {
+    licenseKey = generateLicenseKey(productId, buyerId);
+  } catch {
+    return {
+      error:
+        "License key generation is unavailable (LICENSE_KEY_SECRET not configured).",
+    };
+  }
 
   // 3. Insert license into product_licenses
   const { error: licError } = await admin.from("product_licenses").insert({
@@ -235,7 +243,7 @@ export async function verifyLicenseKeyAction(key: string): Promise<{
   const { data: lic, error } = await admin
     .from("product_licenses")
     .select(
-      "id, license_key, max_activations, activation_count, is_revoked, created_at, buyer:profiles(full_name), digital_products(title)"
+      "id, license_key, product_id, buyer_id, max_activations, activation_count, is_revoked, created_at, buyer:profiles(full_name), digital_products(title)"
     )
     .eq("license_key", trimmed)
     .maybeSingle();
@@ -244,6 +252,15 @@ export async function verifyLicenseKeyAction(key: string): Promise<{
     return {
       valid: false,
       message: "Key matches MLA cryptographic format but is not registered in the database.",
+    };
+  }
+
+  // Real cryptographic verification: recompute the HMAC signature and confirm
+  // the key was genuinely issued by MLA for this product and buyer (§12).
+  if (!verifyLicenseKey(trimmed, lic.product_id, lic.buyer_id)) {
+    return {
+      valid: false,
+      message: "Key signature does not match (forged or invalid for this license).",
     };
   }
 

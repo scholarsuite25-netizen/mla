@@ -48,14 +48,17 @@ what. "anon" = logged-out visitor, "authenticated" = signed-in user,
 
 ## mentor_profiles
 - Active mentors are publicly visible.
-- You can create/edit your own mentor profile, but only the super admin can
-  activate/deactivate it.
+- You can create/edit your own mentor profile (and unlist yourself at any time);
+  only the super admin can force-activate/deactivate it.
 
 ## mentorship_requests
-- You can send a request only as yourself (mentee), and it starts "pending".
-- The mentee and the mentor can each see the request. The mentor can accept or
-  reject it.
-- Only the super admin can give final approval ("approved").
+- You can send a request only as yourself (mentee), it starts "pending", and it
+  may only target an ACTIVE mentor — never yourself. One open request per
+  (mentee, mentor) pair is enforced by the database.
+- The mentee and the mentor can each see the request. The mentee can withdraw
+  ("cancelled"), and the mentor can accept or reject it.
+- Only the super admin can give final approval ("approved"); an approved match
+  can be ended ("ended") by either participant or the super admin.
 - An institution admin can VIEW requests involving mentors in their own
   institution (no edits).
 

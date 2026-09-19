@@ -187,14 +187,16 @@ export function CourseForm({
 
         {id && (
           <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href={`/courses/${id}`}
-              target="_blank"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-parchment hover:border-gold hover:text-gold transition"
-            >
-              <ExternalLink size={13} />
-              <span>Public View</span>
-            </Link>
+            {isPublished && (
+              <Link
+                href={`/courses/${id}`}
+                target="_blank"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-parchment hover:border-gold hover:text-gold transition"
+              >
+                <ExternalLink size={13} />
+                <span>Public View</span>
+              </Link>
+            )}
 
             {isPublished ? (
               <button
@@ -950,7 +952,22 @@ function AddModuleRow({
   const [videoUrl, setVideoUrl] = useState("");
   const [duration, setDuration] = useState(15);
   const [isFreePreview, setIsFreePreview] = useState(false);
+  const [resources, setResources] = useState<LessonResource[]>([]);
+  const [resTitle, setResTitle] = useState("");
+  const [resUrl, setResUrl] = useState("");
   const [isSaving, startTransition] = useTransition();
+
+  function addResource() {
+    if (resTitle.trim() && resUrl.trim()) {
+      setResources([...resources, { title: resTitle.trim(), url: resUrl.trim() }]);
+      setResTitle("");
+      setResUrl("");
+    }
+  }
+
+  function removeResource(i: number) {
+    setResources(resources.filter((_, idx) => idx !== i));
+  }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -963,6 +980,7 @@ function AddModuleRow({
     fd.append("video_url", videoUrl);
     fd.append("duration_minutes", String(duration));
     if (isFreePreview) fd.append("is_free_preview", "on");
+    fd.append("resources", JSON.stringify(resources));
 
     startTransition(async () => {
       const res = await saveModuleAction(courseId, null, fd);
@@ -972,6 +990,7 @@ function AddModuleRow({
         setTitle("");
         setContent("");
         setVideoUrl("");
+        setResources([]);
         setOpen(false);
         router.refresh();
       }
@@ -1065,6 +1084,66 @@ function AddModuleRow({
           placeholder="Lecture outline, syllabus notes, or assignment prompt (Markdown enabled)..."
           className="w-full rounded-xl border border-white/10 bg-[#0E0A08] p-3 font-mono text-xs text-parchment focus:border-gold focus:outline-none"
         />
+
+        {/* Downloadable Resources Builder */}
+        <div className="rounded-2xl border border-white/10 bg-[#120D09] p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs uppercase tracking-wider text-gold font-bold flex items-center gap-1.5">
+              <FileText size={13} /> Downloadable Lesson Resources ({resources.length})
+            </span>
+            <span className="text-[10px] text-parchment/40">PDFs, Frameworks, Handouts</span>
+          </div>
+
+          {resources.length > 0 && (
+            <div className="space-y-1.5">
+              {resources.map((r, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between rounded-lg border border-white/5 bg-black/30 px-3 py-1.5 text-xs"
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <LinkIcon size={12} className="text-gold shrink-0" />
+                    <span className="font-medium text-parchment truncate">{r.title}</span>
+                    <span className="text-[10px] text-parchment/40 truncate font-mono">
+                      ({r.url})
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeResource(i)}
+                    className="text-crest-red hover:text-white ml-2"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center gap-2 pt-1">
+            <input
+              type="text"
+              placeholder="Resource Name (e.g. Session Slides PDF)"
+              value={resTitle}
+              onChange={(e) => setResTitle(e.target.value)}
+              className="w-full sm:w-1/2 rounded-xl border border-white/10 bg-[#0E0A08] px-3 py-2 text-xs text-parchment focus:border-gold focus:outline-none"
+            />
+            <input
+              type="url"
+              placeholder="Download Link URL (https://...)"
+              value={resUrl}
+              onChange={(e) => setResUrl(e.target.value)}
+              className="w-full sm:w-1/2 rounded-xl border border-white/10 bg-[#0E0A08] px-3 py-2 text-xs text-parchment focus:border-gold focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={addResource}
+              className="w-full sm:w-auto shrink-0 rounded-xl border border-gold/40 bg-gold/10 px-3 py-2 text-xs font-semibold text-gold hover:bg-gold/20"
+            >
+              + Add
+            </button>
+          </div>
+        </div>
 
         <div className="flex items-center gap-2 pt-2">
           <button

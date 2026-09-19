@@ -208,7 +208,7 @@ export function ProductForm({
                   </span>
                   <input
                     type="number"
-                    min={0}
+                    min={100}
                     step="0.01"
                     required
                     value={price}
@@ -218,7 +218,7 @@ export function ProductForm({
                   />
                 </div>
                 <p className="text-[10px] text-parchment/40 mt-1">
-                  Processed via Paystack checkout. Set to 0 for free complimentary download.
+                  Processed via Paystack checkout (minimum ₦100). Complimentary access is issued via Manual Licence in the License Manager.
                 </p>
               </div>
             </div>
@@ -264,11 +264,12 @@ export function ProductForm({
                   {uploadingFile ? "Encrypting & Uploading File..." : "Upload New Product Asset File"}
                 </span>
                 <span className="text-[10px] text-parchment/40 mt-1">
-                  PDF, EPUB, ZIP, EXE, DMG up to 50MB
+                  PDF, Word, Excel, PowerPoint, EPUB, audio/video or ZIP up to 50MB
                 </span>
                 <input
                   type="file"
                   disabled={uploadingFile || !id}
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.md,.rtf,.epub,.zip,.mp3,.m4a,.wav,.mp4,.webm,.jpeg,.jpg,.png,.webp"
                   onChange={(e) => handleFileUpload(e.target.files?.[0] ?? null)}
                   className="hidden"
                 />
@@ -412,9 +413,10 @@ export function ProductForm({
                 type="button"
                 disabled={pending}
                 onClick={() => {
-                  if (!confirm("Permanently delete this product from the store?")) return;
+                  if (!confirm("Permanently delete this product from the store? The stored file will also be removed.")) return;
                   startTransition(async () => {
-                    await deleteProductAction(id);
+                    const res = await deleteProductAction(id);
+                    if (res?.error) setMsg({ type: "error", text: res.error });
                   });
                 }}
                 className="rounded-xl border border-crest-red/30 p-2 text-crest-red hover:bg-crest-red hover:text-white transition"

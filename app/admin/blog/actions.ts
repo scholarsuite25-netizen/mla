@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notifyAndBroadcast } from "@/lib/publish";
@@ -24,6 +23,7 @@ const postSchema = z.object({
   seo_description: z.string().nullable().optional(),
   allow_comments: z.boolean().default(true),
   featured: z.boolean().default(false),
+  scheduled_for: z.string().nullable().optional(),
 });
 
 const FILE_LIMIT = 10 * 1024 * 1024; // 10MB
@@ -67,16 +67,31 @@ function getPostInput(formData: FormData) {
     seo_description: String(formData.get("seo_description") ?? "").trim() || null,
     allow_comments: formData.get("allow_comments") === "on" || formData.get("allow_comments") === "true",
     featured: formData.get("featured") === "on" || formData.get("featured") === "true",
+    scheduled_for: String(formData.get("scheduled_for") ?? "").trim() || null,
   };
 }
 
-// Save as draft or update existing post without losing publish status.
+// A scheduled publish stores a future published_at with status still "draft";
+// the cron route (/api/cron/publish-scheduled) flips it live when due.
+function isFutureSchedule(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  const time = new Date(raw).getTime();
+  if (!Number.isFinite(time)) return null;
+  return time > Date.now() ? new Date(time).toISOString() : null;
+}
+
+export type SaveActionResult = ActionResult & { id?: string };
+
+// Save as draft, or save+publish in one step. Publishing a brand-new post
+// works here in a single click (no separate follow-up action needed).
 export async function savePostAction(
   postId: string | null,
-  formData: FormData
-): Promise<ActionResult> {
+  formData: FormData,
+  mode: "draft" | "publish" = "draft"
+): Promise<SaveActionResult> {
+  let actor;
   try {
-    await assertSuperAdmin();
+    actor = await assertSuperAdmin();
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unauthorized." };
   }
@@ -86,6 +101,8 @@ export async function savePostAction(
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
   const admin = createAdminClient();
+  const wantPublished = mode === "publish";
+  const scheduled = isFutureSchedule(parsed.data.scheduled_for);
 
   if (postId) {
     const updatePayload = {
@@ -104,20 +121,38 @@ export async function savePostAction(
 
     const { data, error } = await admin
       .from("blog_posts")
-      .update(updatePayload)
+      .select("id,title,slug,status,published_at")
       .eq("id", postId)
-      .select("id")
       .single();
-    if (error) {
-      if (error.code === "23505") {
+    if (error || !data) {
+      return { error: error?.message ?? "Post not found." };
+    }
+
+    const { error: updateError } = await admin
+      .from("blog_posts")
+      .update(updatePayload)
+      .eq("id", postId);
+    if (updateError) {
+      if (updateError.code === "23505") {
         return { error: "That slug is already taken — pick another." };
       }
-      return { error: error.message };
+      return { error: updateError.message };
     }
+
+    if (scheduled) {
+      // Schedule replaces a live published_at, but only down to a future slot.
+      await admin
+        .from("blog_posts")
+        .update({ status: "draft", published_at: scheduled })
+        .eq("id", postId);
+    } else if (wantPublished) {
+      await publishPostAction(postId);
+    }
+
     revalidatePath("/blog");
     revalidatePath(`/blog/${parsed.data.slug}`);
-    revalidatePath(`/admin/blog/${postId}/edit`);
-    redirect(`/admin/blog/${data!.id}/edit`);
+    revalidatePath("/admin/blog");
+    return { id: postId };
   }
 
   const row = {
@@ -132,9 +167,13 @@ export async function savePostAction(
     seo_description: parsed.data.seo_description ?? null,
     allow_comments: parsed.data.allow_comments,
     featured: parsed.data.featured,
-    status: "draft",
-    published_at: null,
+    status: (wantPublished ? "published" : "draft") as "draft" | "published",
+    published_at: wantPublished ? new Date().toISOString() : null,
   };
+  if (scheduled) {
+    row.status = "draft";
+    row.published_at = scheduled;
+  }
 
   const { data, error } = await admin
     .from("blog_posts")
@@ -147,8 +186,31 @@ export async function savePostAction(
     }
     return { error: error.message };
   }
+  const newId = data.id;
+
+  if (wantPublished && !scheduled) {
+    try {
+      await notifyAndBroadcast({
+        targetType: "blog",
+        targetId: newId,
+        message: `New blog post: ${parsed.data.title}`,
+        title: parsed.data.title,
+        path: `/blog/${parsed.data.slug}`,
+      });
+      await admin.from("audit_log").insert({
+        actor_id: actor.id,
+        action: "blog.publish",
+        target_table: "blog_posts",
+        target_id: newId,
+      });
+    } catch (e) {
+      console.error("Publish fan-out failed:", e);
+    }
+  }
+
   revalidatePath("/admin/blog");
-  redirect(`/admin/blog/${data!.id}/edit`);
+  if (wantPublished) revalidatePath("/blog");
+  return { id: newId };
 }
 
 // Publish: flip to published, then fan out notifications + email.
@@ -225,18 +287,58 @@ export async function unpublishPostAction(postId: string): Promise<ActionResult>
 }
 
 export async function deletePostAction(postId: string): Promise<ActionResult> {
+  let actor;
   try {
-    await assertSuperAdmin();
+    actor = await assertSuperAdmin();
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unauthorized." };
   }
 
   const admin = createAdminClient();
+
+  const { data: post } = await admin
+    .from("blog_posts")
+    .select("id,title,slug,body,cover_image_url")
+    .eq("id", postId)
+    .single();
+
   const { error } = await admin.from("blog_posts").delete().eq("id", postId);
   if (error) return { error: error.message };
+
+  // Clean up the stored cover (and detect any embedded images in the body).
+  if (post?.cover_image_url) {
+    await deleteStoredImages(admin, post.cover_image_url, post.body ?? "");
+  }
+
+  await admin.from("audit_log").insert({
+    actor_id: actor.id,
+    action: "blog.delete",
+    target_table: "blog_posts",
+    target_id: postId,
+  });
+
   revalidatePath("/blog");
   revalidatePath("/admin/blog");
   return {};
+}
+
+// Removes objects belonging to this post from Supabase Storage (covers bucket).
+async function deleteStoredImages(
+  admin: ReturnType<typeof createAdminClient>,
+  coverUrl: string,
+  body: string
+) {
+  const paths = new Set<string>();
+  const matchPath = (url: string) => {
+    const m = url.match(/object\/public\/covers\/(.+)$/);
+    if (m?.[1]) paths.add(m[1]);
+  };
+  matchPath(coverUrl);
+  for (const m of body.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)) {
+    matchPath(m[1]);
+  }
+  if (paths.size === 0) return;
+  await admin.storage.from("covers").remove([...paths]);
 }
 
 // Cover or embedded image upload — validated server-side (type + size)

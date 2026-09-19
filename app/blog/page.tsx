@@ -1,22 +1,25 @@
 import Link from "next/link";
 import {
   getPublishedPosts,
+  getPublishedPostsCount,
   getFeaturedPost,
   getCategoriesWithCounts,
+  type PublishedPost,
 } from "@/lib/blog";
 import { BlogCard } from "@/components/blog-card";
 import {
   Search,
-  Calendar,
-  Clock,
   ArrowRight,
-  Star,
   Sparkles,
   Tag,
   BookOpen,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
+
+const POSTS_PER_PAGE = 12;
 
 export const metadata = {
   title: "Academy Dispatches & Insights — MLA Blog",
@@ -30,24 +33,73 @@ export const metadata = {
   },
 };
 
+function FeaturedHero({ post }: { post: PublishedPost }) {
+  return (
+    <Link
+      href={`/blog/${post.slug}`}
+      className="group relative block overflow-hidden rounded-3xl border border-white/10 bg-[#140E0A]"
+    >
+      <div className="grid md:grid-cols-2">
+        <div className="relative min-h-[220px] overflow-hidden">
+          {post.cover_image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={post.cover_image_url}
+              alt={post.title}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gold/5">
+              <BookOpen size={48} className="text-gold/40" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#120D09] via-transparent to-transparent md:bg-gradient-to-r" />
+        </div>
+        <div className="flex flex-col justify-center gap-3 p-8 sm:p-10">
+          <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-gold">
+            <Sparkles size={11} /> Featured
+          </div>
+          <span className="text-xs text-parchment/50">
+            {post.category} · {post.published_at ? new Date(post.published_at).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" }) : ""}
+          </span>
+          <h2 className="font-display text-2xl font-bold leading-tight text-parchment sm:text-3xl group-hover:text-gold transition-colors line-clamp-2">
+            {post.title}
+          </h2>
+          <p className="line-clamp-3 text-sm text-parchment/65">
+            {post.excerpt || post.body.replace(/[#>*`\[\]()-]/g, "").slice(0, 220)}
+          </p>
+          <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-gold">
+            Read the dispatch <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default async function BlogIndex({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; search?: string; tag?: string }>;
+  searchParams: Promise<{ category?: string; search?: string; tag?: string; page?: string }>;
 }) {
-  const { category = "all", search = "", tag = "" } = await searchParams;
+  const { category = "all", search = "", tag = "", page: pageParam = "1" } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam, 10) || 1);
 
-  const [posts, featuredPost, categories] = await Promise.all([
-    getPublishedPosts({
-      category: category !== "all" ? category : undefined,
-      search: search || undefined,
-      tag: tag || undefined,
-    }),
-    category === "all" && !search && !tag ? getFeaturedPost() : null,
+  const opts = {
+    category: category !== "all" ? category : undefined,
+    search: search || undefined,
+    tag: tag || undefined,
+  };
+  const isHomeListing = category === "all" && !search && !tag;
+
+  const [posts, featuredPost, categories, total] = await Promise.all([
+    getPublishedPosts({ ...opts, limit: POSTS_PER_PAGE, page: currentPage }),
+    isHomeListing && currentPage === 1 ? getFeaturedPost() : null,
     getCategoriesWithCounts(),
+    getPublishedPostsCount(opts),
   ]);
 
-  // Aggregate all unique tags from current posts for tag cloud
+  const totalPages = Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
   const allTags = Array.from(
     new Set(posts.flatMap((p) => p.tags || []))
   ).slice(0, 15);
@@ -176,6 +228,13 @@ export default async function BlogIndex({
           </div>
         )}
 
+        {/* Featured Hero */}
+        {featuredPost && (
+          <div className="mt-8">
+            <FeaturedHero post={featuredPost} />
+          </div>
+        )}
+
         {/* Article Grid */}
         {posts.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-8">
@@ -199,6 +258,55 @@ export default async function BlogIndex({
               Reset All Filters
             </Link>
           </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && posts.length > 0 && (
+          <nav className="mt-10 flex items-center justify-center gap-3" aria-label="Blog pagination">
+            {currentPage > 1 ? (
+              <Link
+                href={{
+                  pathname: "/blog",
+                  query: {
+                    ...(category !== "all" ? { category } : {}),
+                    ...(search ? { search } : {}),
+                    ...(tag ? { tag } : {}),
+                    page: String(currentPage - 1),
+                  },
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-[#140E0A] px-4 py-2 text-xs font-medium text-parchment/70 hover:border-gold/40 hover:text-gold"
+              >
+                <ChevronLeft size={14} /> Previous
+              </Link>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/5 px-4 py-2 text-xs text-parchment/30">
+                <ChevronLeft size={14} /> Previous
+              </span>
+            )}
+            <span className="rounded-xl border border-white/10 bg-[#140E0A] px-4 py-2 text-xs font-semibold text-gold">
+              Page {currentPage} of {totalPages}
+            </span>
+            {currentPage < totalPages ? (
+              <Link
+                href={{
+                  pathname: "/blog",
+                  query: {
+                    ...(category !== "all" ? { category } : {}),
+                    ...(search ? { search } : {}),
+                    ...(tag ? { tag } : {}),
+                    page: String(currentPage + 1),
+                  },
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-[#140E0A] px-4 py-2 text-xs font-medium text-parchment/70 hover:border-gold/40 hover:text-gold"
+              >
+                Next <ChevronRight size={14} />
+              </Link>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/5 px-4 py-2 text-xs text-parchment/30">
+                Next <ChevronRight size={14} />
+              </span>
+            )}
+          </nav>
         )}
 
         {/* Popular Tags Discovery Cloud */}

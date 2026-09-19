@@ -39,6 +39,7 @@ export async function getPublishedPosts(
         tag?: string;
         search?: string;
         limit?: number;
+        page?: number;
       }
 ): Promise<PublishedPost[]> {
   const supabase = await createClient();
@@ -49,13 +50,14 @@ export async function getPublishedPosts(
       : optionsOrLimit;
 
   const limit = options?.limit ?? 50;
+  const page = options?.page ?? 1;
 
   let query = supabase
     .from("blog_posts")
     .select(POST_SELECT)
     .eq("status", "published")
     .order("published_at", { ascending: false })
-    .limit(limit);
+    .range((page - 1) * limit, page * limit - 1);
 
   if (options?.category && options.category !== "all") {
     query = query.ilike("category", options.category);
@@ -76,6 +78,32 @@ export async function getPublishedPosts(
     return [];
   }
   return (data as PublishedPost[]) ?? [];
+}
+
+export async function getPublishedPostsCount(
+  options: { category?: string; tag?: string; search?: string } = {}
+): Promise<number> {
+  const supabase = await createClient();
+  let query = supabase
+    .from("blog_posts")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "published");
+
+  if (options.category && options.category !== "all") {
+    query = query.ilike("category", options.category);
+  }
+
+  if (options.tag) {
+    query = query.contains("tags", [options.tag]);
+  }
+
+  if (options.search) {
+    const term = options.search.trim();
+    query = query.or(`title.ilike.%${term}%,excerpt.ilike.%${term}%,body.ilike.%${term}%`);
+  }
+
+  const { count } = await query;
+  return count ?? 0;
 }
 
 export async function getFeaturedPost(): Promise<PublishedPost | null> {

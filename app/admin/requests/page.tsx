@@ -31,7 +31,7 @@ export default async function AdminRequestsPage() {
     admin
       .from("mentorship_requests")
       .select(
-        "id,status,created_at,mentee:mentorship_requests!mentorship_requests_mentee_id_fkey(full_name),mentor:mentorship_requests!mentorship_requests_mentor_id_fkey(full_name)"
+        "id,status,created_at,mentee:profiles!mentorship_requests_mentee_id_fkey(full_name),mentor:profiles!mentorship_requests_mentor_id_fkey(full_name)"
       )
       .order("created_at", { ascending: false }),
     admin

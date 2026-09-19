@@ -37,12 +37,11 @@ import {
 } from "lucide-react";
 import {
   savePostAction,
-  publishPostAction,
-  unpublishPostAction,
   uploadCoverAction,
   deletePostAction,
 } from "@/app/admin/blog/actions";
 import { Markdown } from "@/components/markdown";
+import { CalendarClock } from "lucide-react";
 
 type Post = {
   id: string;
@@ -98,6 +97,15 @@ export function PostForm({ post }: { post: Post | null }) {
   const [seoDescription, setSeoDescription] = useState(post?.seo_description ?? "");
   const [allowComments, setAllowComments] = useState(post?.allow_comments ?? true);
   const [featured, setFeatured] = useState(post?.featured ?? false);
+  const [scheduledFor, setScheduledFor] = useState(
+    post?.published_at && post?.status !== "published"
+      ? (() => {
+          const d = new Date(post.published_at!);
+          const pad = (n: number) => String(n).padStart(2, "0");
+          return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        })()
+      : ""
+  );
 
   const [activeSidebarTab, setActiveSidebarTab] = useState<"post" | "seo">("post");
   const [viewMode, setViewMode] = useState<"edit" | "split" | "preview">("edit");
@@ -115,6 +123,10 @@ export function PostForm({ post }: { post: Post | null }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const id = post?.id ?? null;
   const isPublished = post?.status === "published";
+  const isScheduled =
+    !isPublished &&
+    !!post?.published_at &&
+    new Date(post.published_at).getTime() > Date.now();
 
   function slugify(text: string) {
     return text
@@ -240,6 +252,7 @@ export function PostForm({ post }: { post: Post | null }) {
       fd.append("seo_description", seoDescription);
       if (allowComments) fd.append("allow_comments", "on");
       if (featured) fd.append("featured", "on");
+      if (scheduledFor) fd.append("scheduled_for", new Date(scheduledFor).toISOString());
 
       startTransition(async () => {
         if (action === "delete") {
@@ -254,26 +267,22 @@ export function PostForm({ post }: { post: Post | null }) {
           return;
         }
 
-        const result = await savePostAction(id, fd);
+        const result = await savePostAction(
+          id,
+          fd,
+          action === "publish" ? "publish" : "draft"
+        );
         if (result?.error) {
           setError(result.error);
           return;
         }
 
-        if (action === "publish" && id) {
-          const res = await publishPostAction(id);
-          if (res?.error) setError(res.error);
-          else {
-            router.push("/admin/blog");
-            router.refresh();
-          }
-        } else if (action === "unpublish" && id) {
-          const res = await unpublishPostAction(id);
-          if (res?.error) setError(res.error);
-          else {
-            router.push("/admin/blog");
-            router.refresh();
-          }
+        if (action === "publish" || action === "unpublish") {
+          router.push("/admin/blog");
+          router.refresh();
+        } else if (!id && result.id) {
+          router.push(`/admin/blog/${result.id}/edit`);
+          router.refresh();
         } else {
           router.push("/admin/blog");
           router.refresh();
@@ -305,11 +314,13 @@ export function PostForm({ post }: { post: Post | null }) {
               className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${
                 isPublished
                   ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                  : isScheduled
+                  ? "bg-sky-500/15 text-sky-400 border border-sky-500/30"
                   : "bg-amber-500/15 text-amber-300 border border-amber-500/30"
               }`}
             >
-              <span className={`h-1.5 w-1.5 rounded-full ${isPublished ? "bg-emerald-400" : "bg-amber-400"}`} />
-              {isPublished ? "Published" : "Draft"}
+              <span className={`h-1.5 w-1.5 rounded-full ${isPublished ? "bg-emerald-400" : isScheduled ? "bg-sky-400" : "bg-amber-400"}`} />
+              {isPublished ? "Published" : isScheduled ? "Scheduled" : "Draft"}
             </span>
             {featured && (
               <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 border border-gold/40 px-2 py-0.5 text-[10px] font-semibold text-gold">
@@ -354,7 +365,7 @@ export function PostForm({ post }: { post: Post | null }) {
             </button>
           </div>
 
-          {id && slug && (
+          {isPublished && slug && (
             <Link
               href={`/blog/${slug}`}
               target="_blank"
@@ -407,8 +418,7 @@ export function PostForm({ post }: { post: Post | null }) {
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Left Canvas: Title, Gutenberg Toolbar, Body Editor & Live Preview */}
         <div className="space-y-4 lg:col-span-8">
-          {/* Post Title & Permalink */}
-          <div className="rounded-2xl border border-white/10 bg-[#120D09] p-5 shadow-xl space-y-3">
+          <div className="rounded-2xl border border-parchment/10 bg-panel p-6 shadow-sm space-y-4">
             <div>
               <input
                 type="text"
@@ -444,7 +454,7 @@ export function PostForm({ post }: { post: Post | null }) {
           </div>
 
           {/* WordPress Formatting Toolbar */}
-          <div className="sticky top-2 z-10 flex flex-wrap items-center gap-1 rounded-2xl border border-white/10 bg-[#140E0A]/95 p-2 backdrop-blur-xl shadow-lg">
+          <div className="sticky top-2 z-10 flex flex-wrap items-center gap-1 rounded-2xl border border-parchment/10 bg-panel/95 p-2 backdrop-blur-xl shadow-sm">
             <button
               type="button"
               onClick={() => wrap("**")}
@@ -578,7 +588,7 @@ export function PostForm({ post }: { post: Post | null }) {
           </div>
 
           {/* Editor & Preview Workspace */}
-          <div className="rounded-2xl border border-white/10 bg-[#0E0A08] p-4 shadow-inner">
+          <div className="rounded-2xl border border-parchment/10 bg-ink p-4 shadow-inner">
             {viewMode === "edit" && (
               <textarea
                 ref={textareaRef}
@@ -637,7 +647,7 @@ export function PostForm({ post }: { post: Post | null }) {
         {/* Right Sidebar: WordPress Document Settings & Yoast-Style SEO */}
         <div className="space-y-5 lg:col-span-4">
           {/* Sidebar Tab Selector */}
-          <div className="flex rounded-2xl border border-white/10 bg-[#120D09] p-1 text-xs">
+          <div className="flex rounded-2xl border border-parchment/10 bg-panel p-1 text-xs shadow-sm">
             <button
               type="button"
               onClick={() => setActiveSidebarTab("post")}
@@ -668,7 +678,7 @@ export function PostForm({ post }: { post: Post | null }) {
           {activeSidebarTab === "post" && (
             <div className="space-y-5">
               {/* Category Box */}
-              <div className="rounded-2xl border border-white/10 bg-[#120D09] p-4 space-y-3">
+              <div className="rounded-2xl border border-parchment/10 bg-panel p-5 space-y-4 shadow-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-xs uppercase tracking-wider text-gold font-bold flex items-center gap-1.5">
                     <FolderTree size={14} /> Category
@@ -686,7 +696,7 @@ export function PostForm({ post }: { post: Post | null }) {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-[#0E0A08] p-2.5 text-xs text-parchment focus:border-gold focus:outline-none"
+                    className="w-full rounded-xl border border-parchment/10 bg-ink p-3 text-sm text-parchment focus:border-parchment/30 focus:outline-none focus:ring-1 focus:ring-parchment/30"
                   >
                     {DEFAULT_CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -701,7 +711,7 @@ export function PostForm({ post }: { post: Post | null }) {
                       placeholder="Enter new category name..."
                       value={customCategory}
                       onChange={(e) => setCustomCategory(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-[#0E0A08] p-2.5 text-xs text-parchment focus:border-gold focus:outline-none"
+                      className="w-full rounded-xl border border-parchment/10 bg-ink p-3 text-sm text-parchment focus:border-parchment/30 focus:outline-none focus:ring-1 focus:ring-parchment/30"
                     />
                     <p className="text-[10px] text-parchment/40">
                       Creates a new category archive on the public blog.
@@ -711,7 +721,7 @@ export function PostForm({ post }: { post: Post | null }) {
               </div>
 
               {/* Tags Manager */}
-              <div className="rounded-2xl border border-white/10 bg-[#120D09] p-4 space-y-3">
+              <div className="rounded-2xl border border-parchment/10 bg-panel p-5 space-y-4 shadow-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-xs uppercase tracking-wider text-gold font-bold flex items-center gap-1.5">
                     <Hash size={14} /> Tags
@@ -727,7 +737,7 @@ export function PostForm({ post }: { post: Post | null }) {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
                     placeholder="Add tag and press Enter..."
-                    className="flex-1 rounded-xl border border-white/10 bg-[#0E0A08] px-3 py-2 text-xs text-parchment focus:border-gold focus:outline-none"
+                    className="flex-1 rounded-xl border border-parchment/10 bg-ink px-4 py-2.5 text-sm text-parchment focus:border-parchment/30 focus:outline-none focus:ring-1 focus:ring-parchment/30"
                   />
                   <button
                     type="button"
@@ -785,7 +795,7 @@ export function PostForm({ post }: { post: Post | null }) {
               </div>
 
               {/* Featured Image Box */}
-              <div className="rounded-2xl border border-white/10 bg-[#120D09] p-4 space-y-3">
+              <div className="rounded-2xl border border-parchment/10 bg-panel p-5 space-y-4 shadow-sm">
                 <span className="text-xs uppercase tracking-wider text-gold font-bold flex items-center gap-1.5">
                   <ImageIcon size={14} /> Featured Image
                 </span>
@@ -834,6 +844,34 @@ export function PostForm({ post }: { post: Post | null }) {
                     className="w-full rounded-xl border border-white/10 bg-[#0E0A08] px-3 py-2 text-xs text-parchment focus:border-gold focus:outline-none"
                   />
                 </div>
+              </div>
+
+              {/* Publish Schedule Box */}
+              <div className="rounded-2xl border border-parchment/10 bg-panel p-5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs uppercase tracking-wider text-gold font-bold flex items-center gap-1.5">
+                    <CalendarClock size={14} /> Publish Schedule
+                  </span>
+                  {scheduledFor && (
+                    <button
+                      type="button"
+                      onClick={() => setScheduledFor("")}
+                      className="text-[11px] text-crest-red hover:underline"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <input
+                  type="datetime-local"
+                  value={scheduledFor}
+                  onChange={(e) => setScheduledFor(e.target.value)}
+                  className="w-full rounded-xl border border-parchment/10 bg-ink p-2.5 text-xs text-parchment focus:border-parchment/30 focus:outline-none focus:ring-1 focus:ring-parchment/30"
+                />
+                <p className="text-[10px] text-parchment/40">
+                  Leave empty to publish immediately. Set a future time to schedule — the post
+                  will go live automatically and readers will be notified when it publishes.
+                </p>
               </div>
 
               {/* Excerpt Box */}

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { notifyParticipantByEmail } from "@/lib/mentorship";
 
 export type ActionResult = { error?: string };
 
@@ -71,6 +72,7 @@ export async function acceptRequestAction(requestId: string): Promise<ActionResu
     .eq("id", requestId)
     .maybeSingle();
   if (!request) return { error: "Request not found." };
+  if (request.mentor_id !== user.id) return { error: "Only the assigned mentor can respond to this request." };
 
   const { error } = await supabase
     .from("mentorship_requests")
@@ -80,13 +82,24 @@ export async function acceptRequestAction(requestId: string): Promise<ActionResu
     .eq("status", "pending");
   if (error) return { error: error.message };
 
-  // Notify the mentee.
+  // Notify the mentee (in-app + opt-in email).
   const admin = createAdminClient();
+  const { data: mentor } = await admin
+    .from("profiles")
+    .select("full_name")
+    .eq("id", user.id)
+    .single();
   await admin.from("notifications").insert({
     profile_id: request.mentee_id,
     type: "mentorship",
     reference_id: requestId,
-    message: "A mentor accepted your request — awaiting final approval.",
+    message: `${mentor?.full_name ?? "A mentor"} accepted your request — awaiting final approval.`,
+  });
+  await notifyParticipantByEmail({
+    profileId: request.mentee_id,
+    subject: "Your mentorship request was accepted on MLA",
+    html: `<p>${mentor?.full_name ?? "A mentor"} accepted your mentorship request. It now awaits final platform approval.</p>
+<p><a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://mla.org.ng"}/dashboard/requests">Track it in your dashboard</a></p>`,
   });
 
   revalidatePath("/dashboard/requests");
@@ -103,10 +116,11 @@ export async function rejectRequestAction(requestId: string): Promise<ActionResu
 
   const { data: request } = await supabase
     .from("mentorship_requests")
-    .select("mentee_id")
+    .select("mentee_id, mentor_id")
     .eq("id", requestId)
     .maybeSingle();
   if (!request) return { error: "Request not found." };
+  if (request.mentor_id !== user.id) return { error: "Only the assigned mentor can respond to this request." };
 
   const { error } = await supabase
     .from("mentorship_requests")
@@ -122,6 +136,12 @@ export async function rejectRequestAction(requestId: string): Promise<ActionResu
     type: "mentorship",
     reference_id: requestId,
     message: "A mentor declined your request.",
+  });
+  await notifyParticipantByEmail({
+    profileId: request.mentee_id,
+    subject: "Your mentorship request was declined on MLA",
+    html: `<p>A mentor declined your mentorship request. You can request a different mentor from the directory.</p>
+<p><a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://mla.org.ng"}/mentorship/find">Browse mentors</a></p>`,
   });
 
   revalidatePath("/dashboard/requests");

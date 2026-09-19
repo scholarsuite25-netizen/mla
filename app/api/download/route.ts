@@ -63,12 +63,23 @@ export async function GET(req: Request) {
     const blob = await admin.storage
       .from("product-files")
       .download(product.file_url);
-    const buf = blob.data;
-    if (!buf) {
+    if (!blob.data) {
       return NextResponse.json({ error: "Could not fetch the product file." }, { status: 500 });
     }
+    
+    // If PDF is larger than 25MB, skip watermarking to prevent OOM
+    if (blob.data.size > 25 * 1024 * 1024) {
+      console.warn(`[download] PDF ${product.file_url} is too large (${blob.data.size} bytes). Skipping watermark.`);
+      const { data: signed } = await admin.storage
+        .from("product-files")
+        .createSignedUrl(product.file_url, 300);
+      if (!signed?.signedUrl) {
+        return NextResponse.json({ error: "Could not generate download link." }, { status: 500 });
+      }
+      return NextResponse.redirect(signed.signedUrl);
+    }
 
-    const watermarked = await watermarkPdf(new Uint8Array(await buf.arrayBuffer()), `${buyerName} | ${email}`);
+    const watermarked = await watermarkPdf(new Uint8Array(await blob.data.arrayBuffer()), `${buyerName} | ${email}`);
 
     return new NextResponse(new Uint8Array(watermarked), {
       headers: {

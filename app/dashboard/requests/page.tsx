@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { RequestActions } from "@/components/mentorship/request-actions";
 import { StatusBadge } from "@/components/mentorship/status-badge";
+import { CancelRequestButton } from "@/components/mentorship/cancel-request";
+import { EndMatchButton } from "@/components/mentorship/end-match";
 import { RequestAdminButton } from "@/components/dashboard/request-admin-button";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +36,7 @@ export default async function DashboardRequestsPage() {
   const { data: incoming } = await supabase
     .from("mentorship_requests")
     .select(
-      "id,status,created_at,mentee:mentorship_requests!mentorship_requests_mentee_id_fkey(full_name)"
+      "id,status,created_at,mentee:profiles!mentorship_requests_mentee_id_fkey(full_name)"
     )
     .eq("mentor_id", user.id)
     .order("created_at", { ascending: false });
@@ -43,7 +45,7 @@ export default async function DashboardRequestsPage() {
   const { data: outgoing } = await supabase
     .from("mentorship_requests")
     .select(
-      "id,status,created_at,mentor:mentorship_requests!mentorship_requests_mentor_id_fkey(full_name)"
+      "id,status,created_at,mentor:profiles!mentorship_requests_mentor_id_fkey(full_name)"
     )
     .eq("mentee_id", user.id)
     .order("created_at", { ascending: false });
@@ -56,7 +58,7 @@ export default async function DashboardRequestsPage() {
     const { data } = await supabase
       .from("mentorship_requests")
       .select(
-        "id,status,created_at,mentee:mentorship_requests!mentorship_requests_mentee_id_fkey(full_name),mentor:mentorship_requests!mentorship_requests_mentor_id_fkey(full_name)"
+        "id,status,created_at,mentee:profiles!mentorship_requests_mentee_id_fkey(full_name),mentor:profiles!mentorship_requests_mentor_id_fkey(full_name)"
       )
       .order("created_at", { ascending: false });
     institutionRequests = (data as unknown as RequestRow[]) ?? [];
@@ -127,6 +129,9 @@ export default async function DashboardRequestsPage() {
                   {req.status === "pending" && (
                     <RequestActions requestId={req.id} />
                   )}
+                  {req.status === "approved" && (
+                    <EndMatchButton requestId={req.id} />
+                  )}
                 </div>
               </div>
             );
@@ -161,7 +166,15 @@ export default async function DashboardRequestsPage() {
                     {new Date(req.created_at).toLocaleDateString()}
                   </p>
                 </div>
-                <StatusBadge status={req.status} />
+                <div className="flex items-center gap-3">
+                  <StatusBadge status={req.status} />
+                  {req.status === "pending" && (
+                    <CancelRequestButton requestId={req.id} />
+                  )}
+                  {req.status === "approved" && (
+                    <EndMatchButton requestId={req.id} />
+                  )}
+                </div>
               </div>
             );
           })}

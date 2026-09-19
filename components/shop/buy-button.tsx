@@ -19,9 +19,9 @@ export function BuyButton({ productId }: { productId: string }) {
           }
         })
       }
-      className="rounded-sm bg-crest-red px-8 py-3 text-sm font-medium text-white hover:bg-crest-red/90 disabled:opacity-50"
+      className="flex w-full items-center justify-center rounded-full bg-gradient-to-r from-gold-dark to-gold px-8 py-4 font-bold text-ink shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] disabled:opacity-50"
     >
-      {pending ? "Contacting Paystack…" : "Buy now"}
+      {pending ? "Contacting Secure Payment Gateway…" : "Purchase Securely"}
     </button>
   );
 }

@@ -119,26 +119,46 @@ export function AuditLogManager({ initialLogs }: AuditLogManagerProps) {
       return `Member Role Changed to ${role.toUpperCase()}`;
     }
     if (action === "member.suspended") return "Member Account Suspended";
-    if (action === "member.reactivated") return "Member Account Reactivated";
+    if (action === "member.reinstated") return "Member Account Reactivated";
     if (action === "member.password_reset_generated") return "Password Recovery Link Generated";
 
     if (action === "license.issued") return "Cryptographic License Issued";
     if (action === "license.activation_reset") return "Hardware Devices Quota Reset";
     if (action === "license.revoked") return "Cryptographic License Revoked";
-    if (action === "license.manually_issued") return "Manual License Issued by Admin";
+    if (action === "license.unrevoked") return "Cryptographic License Reinstated";
+    if (action === "license.manual_issue") return "Manual License Issued by Admin";
+    if (action === "license.update_max_activations") return "License Device Limit Updated";
 
     if (action === "mentorship.requested") return "Mentorship Application Submitted";
+    if (action === "mentorship.approve") return "Mentorship Match Approved";
     if (action === "mentorship.approved") return "Mentorship Match Approved";
     if (action === "mentorship.rejected") return "Mentorship Match Rejected";
     if (action === "mentorship.accepted") return "Mentorship Accepted by Mentor";
+    if (action === "mentorship.cancelled") return "Mentorship Request Withdrawn";
+    if (action === "mentorship.ended") return "Mentorship Match Ended";
     if (action === "institution_admin.approve") return "Institution Admin Granted";
     if (action === "institution_admin.reject") return "Institution Admin Rejected";
 
     if (action === "course.created") return "Course Curriculum Created";
     if (action === "course.updated") return "Course Syllabus Updated";
     if (action === "course.deleted") return "Course Curriculum Deleted";
-    if (action === "blog_post.published") return "Academy Article Published";
+    if (action === "course.publish") return "Course Curriculum Published";
+    if (action === "course.unpublish") return "Course Curriculum Unpublished";
+
+    if (action === "blog.publish") return "Academy Article Published";
+    if (action === "blog.publish_scheduled") return "Scheduled Article Published Automatically";
+    if (action === "blog.unpublish") return "Academy Article Unpublished";
+    if (action === "blog.delete") return "Academy Article Deleted";
+
+    if (action === "product.created") return "Digital Product Created";
+    if (action === "product.updated") return "Digital Product Updated";
+    if (action === "product.deleted") return "Digital Product Deleted";
+    if (action === "email.send_individual") return "Individual Email Sent";
+    if (action === "email.send_broadcast") return "Broadcast Email Sent";
+
     if (action === "order.paid") return "Store Order Settled (Paystack)";
+    if (action === "order.created") return "Store Checkout Initiated";
+    if (action === "order.amount_mismatch") return "Paystack Amount Verify Failed";
     if (action === "admin.security_note") return "Admin Security Milestone";
 
     return action.replace(/[._]/g, " ").toUpperCase();
@@ -153,16 +173,31 @@ export function AuditLogManager({ initialLogs }: AuditLogManagerProps) {
     if (log.action === "license.issued") {
       return `Cryptographic license key issued [${((d.license_key as string) || "").substring(0, 16)}...] with max ${(d.max_activations as number) || 3} hardware seats`;
     }
+    if (log.action === "license.manual_issue") {
+      return `Manual license ${log.target_id?.substring(0, 8)}... issued to a member with ${(d.max_activations as number) || 3} hardware seats`;
+    }
+    if (log.action === "license.update_max_activations") {
+      return `Device activation limit for license ${log.target_id?.substring(0, 8)}... updated by administrator`;
+    }
     if (log.action === "license.activation_reset") {
       return `Hardware activations and device fingerprints cleared for license ${log.target_id?.substring(0, 8)}...`;
     }
     if (log.action === "license.revoked") {
       return `License ${log.target_id?.substring(0, 8)}... revoked and access severed`;
     }
+    if (log.action === "license.unrevoked") {
+      return `License ${log.target_id?.substring(0, 8)}... reinstated and access restored`;
+    }
     if (log.action === "mentorship.requested") {
       return `Mentorship application initiated for scholar. Match status: pending review`;
     }
-    if (log.action === "mentorship.approved") {
+    if (log.action === "mentorship.cancelled") {
+      return `Mentorship request ${log.target_id?.substring(0, 8)}... withdrawn by the mentee`;
+    }
+    if (log.action === "mentorship.ended") {
+      return `Approved mentorship match ${log.target_id?.substring(0, 8)}... ended`;
+    }
+    if (log.action === "mentorship.approved" || log.action === "mentorship.approve") {
       return `Mentorship status transitioned to "approved". Mentor and mentee notified`;
     }
     if (log.action.startsWith("member.role_changed_to_")) {

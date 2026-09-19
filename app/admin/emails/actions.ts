@@ -75,7 +75,7 @@ export async function sendAdminEmailAction(formData: FormData): Promise<ActionRe
       // `admin.auth.admin.listUsers()` can get emails, but it's paginated.
       
       // Let's fetch all users from auth.admin
-      let allAuthUsers: any[] = [];
+      let allAuthUsers: { id: string; email?: string | null }[] = [];
       let page = 1;
       while (true) {
         const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 1000 });

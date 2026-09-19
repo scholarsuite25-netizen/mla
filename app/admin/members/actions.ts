@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { assertSuperAdmin } from "@/lib/auth-guard";
+import { sendTransactionalEmail } from "@/lib/email/resend";
 
 export type ActionResult = { error?: string; success?: boolean; resetLink?: string };
 
@@ -122,9 +123,64 @@ export async function sendPasswordResetAction(
     target_id: profileId,
   });
 
+  const resetLink = (data?.properties?.action_link as string | undefined) ?? undefined;
+
+  // Actually dispatch the recovery email to the member.
+  if (resetLink) {
+    try {
+      await sendTransactionalEmail({
+        to: email,
+        subject: "Reset your MLA Academy password",
+        html: `<!DOCTYPE html>
+<html>
+<body style="margin:0;background:#0a0806;font-family:Georgia,serif;color:#faf6ee;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0806;padding:40px 16px;">
+  <tr>
+    <td align="center">
+      <table role="presentation" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#18130f;border:1px solid #d4af37;border-radius:12px;overflow:hidden;">
+        <tr>
+          <td style="padding:28px 32px 8px;text-align:center;">
+            <h1 style="margin:0;color:#d4af37;font-size:22px;">MLA Academy</h1>
+            <p style="color:#b8ada0;font-size:12px;letter-spacing:2px;text-transform:uppercase;">Mentorship &amp; Leadership Academy</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 32px 8px;">
+            <p style="margin:0 0 12px;color:#faf6ee;font-size:16px;line-height:1.5;">Hello,</p>
+            <p style="margin:0 0 12px;color:#faf6ee;font-size:14px;line-height:1.6;">We received a request to reset your password. Use the secure link below to create a new one. This link expires in 60 minutes and can only be used once.</p>
+            <p style="text-align:center;margin:20px 0;">
+              <a href="${resetLink}" style="background:#dc2626;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:bold;">Reset Password</a>
+            </p>
+            <p style="margin:0 0 12px;color:#b8ada0;font-size:12px;line-height:1.5;">If the button above does not work, copy and paste this link into your browser:</p>
+            <p style="margin:0 0 12px;color:#d4af37;font-size:11px;word-break:break-all;">${resetLink}</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:8px 32px 24px;text-align:center;">
+            <p style="margin:0;color:#b8ada0;font-size:11px;line-height:1.5;">If you did not request this, you can safely ignore this email — your password will remain unchanged.</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>`,
+      });
+    } catch (emailErr) {
+      console.error("Failed to send password reset email:", emailErr);
+      return {
+        error:
+          "Recovery link generated but the email could not be sent. Share the backup link with the member instead.",
+        resetLink,
+      };
+    }
+  }
+
+  revalidatePath("/admin/members");
   return {
     success: true,
-    resetLink: data?.properties?.action_link ?? undefined,
+    resetLink,
   };
 }
 
