@@ -14,7 +14,6 @@ import {
   Calendar,
   ShoppingBag,
   CheckCircle2,
-  Star,
   Compass,
   Briefcase,
   Rocket,
@@ -65,15 +64,11 @@ export default async function Home() {
               Master career planning, business setup and management, applied AI, and purposeful second-act occupations.
             </p>
 
-            {/* Social Proof Stars */}
+            {/* Community Marker */}
             <div className="mt-5 flex items-center gap-2.5">
-              <div className="flex text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} className="fill-amber-400 text-amber-400" />
-                ))}
-              </div>
+              <CheckCircle2 size={15} className="text-gold shrink-0" />
               <span className="text-xs font-semibold text-parchment/80">
-                4.9/5 Rating across corporate, startup &amp; campus cohorts
+                Free core syllabus on every career track
               </span>
             </div>
 
@@ -138,13 +133,13 @@ export default async function Home() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0E0B08] via-transparent to-black/20" />
 
-              {/* Floating Chip 1: Top Verified Mentor */}
+              {/* Floating Chip 1: Mentor Matching */}
               <div className="absolute top-4 left-4 rounded-xl border border-white/20 bg-black/75 px-3.5 py-2 backdrop-blur-xl shadow-lg">
                 <div className="flex items-center gap-2">
                   <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span className="text-xs font-semibold text-parchment">Verified Mentor Available</span>
+                  <span className="text-xs font-semibold text-parchment">Mentor matching open</span>
                   <span className="rounded bg-gold/20 px-1.5 py-0.5 text-[10px] font-bold text-gold">
-                    Executive Match
+                    Executive &amp; campus
                   </span>
                 </div>
               </div>
@@ -158,12 +153,12 @@ export default async function Home() {
                     </div>
                     <div>
                       <p className="text-xs font-bold text-parchment">AI Literacy &amp; Vibe Coding</p>
-                      <p className="text-[10px] text-parchment/60">Module 2: Autonomous Agent Workflows</p>
+                      <p className="text-[10px] text-parchment/60">Core curriculum · self-paced</p>
                     </div>
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/20">
-                    <CheckCircle2 size={10} /> Certified
-                  </span>
+<span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/20">
+                      <CheckCircle2 size={10} /> Free access
+                    </span>
                 </div>
               </div>
             </div>
@@ -212,7 +207,7 @@ export default async function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold shrink-0" />
-                  <span>1-on-1 industry C-suite &amp; director mentors</span>
+                  <span>1-on-1 industry mentor matching</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold shrink-0" />
@@ -248,15 +243,15 @@ export default async function Home() {
               <ul className="mt-4 space-y-2 text-xs text-parchment/75">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-red-400 shrink-0" />
-                  <span>Real deployed proof-of-work portfolio</span>
+                  <span>Hands-on proof-of-work projects</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-red-400 shrink-0" />
-                  <span>CV reviews &amp; mock interview drills</span>
+                  <span>Mentor-led CV &amp; interview coaching</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-red-400 shrink-0" />
-                  <span>Direct alumni &amp; recruiter networking</span>
+                  <span>Cross-institution peer networking</span>
                 </li>
               </ul>
             </div>
@@ -322,13 +317,13 @@ export default async function Home() {
                 Retirement Planning &amp; Legacy
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Structured transition for senior leaders: pension optimization, wealth preservation, board advisory directorships,
-                high-ticket consulting, and second-act venture building.
+                Structured transition for senior leaders: pension optimization, wealth preservation,
+                advisory and high-ticket consulting, and second-act venture building.
               </p>
               <ul className="mt-4 space-y-2 text-xs text-parchment/75">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
-                  <span>Pension strategy &amp; wealth preservation</span>
+                  <span>Structured retirement &amp; legacy planning</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
@@ -336,7 +331,7 @@ export default async function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
-                  <span>Board directorship &amp; angel syndicates</span>
+                  <span>Guided second-act venture building</span>
                 </li>
               </ul>
             </div>
@@ -402,21 +397,21 @@ export default async function Home() {
                 Campus Scholars (Students)
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Excel in your academic coursework, build inter-university peer networks across 20+ institutions,
-                and graduate with a battle-tested technical edge.
+                Excel in your academic coursework, build cross-campus peer networks across {institutions} institutions,
+                and graduate with a practical technical edge.
               </p>
               <ul className="mt-4 space-y-2 text-xs text-parchment/75">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
-                  <span>Inter-university student leader networks</span>
+                  <span>Cross-campus scholar networks</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
-                  <span>Faculty &amp; senior fellow guidance</span>
+                  <span>Mentor &amp; fellow guidance</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
-                  <span>Campus hackathons and masterclasses</span>
+                  <span>Campus meetups &amp; masterclasses</span>
                 </li>
               </ul>
             </div>
@@ -531,12 +526,12 @@ export default async function Home() {
                 Masterclass Events
               </h3>
               <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Virtual webinars, technical deep dives, and corporate leadership workshops with live RSVP and recording archives.
+                Virtual webinars, technical deep dives, and corporate leadership workshops with live RSVP for members.
               </p>
               <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Nationwide webinar broadcasts</span>
+                  <span>Live webinars &amp; workshops</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
@@ -544,7 +539,7 @@ export default async function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 size={13} className="text-gold" />
-                  <span>Archived session recordings</span>
+                  <span>RSVP &amp; event reminders</span>
                 </li>
               </ul>
             </div>
@@ -606,11 +601,11 @@ export default async function Home() {
               <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/20 bg-black/80 p-3.5 backdrop-blur-xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-bold text-parchment">Dr. Chioma Nnamdi</p>
-                    <p className="text-[10px] text-parchment/60">Senior AI Mentor &amp; Tech Executive</p>
+                    <p className="text-xs font-bold text-parchment">MLA Fellows &amp; Mentorship Guild</p>
+                    <p className="text-[10px] text-parchment/60">Community spotlight</p>
                   </div>
                   <span className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
-                    Active Mentor
+                    Featured
                   </span>
                 </div>
               </div>
@@ -738,7 +733,7 @@ export default async function Home() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle2 size={13} className="text-gold" />
-                Instant personalized onboarding
+                Instant free account access
               </span>
             </div>
           </div>

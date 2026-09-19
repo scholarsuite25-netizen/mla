@@ -141,7 +141,7 @@ export async function Footer() {
             <div className="flex flex-wrap gap-2 pt-2">
               <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-parchment/80">
                 <ShieldCheck size={12} className="text-gold" />
-                <span>Verified Mentorship</span>
+                <span>Active Mentorship</span>
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-parchment/80">
                 <GraduationCap size={12} className="text-crest-red" />
@@ -174,7 +174,7 @@ export async function Footer() {
             <FooterLinks
               links={[
                 { label: "Find a Mentor", href: "/mentorship/find" },
-                { label: "Become a Verified Mentor", href: "/mentorship/become" },
+                { label: "Become a Mentor", href: "/mentorship/become" },
                 { label: "Institutions Directory", href: "/institutions" },
                 { label: "Independent Scholar Track", href: "/register" },
                 { label: "Faculty & Campus Access", href: "/dashboard/requests" },
