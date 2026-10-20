@@ -13,7 +13,7 @@ export default async function AdminProductsPage() {
   const [{ data: products, error: pError }, { data: orders }] = await Promise.all([
     admin
       .from("digital_products")
-      .select("id,title,type,price,status,updated_at")
+      .select("id,title,type,price,status,updated_at,is_membership_deal")
       .order("updated_at", { ascending: false }),
     admin
       .from("orders")

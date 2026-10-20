@@ -17,6 +17,11 @@ import {
   Menu,
   X,
   Send,
+  CreditCard,
+  QrCode,
+  Mic,
+  UploadCloud,
+  Bell,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -26,6 +31,11 @@ const navItems = [
     href: "/admin",
     icon: LayoutDashboard,
     exact: true,
+  },
+  {
+    label: "Notices & Bulletins",
+    href: "/admin/notices",
+    icon: Bell,
   },
   {
     label: "Blog (CMS)",
@@ -46,6 +56,26 @@ const navItems = [
     label: "Shop & Products",
     href: "/admin/products",
     icon: ShoppingBag,
+  },
+  {
+    label: "Bulk Uploader",
+    href: "/admin/products/bulk",
+    icon: UploadCloud,
+  },
+  {
+    label: "Orders & Transfers",
+    href: "/admin/orders",
+    icon: CreditCard,
+  },
+  {
+    label: "Stage QR Slides",
+    href: "/admin/events-qr",
+    icon: QrCode,
+  },
+  {
+    label: "Speaking Inquiries",
+    href: "/admin/inquiries",
+    icon: Mic,
   },
   {
     label: "Licences (DRM)",

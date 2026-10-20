@@ -23,6 +23,7 @@ import {
   ShoppingBag,
   Building2,
   FileText,
+  MessageSquare,
 } from "lucide-react";
 import { signOutAction } from "@/app/auth/actions";
 
@@ -51,6 +52,9 @@ const iconMap: Record<string, React.ReactNode> = {
   "Shop": <ShoppingBag size={16} className="text-gold" />,
   "Digital Storefront": <ShoppingBag size={16} className="text-gold" />,
   "My Downloads": <FileText size={16} className="text-gold" />,
+  "Notice Board": <Bell size={16} className="text-gold" />,
+  "Community Forum": <MessageSquare size={16} className="text-gold" />,
+  "Lifetime Membership": <Award size={16} className="text-gold" />,
 };
 
 function Dropdown({ link }: { link: NavLink }) {

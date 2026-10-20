@@ -5,6 +5,7 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { FloatingContact } from "@/components/floating-contact";
 import { RegistrationPopup } from "@/components/registration-popup";
+import { AppProviders } from "@/components/providers/app-providers";
 
 const fraunces = Fraunces({
   variable: "--font-display",
@@ -59,11 +60,13 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon.svg" />
       </head>
       <body className={`${fraunces.variable} ${sora.variable} flex min-h-screen flex-col antialiased bg-[#0A0806] text-parchment selection:bg-gold/30 selection:text-gold-light`}>
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <RegistrationPopup />
-        <FloatingContact />
+        <AppProviders>
+          <Nav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <RegistrationPopup />
+          <FloatingContact />
+        </AppProviders>
       </body>
     </html>
   );

@@ -7,105 +7,252 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { initializeTransaction, paystackConfigured } from "@/lib/paystack";
 import { generateLicenseKey } from "@/lib/licenses";
 import { logAuditEvent } from "@/lib/audit";
+import { checkIsMember } from "@/lib/membership";
+import {
+  validateCoupon,
+  createBankTransferOrder,
+  getStoreSettings,
+  type CouponValidationResult,
+  type BankTransferOrderResult,
+  type StoreSettings,
+} from "@/lib/store";
 
-export type ActionResult = { error?: string; url?: string };
+export type ActionResult = {
+  error?: string;
+  url?: string;
+  orderId?: string;
+  reference?: string;
+  bankDetails?: StoreSettings;
+  whatsappUrl?: string;
+};
 
-export async function startCheckoutAction(productId: string): Promise<ActionResult> {
+export type CheckoutInput =
+  | string
+  | {
+      productId?: string;
+      bundleId?: string;
+      buyerName?: string;
+      buyerEmail?: string;
+      couponCode?: string;
+    };
+
+export async function getStoreSettingsAction(): Promise<StoreSettings> {
+  return await getStoreSettings();
+}
+
+export async function validateCouponAction(
+  code: string,
+  subtotal: number
+): Promise<CouponValidationResult> {
+  return await validateCoupon(code, subtotal);
+}
+
+export async function startBankTransferAction(input: {
+  productId?: string;
+  bundleId?: string;
+  buyerName: string;
+  buyerEmail: string;
+  couponCode?: string;
+  note?: string;
+}): Promise<BankTransferOrderResult> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { error: "Please sign in to purchase." };
 
-  if (!paystackConfigured()) {
-    return { error: "Checkout is not set up yet — the operator needs to add Paystack keys." };
-  }
+  return await createBankTransferOrder({
+    ...input,
+    buyerId: user?.id,
+  });
+}
+
+export async function startCheckoutAction(
+  input: CheckoutInput
+): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const isObj = typeof input === "object" && input !== null;
+  const productId = isObj ? input.productId : input;
+  const bundleId = isObj ? input.bundleId : undefined;
+  const couponCode = isObj ? input.couponCode : undefined;
 
   const admin = createAdminClient();
-  const { data: product } = await admin
-    .from("digital_products")
-    .select("id,title,price,status")
-    .eq("id", productId)
-    .eq("status", "published")
-    .maybeSingle();
-  if (!product) return { error: "Product not found or not for sale yet." };
 
-  let identity: { user: { email?: string } | null } | null = null;
-  try {
-    const res = await admin.auth.admin.getUserById(user.id);
-    identity = res.data as { user: { email?: string } | null };
-  } catch {
-    identity = null;
+  let email = isObj ? input.buyerEmail?.trim().toLowerCase() : "";
+  let buyerName = isObj ? input.buyerName?.trim() : "";
+
+  if (user) {
+    let identity: { user: { email?: string } | null } | null = null;
+    try {
+      const res = await admin.auth.admin.getUserById(user.id);
+      identity = res.data as { user: { email?: string } | null };
+    } catch {
+      identity = null;
+    }
+    email = identity?.user?.email ?? user.email ?? email;
+    const { data: prof } = await admin.from("profiles").select("full_name").eq("id", user.id).single();
+    buyerName = prof?.full_name ?? buyerName;
   }
-  const email = identity?.user?.email ?? user.email;
-  if (!email) return { error: "Could not determine your email." };
 
-  // Sweep abandoned pending checkouts so rows don't accumulate per click.
-  await admin
-    .from("orders")
-    .delete()
-    .eq("buyer_id", user.id)
-    .eq("product_id", product.id)
-    .eq("status", "pending");
+  if (!email || !email.includes("@")) {
+    return { error: "Please enter a valid email address for delivery." };
+  }
 
-  // If the product is free, bypass Paystack entirely.
-  if (Number(product.price) <= 0) {
+  let itemTitle = "";
+  let basePrice = 0;
+  let isMembershipDeal = false;
+
+  if (bundleId) {
+    const { data: bundle } = await admin
+      .from("product_bundles")
+      .select("id, title, price, status")
+      .eq("id", bundleId)
+      .eq("status", "published")
+      .maybeSingle();
+    if (!bundle) return { error: "Bundle not found or not for sale yet." };
+    itemTitle = bundle.title;
+    basePrice = Number(bundle.price);
+  } else if (productId) {
+    const { data: product } = await admin
+      .from("digital_products")
+      .select("id, title, price, status, is_membership_deal")
+      .eq("id", productId)
+      .eq("status", "published")
+      .maybeSingle();
+    if (!product) return { error: "Material not found or not for sale yet." };
+    itemTitle = product.title;
+    basePrice = Number(product.price);
+    isMembershipDeal = Boolean(product.is_membership_deal);
+  } else {
+    return { error: "No product or bundle selected." };
+  }
+
+  const isMember = await checkIsMember(user?.id, email);
+
+  // Handle coupon discount
+  let discountAmount = 0;
+  let couponId: string | null = null;
+  if (couponCode) {
+    const cRes = await validateCoupon(couponCode, basePrice);
+    if (cRes.valid && cRes.couponId && cRes.discountAmount !== undefined) {
+      couponId = cRes.couponId;
+      discountAmount = cRes.discountAmount;
+    }
+  }
+
+  // Handle Lifetime Membership Benefits:
+  // 1. If product is a Membership Deal and buyer is member -> 100% Free
+  // 2. All active members enjoy 50% discount on all published items on the platform
+  if (isMember) {
+    if (isMembershipDeal) {
+      discountAmount = basePrice;
+    } else if (basePrice > 0) {
+      const memberDiscount = Math.round(basePrice * 0.5);
+      discountAmount = Math.max(discountAmount, memberDiscount);
+    }
+  }
+
+  const finalAmount = Math.max(0, basePrice - discountAmount);
+
+  // If final price is 0 (free or 100% coupon)
+  if (finalAmount <= 0) {
     const { data: order, error: oErr } = await admin
       .from("orders")
       .insert({
-        buyer_id: user.id,
-        product_id: product.id,
+        buyer_id: user?.id || null,
+        buyer_name: buyerName || "Guest",
+        buyer_email: email,
+        product_id: productId || null,
+        bundle_id: bundleId || null,
         amount: 0,
         status: "paid",
-        paystack_reference: `free_${crypto.randomUUID()}`
+        coupon_id: couponId,
+        discount_amount: discountAmount,
+        paystack_reference: `free_${crypto.randomUUID()}`,
       })
       .select("id")
       .single();
     if (oErr) return { error: oErr.message };
 
-    let licenseKey: string;
-    try {
-      licenseKey = generateLicenseKey(product.id, user.id);
-    } catch {
-      return { error: "Could not generate license key." };
+    const buyerIdentifier = user?.id || email;
+    const pids: string[] = [];
+    if (bundleId) {
+      const { data: bItems } = await admin
+        .from("product_bundle_items")
+        .select("product_id")
+        .eq("bundle_id", bundleId);
+      for (const bi of bItems ?? []) pids.push(bi.product_id);
+    } else if (productId) {
+      pids.push(productId);
     }
 
-    const { error: licError } = await admin.from("product_licenses").insert({
-      order_id: order.id,
-      product_id: product.id,
-      buyer_id: user.id,
-      license_key: licenseKey,
-      max_activations: 3,
-    });
-    if (licError) return { error: licError.message };
+    for (const pid of pids) {
+      const licenseKey = generateLicenseKey(pid, buyerIdentifier);
+      await admin.from("product_licenses").insert({
+        order_id: order.id,
+        product_id: pid,
+        bundle_id: bundleId || null,
+        buyer_id: user?.id || null,
+        buyer_email: email,
+        license_key: licenseKey,
+        max_activations: 5,
+      });
+    }
 
     revalidatePath("/shop");
-    return { url: "/dashboard/library" };
+    return { url: `/shop/delivery/${order.id}?email=${encodeURIComponent(email)}` };
   }
 
+  if (!paystackConfigured()) {
+    return {
+      error: "Online card checkout is currently being configured. You can use Direct Bank Transfer & WhatsApp below!",
+    };
+  }
 
+  // Enforce Paystack NGN 100 minimum
+  if (finalAmount < 100) {
+    return {
+      error: "Order total is below Paystack's ₦100 threshold. Please select Bank Transfer or add additional items.",
+    };
+  }
 
   const { data: order, error: oErr } = await admin
     .from("orders")
     .insert({
-      buyer_id: user.id,
-      product_id: product.id,
-      amount: Number(product.price),
+      buyer_id: user?.id || null,
+      buyer_name: buyerName || "Guest",
+      buyer_email: email,
+      product_id: productId || null,
+      bundle_id: bundleId || null,
+      amount: finalAmount,
+      coupon_id: couponId,
+      discount_amount: discountAmount,
       status: "pending",
+      payment_method: "paystack",
     })
     .select("id")
     .single();
+
   if (oErr) return { error: oErr.message };
 
   await logAuditEvent({
     action: "order.created",
     targetTable: "orders",
     targetId: order.id,
-    actorId: user.id,
+    actorId: user?.id || null,
     actorEmail: email,
     category: "shop",
     severity: "info",
-    details: { product_id: product.id, title: product.title, amount: Number(product.price) },
+    details: {
+      product_id: productId,
+      bundle_id: bundleId,
+      title: itemTitle,
+      amount: finalAmount,
+      discount: discountAmount,
+    },
   });
 
   const reference = `mla_${order.id}`;
@@ -120,10 +267,10 @@ export async function startCheckoutAction(productId: string): Promise<ActionResu
   try {
     const { authorization_url } = await initializeTransaction({
       email,
-      amountKobo: Number(product.price) * 100,
+      amountKobo: Math.round(finalAmount * 100),
       reference,
       callbackUrl: `${origin}/dashboard/library`,
-      metadata: { order_id: order.id, product_id: product.id },
+      metadata: { order_id: order.id, product_id: productId, bundle_id: bundleId },
     });
     revalidatePath("/shop");
     return { url: authorization_url };
@@ -144,7 +291,9 @@ export async function submitReviewAction(formData: FormData): Promise<ActionResu
   }
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return { error: "Please sign in to review." };
 
   const { error } = await supabase.from("product_reviews").upsert(
@@ -158,7 +307,7 @@ export async function submitReviewAction(formData: FormData): Promise<ActionResu
   );
 
   if (error) return { error: error.message };
-  
+
   revalidatePath("/shop");
   revalidatePath(`/shop/${productId}`);
   return {};

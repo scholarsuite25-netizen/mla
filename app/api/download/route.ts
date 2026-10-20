@@ -11,6 +11,8 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const licenseId = searchParams.get("license") ?? "";
   const fingerprint = searchParams.get("d") ?? "";
+  const keyParam = searchParams.get("key") ?? "";
+
   if (!licenseId || !fingerprint) {
     return NextResponse.json({ error: "Missing download parameters." }, { status: 400 });
   }
@@ -19,19 +21,26 @@ export async function GET(req: Request) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Please sign in." }, { status: 401 });
-  }
 
   const admin = createAdminClient();
   const { data: lic } = await admin
     .from("product_licenses")
-    .select("license_key,buyer_id,product_id,digital_products(file_url,type,title)")
+    .select("license_key,buyer_id,buyer_email,product_id,orders(buyer_name,buyer_email),digital_products(file_url,type,title)")
     .eq("id", licenseId)
     .single();
 
-  if (!lic || String(lic.buyer_id) !== user.id) {
-    return NextResponse.json({ error: "Licence not found for this account." }, { status: 404 });
+  if (!lic) {
+    return NextResponse.json({ error: "Licence not found." }, { status: 404 });
+  }
+
+  const isOwner = Boolean(user && String(lic.buyer_id) === user.id);
+  const isKeyValid = Boolean(keyParam && keyParam === lic.license_key);
+
+  if (!isOwner && !isKeyValid) {
+    if (!user) {
+      return NextResponse.json({ error: "Please sign in or provide a valid licence key." }, { status: 401 });
+    }
+    return NextResponse.json({ error: "Licence not found for this account." }, { status: 403 });
   }
 
   const product = Array.isArray(lic.digital_products)
@@ -46,16 +55,27 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: activation.reason }, { status: 403 });
   }
 
-  let identity: { user: { email?: string } | null } | null = null;
-  try {
-    const res = await admin.auth.admin.getUserById(user.id);
-    identity = res.data as { user: { email?: string } | null };
-  } catch {
-    identity = null;
+  let email = "buyer";
+  let buyerName = "Valued Reader";
+  const orderData = Array.isArray(lic.orders)
+    ? lic.orders[0]
+    : (lic.orders as { buyer_name?: string; buyer_email?: string } | null);
+
+  if (user) {
+    let identity: { user: { email?: string } | null } | null = null;
+    try {
+      const res = await admin.auth.admin.getUserById(user.id);
+      identity = res.data as { user: { email?: string } | null };
+    } catch {
+      identity = null;
+    }
+    email = identity?.user?.email ?? user.email ?? orderData?.buyer_email ?? lic.buyer_email ?? "buyer";
+    const { data: profile } = await admin.from("profiles").select("full_name").eq("id", user.id).single();
+    buyerName = profile?.full_name ?? orderData?.buyer_name ?? email;
+  } else {
+    email = orderData?.buyer_email ?? lic.buyer_email ?? "buyer";
+    buyerName = orderData?.buyer_name ?? "Valued Reader";
   }
-  const email = identity?.user?.email ?? user.email ?? "buyer";
-  const { data: profile } = await admin.from("profiles").select("full_name").eq("id", user.id).single();
-  const buyerName = profile?.full_name ?? email;
 
   const isPdf = /\.pdf$/i.test(product.file_url);
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -9,6 +10,29 @@ const schema = z.object({
 });
 
 export async function POST(request: Request) {
+  // Rate limiting by client IP
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "anonymous";
+
+  const rateLimit = checkRateLimit(`newsletter_${ip}`, {
+    limit: 5,
+    windowMs: 60_000,
+  });
+
+  if (!rateLimit.success) {
+    return NextResponse.json(
+      { error: "Too many subscription attempts. Please wait a minute." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": Math.ceil((rateLimit.resetAt - Date.now()) / 1000).toString(),
+        },
+      }
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();

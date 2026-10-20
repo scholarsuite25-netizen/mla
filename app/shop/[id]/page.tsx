@@ -16,7 +16,7 @@ export default async function ProductDetailPage({
 
   const { data: product } = await supabase
     .from("digital_products")
-    .select("id,title,type,description,price,cover_image_url")
+    .select("id,title,type,description,price,cover_image_url,is_membership_deal")
     .eq("id", id)
     .eq("status", "published")
     .maybeSingle();
@@ -26,12 +26,72 @@ export default async function ProductDetailPage({
     data: { user },
   } = await supabase.auth.getUser();
 
+  const { data: profile } = user
+    ? await supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle()
+    : { data: null };
+
+  const { checkIsMember } = await import("@/lib/membership");
+  const isMember = await checkIsMember(user?.id, user?.email);
+
+  const { getStoreSettings } = await import("@/lib/store");
+  const bankSettings = await getStoreSettings();
+
+  const basePrice = Number(product.price);
+  const isMembershipDeal = Boolean(product.is_membership_deal);
+
+  // Effective price for user
+  let effectivePrice = basePrice;
+  if (isMember) {
+    if (isMembershipDeal) {
+      effectivePrice = 0;
+    } else if (basePrice > 0) {
+      effectivePrice = Math.round(basePrice * 0.5);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-ink w-full">
       <div className="mx-auto max-w-6xl px-4 py-8 lg:py-16">
         <Link href="/shop" className="inline-flex items-center gap-2 text-sm text-parchment/60 hover:text-gold transition-colors mb-8">
           <ChevronLeft size={16} /> Back to Collection
         </Link>
+
+        {/* Member Discount Strip Notice */}
+        {isMember ? (
+          <div className="mb-8 rounded-2xl bg-gradient-to-r from-gold/20 via-gold/10 to-transparent border border-gold/30 p-4 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">👑</span>
+              <div>
+                <p className="text-sm font-bold text-gold">
+                  Lifetime Member Status Active
+                </p>
+                <p className="text-xs text-parchment/70">
+                  {isMembershipDeal
+                    ? "This publication is an official Membership Deal and is 100% complimentary for you."
+                    : "You enjoy an automatic 50% discount on this material as an MLA Lifetime Member."}
+                </p>
+              </div>
+            </div>
+            <span className="rounded-full bg-gold/20 text-gold border border-gold/40 px-3 py-1 text-xs font-bold shrink-0">
+              {isMembershipDeal ? "100% OFF" : "50% OFF"}
+            </span>
+          </div>
+        ) : (
+          <div className="mb-8 rounded-2xl bg-white/5 border border-white/10 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2 text-parchment/80">
+              <span className="text-base">👑</span>
+              <span>
+                Want <strong>50% off</strong> all publications or free access to Membership Deals? One-time <strong>₦20,000</strong> Lifetime Membership available.
+              </span>
+            </div>
+            <Link
+              href="/membership"
+              className="text-gold font-bold hover:underline shrink-0"
+            >
+              Learn More &amp; Join →
+            </Link>
+          </div>
+        )}
 
         <div className="grid gap-12 lg:grid-cols-[1fr_1fr] items-start">
           {/* Left Column: Product Render */}
@@ -59,15 +119,50 @@ export default async function ProductDetailPage({
 
           {/* Right Column: Details & Actions */}
           <div className="flex flex-col pt-4">
-            <p className="text-sm font-bold uppercase tracking-widest text-gold mb-3">
-              {product.type}
-            </p>
+            <div className="flex items-center gap-2 mb-3">
+              <p className="text-sm font-bold uppercase tracking-widest text-gold">
+                {product.type}
+              </p>
+              {isMembershipDeal && (
+                <span className="rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                  👑 Membership Deal
+                </span>
+              )}
+            </div>
             <h1 className="font-display text-4xl md:text-5xl text-parchment leading-tight mb-4">
               {product.title}
             </h1>
-            <p className="font-display text-3xl text-parchment mb-8 border-b border-white/10 pb-8">
-              ₦{Number(product.price).toFixed(2)}
-            </p>
+            <div className="flex items-baseline gap-3 mb-8 border-b border-white/10 pb-8">
+              {effectivePrice === 0 ? (
+                <>
+                  <span className="font-display text-4xl font-bold text-emerald-400">FREE</span>
+                  <span className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider">
+                    {isMember && isMembershipDeal ? "Included with Membership" : "Complimentary Access"}
+                  </span>
+                </>
+              ) : isMember ? (
+                <div className="flex items-baseline gap-3">
+                  <span className="font-display text-2xl text-parchment/40 line-through">
+                    ₦{basePrice.toLocaleString()}
+                  </span>
+                  <p className="font-display text-4xl font-bold text-gold">
+                    ₦{effectivePrice.toLocaleString()}
+                  </p>
+                  <span className="rounded-full bg-gold/20 text-gold border border-gold/30 px-2.5 py-0.5 text-[11px] font-bold uppercase">
+                    50% Member Discount
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-1">
+                  <p className="font-display text-3xl text-parchment">
+                    ₦{basePrice.toLocaleString()}
+                  </p>
+                  <p className="text-xs text-gold">
+                    ₦{(basePrice * 0.5).toLocaleString()} for MLA Lifetime Members
+                  </p>
+                </div>
+              )}
+            </div>
 
             <div className="prose prose-invert prose-parchment max-w-none mb-10 text-parchment/70 leading-relaxed font-light">
               <p>
@@ -77,20 +172,17 @@ export default async function ProductDetailPage({
 
             {/* Purchase CTA */}
             <div className="mb-12">
-              {user ? (
-                <div className="group">
-                  <BuyButton productId={product.id} />
-                </div>
-              ) : (
-                <Link
-                  href="/register?next=/shop/"
-                  className="flex w-full items-center justify-center rounded-full bg-gradient-to-r from-gold-dark to-gold px-8 py-4 font-bold text-ink shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all hover:shadow-[0_0_30px_rgba(212,175,55,0.4)]"
-                >
-                  Sign in to Purchase Securely
-                </Link>
-              )}
+              <BuyButton
+                productId={product.id}
+                title={product.title}
+                price={effectivePrice}
+                type={product.type}
+                coverImageUrl={product.cover_image_url}
+                initialUser={user ? { email: user.email, name: profile?.full_name ?? undefined } : null}
+                bankSettings={bankSettings}
+              />
               <p className="mt-3 text-center text-xs text-parchment/40 flex items-center justify-center gap-1.5">
-                <ShieldCheck size={14} className="text-gold/60" /> Payments processed securely with AES-256 encryption.
+                <ShieldCheck size={14} className="text-gold/60" /> Instant access via Direct GTBank Transfer or Card.
               </p>
             </div>
 

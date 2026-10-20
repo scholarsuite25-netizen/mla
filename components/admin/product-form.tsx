@@ -38,6 +38,7 @@ export function ProductForm({
     cover_image_url: string | null;
     file_url: string | null;
     status?: string;
+    is_membership_deal?: boolean;
   } | null;
 }) {
   const router = useRouter();
@@ -46,6 +47,7 @@ export function ProductForm({
   const [title, setTitle] = useState(product?.title ?? "");
   const [type, setType] = useState(product?.type ?? "pdf");
   const [price, setPrice] = useState(product?.price ?? 0);
+  const [isMembershipDeal, setIsMembershipDeal] = useState(product?.is_membership_deal ?? false);
   const [description, setDescription] = useState(product?.description ?? "");
   const [coverUrl, setCoverUrl] = useState(product?.cover_image_url ?? "");
   const [fileUrl, setFileUrl] = useState(product?.file_url ?? "");
@@ -124,6 +126,7 @@ export function ProductForm({
     fd.append("title", title);
     fd.append("type", type);
     fd.append("price", String(price));
+    fd.append("is_membership_deal", String(isMembershipDeal));
     fd.append("description", description);
     fd.append("cover_image_url", coverUrl);
 
@@ -192,34 +195,64 @@ export function ProductForm({
                   onChange={(e) => setType(e.target.value)}
                   className="w-full rounded-xl border border-white/10 bg-[#0E0A08] p-2.5 text-xs text-parchment focus:border-gold focus:outline-none"
                 >
-                  <option value="pdf">PDF Blueprint / Curriculum Handout</option>
-                  <option value="ebook">eBook / Digital Publication</option>
+                  <option value="ebook">Published E-Book / Publication</option>
+                  <option value="lecture_slides">Keynote &amp; Lecture Slides</option>
+                  <option value="training_manual">Training Manual &amp; Masterclass Notes</option>
+                  <option value="monograph">Monograph / Institutional Address</option>
+                  <option value="pdf">PDF Handout &amp; Blueprint</option>
                   <option value="software">Software / Code / Desktop Tool</option>
                 </select>
               </div>
 
               <div>
-                <label className="mb-1 block text-xs uppercase tracking-widest text-parchment/60 font-semibold">
-                  Price (₦ NGN) *
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs uppercase tracking-widest text-parchment/60 font-semibold">
+                    Price (₦ NGN) *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setPrice(0)}
+                    className="text-[10px] font-semibold text-gold hover:underline uppercase"
+                  >
+                    Set Free (₦0)
+                  </button>
+                </div>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gold">
                     ₦
                   </span>
                   <input
                     type="number"
-                    min={100}
+                    min={0}
                     step="0.01"
                     required
                     value={price}
                     onChange={(e) => setPrice(Number(e.target.value))}
-                    placeholder="5000"
+                    placeholder="0"
                     className="w-full rounded-xl border border-white/10 bg-[#0E0A08] py-2.5 pl-8 pr-4 text-xs font-semibold text-parchment focus:border-gold focus:outline-none"
                   />
                 </div>
                 <p className="text-[10px] text-parchment/40 mt-1">
-                  Processed via Paystack checkout (minimum ₦100). Complimentary access is issued via Manual Licence in the License Manager.
+                  Set ₦0 for complimentary distribution, or set any price for paid sales. Paid items support Direct GTBank Transfer (WhatsApp) and online checkout.
                 </p>
+
+                <div className="mt-4 rounded-xl border border-gold/30 bg-gold/5 p-3.5 flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    id="is_membership_deal"
+                    checked={isMembershipDeal}
+                    onChange={(e) => setIsMembershipDeal(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-white/20 bg-[#0E0A08] text-gold accent-gold focus:ring-gold cursor-pointer"
+                  />
+                  <label htmlFor="is_membership_deal" className="cursor-pointer text-xs select-none">
+                    <span className="font-bold text-gold flex items-center gap-1.5">
+                      👑 Mark as Membership Deal
+                    </span>
+                    <span className="text-parchment/70 block mt-1 leading-relaxed text-[11px]">
+                      Active ₦20,000 Lifetime Members can access and download this publication 100% free. Non-members will see standard price with an option to join the membership.
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   Search,
   Plus,
+  UploadCloud,
   ExternalLink,
   ShoppingBag,
   FileCode,
@@ -20,6 +21,7 @@ export interface ProductListItem {
   price: number;
   status: string;
   updated_at: string;
+  is_membership_deal?: boolean;
 }
 
 export interface RecentOrder {
@@ -68,13 +70,22 @@ export function ProductsManager({
             WooCommerce-grade digital shop management: products, prices, downloads, and sales.
           </p>
         </div>
-        <Link
-          href="/admin/products/new"
-          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-crest-red to-amber-700 px-4 py-2.5 text-xs font-semibold text-white shadow-lg hover:brightness-110 transition-all self-start sm:self-auto"
-        >
-          <Plus size={15} />
-          <span>Add New Product</span>
-        </Link>
+        <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
+          <Link
+            href="/admin/products/bulk"
+            className="inline-flex items-center gap-2 rounded-xl border border-gold/40 bg-gold/10 px-4 py-2.5 text-xs font-semibold text-gold shadow-md hover:bg-gold/20 transition-all"
+          >
+            <UploadCloud size={15} />
+            <span>Bulk Upload Materials</span>
+          </Link>
+          <Link
+            href="/admin/products/new"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-crest-red to-amber-700 px-4 py-2.5 text-xs font-semibold text-white shadow-lg hover:brightness-110 transition-all"
+          >
+            <Plus size={15} />
+            <span>Add Single Product</span>
+          </Link>
+        </div>
       </div>
 
       {/* Overview Metric Banner */}
@@ -167,9 +178,12 @@ export function ProductsManager({
                 className="rounded-lg border border-white/10 bg-[#0E0A08] px-2.5 py-1.5 text-xs text-parchment focus:border-gold focus:outline-none"
               >
                 <option value="all">All Product Types</option>
-                <option value="ebook">E-Book</option>
+                <option value="ebook">Published E-Book</option>
+                <option value="lecture_slides">Keynote / Lecture Slides</option>
+                <option value="training_manual">Training Manual / Notes</option>
+                <option value="monograph">Monograph / Address</option>
+                <option value="pdf">PDF Document</option>
                 <option value="software">Software / Starter Kit</option>
-                <option value="pdf">PDF / Document</option>
               </select>
             </div>
 
@@ -216,6 +230,11 @@ export function ProductsManager({
                         <TypeIcon size={12} className="text-gold" />
                         <span className="capitalize">{product.type}</span>
                       </span>
+                      {product.is_membership_deal && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                          👑 Membership Deal
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="font-display text-base sm:text-lg font-bold text-parchment truncate">
@@ -223,9 +242,15 @@ export function ProductsManager({
                     </h3>
 
                     <div className="flex items-center gap-4 text-xs">
-                      <span className="font-bold text-gold">
-                        ₦{Number(product.price).toLocaleString("en-NG", { minimumFractionDigits: 2 })}
-                      </span>
+                      {Number(product.price) === 0 ? (
+                        <span className="font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-lg text-[11px]">
+                          ₦0.00 (Free Material)
+                        </span>
+                      ) : (
+                        <span className="font-bold text-gold">
+                          ₦{Number(product.price).toLocaleString("en-NG", { minimumFractionDigits: 2 })}
+                        </span>
+                      )}
                       {product.status === "published" && (
                         <Link
                           href={`/shop/${product.id}`}

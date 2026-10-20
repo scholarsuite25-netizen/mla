@@ -11,10 +11,11 @@ export type ActionResult = { error?: string };
 
 const productSchema = z.object({
   title: z.string().trim().min(3, "Title must be at least 3 characters."),
-  type: z.enum(["ebook", "software", "pdf"]),
+  type: z.enum(["ebook", "software", "pdf", "lecture_slides", "training_manual", "monograph"]),
   description: z.string().trim().max(10000, "Description is too long."),
-  price: z.coerce.number().min(100, "Minimum price is ₦100 — Paystack rejects ₦0. Use license manual issue for complimentary access."),
+  price: z.coerce.number().min(0, "Price must be ₦0 (Free) or greater."),
   cover_image_url: z.string().trim().max(2000),
+  is_membership_deal: z.coerce.boolean().optional().default(false),
 });
 
 export async function saveProductAction(
@@ -34,6 +35,7 @@ export async function saveProductAction(
     description: String(formData.get("description") ?? ""),
     price: Number(formData.get("price") ?? "0"),
     cover_image_url: String(formData.get("cover_image_url") ?? ""),
+    is_membership_deal: formData.get("is_membership_deal") === "true" || formData.get("is_membership_deal") === "on",
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
@@ -45,6 +47,7 @@ export async function saveProductAction(
     description: parsed.data.description,
     price: parsed.data.price,
     cover_image_url: parsed.data.cover_image_url || null,
+    is_membership_deal: Boolean(parsed.data.is_membership_deal),
   };
 
   if (productId) {

@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "build:prod": "npm run db:migrate && next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "test": "node --test tests/business-logic.test.mjs",
     "db:migrate": "node scripts/migrate.mjs",
     "seed:super-admin": "node scripts/seed-super-admin.mjs",
     "test:e2e": "playwright test"

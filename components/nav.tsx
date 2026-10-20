@@ -4,6 +4,25 @@ import { NavClient, NavLink } from "@/components/nav-client";
 
 const publicLinks: NavLink[] = [
   { label: "Home", href: "/" },
+  { label: "About S. B. Omotoso", href: "/profile" },
+  {
+    label: "Lecture Notes & Shop",
+    href: "/shop",
+    children: [
+      { label: "Lecture Materials & Bundles", href: "/shop", description: "Keynote notes, slides & licensed toolkits" },
+      { label: "My Downloads & Library", href: "/dashboard/library", description: "Access purchased notes & watermarked PDFs" },
+    ],
+  },
+  { label: "Membership (₦20k)", href: "/membership" },
+  {
+    label: "Community",
+    href: "/forum",
+    children: [
+      { label: "Community Forum", href: "/forum", description: "Peer discussions, clinical scenarios & study groups" },
+      { label: "Notice Board", href: "/notices", description: "Official bulletins, schedule alerts & exam memos" },
+    ],
+  },
+  { label: "Invite to Speak", href: "/speaking" },
   {
     label: "Courses",
     href: "/courses",
@@ -13,25 +32,6 @@ const publicLinks: NavLink[] = [
     ],
   },
   { label: "Blog", href: "/blog" },
-  {
-    label: "Shop",
-    href: "/shop",
-    children: [
-      { label: "Digital Storefront", href: "/shop", description: "Ebooks, templates & licensed kits" },
-      { label: "My Downloads", href: "/dashboard/library", description: "Access purchased files & signed links" },
-    ],
-  },
-  {
-    label: "Community",
-    href: "/mentorship/find",
-    children: [
-      { label: "Find a Mentor", href: "/mentorship/find", description: "1-on-1 industry & academic guidance" },
-      { label: "Become a Mentor", href: "/mentorship/become", description: "Share expertise with learners" },
-      { label: "Events & Summits", href: "/events", description: "Leadership sessions & workshops" },
-      { label: "Institutions & Hubs", href: "/institutions", description: "Partner universities & enterprise networks" },
-      { label: "Our Mission", href: "/about", description: "Leadership & career pillars" },
-    ],
-  },
 ];
 
 export async function Nav() {
