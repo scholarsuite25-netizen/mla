@@ -38,6 +38,19 @@ export type NavLink = {
 };
 
 const iconMap: Record<string, React.ReactNode> = {
+  "About": <BookOpen size={16} className="text-gold" />,
+  "Shop": <ShoppingBag size={16} className="text-gold" />,
+  "Materials": <FileText size={16} className="text-gold" />,
+  "Downloads": <FileText size={16} className="text-gold" />,
+  "Membership": <Award size={16} className="text-gold" />,
+  "Community": <MessageSquare size={16} className="text-gold" />,
+  "Forum": <MessageSquare size={16} className="text-gold" />,
+  "Notices": <Bell size={16} className="text-gold" />,
+  "Speaking": <Sparkles size={16} className="text-gold" />,
+  "Courses": <GraduationCap size={16} className="text-gold" />,
+  "Catalog": <GraduationCap size={16} className="text-gold" />,
+  "Learning": <Compass size={16} className="text-gold" />,
+  "Blog": <Sparkles size={16} className="text-gold" />,
   "Our Mission": <BookOpen size={16} className="text-gold" />,
   "Institutions": <Building2 size={16} className="text-gold" />,
   "Institutions & Hubs": <Building2 size={16} className="text-gold" />,
@@ -46,10 +59,8 @@ const iconMap: Record<string, React.ReactNode> = {
   "Find a Mentor": <Users size={16} className="text-gold" />,
   "Become a Mentor": <Award size={16} className="text-gold" />,
   "My Requests": <FileText size={16} className="text-gold" />,
-  "Blog": <Sparkles size={16} className="text-gold" />,
   "Events": <Calendar size={16} className="text-gold" />,
   "Events & Summits": <Calendar size={16} className="text-gold" />,
-  "Shop": <ShoppingBag size={16} className="text-gold" />,
   "Digital Storefront": <ShoppingBag size={16} className="text-gold" />,
   "My Downloads": <FileText size={16} className="text-gold" />,
   "Notice Board": <Bell size={16} className="text-gold" />,
@@ -214,8 +225,8 @@ export function NavClient({
                     </p>
                   </div>
                   <div className="py-1 space-y-0.5">
-                    <AvatarLink href="/dashboard" icon={<LayoutDashboard size={14} />} label="My Dashboard" onClose={() => setAvatarOpen(false)} />
-                    <AvatarLink href="/dashboard/licenses" icon={<KeyRound size={14} />} label="My Licenses" onClose={() => setAvatarOpen(false)} />
+                    <AvatarLink href="/dashboard" icon={<LayoutDashboard size={14} />} label="Dashboard" onClose={() => setAvatarOpen(false)} />
+                    <AvatarLink href="/dashboard/licenses" icon={<KeyRound size={14} />} label="Licenses" onClose={() => setAvatarOpen(false)} />
                     <AvatarLink href="/settings" icon={<Settings size={14} />} label="Settings" onClose={() => setAvatarOpen(false)} />
                   </div>
                   <div className="border-t border-white/[0.08] pt-1 mt-1">
@@ -227,7 +238,7 @@ export function NavClient({
                       }}
                       className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-medium text-parchment/70 transition-colors hover:bg-crest-red/15 hover:text-red-400"
                     >
-                      <LogOut size={14} /> Log Out
+                      <LogOut size={14} /> Logout
                     </button>
                   </div>
                 </div>
@@ -240,13 +251,13 @@ export function NavClient({
               href="/login"
               className="rounded-lg px-3.5 py-2 text-sm font-medium text-parchment/80 transition-colors hover:text-gold"
             >
-              Sign In
+              Login
             </Link>
             <Link
               href="/register"
               className="btn-primary !px-4 !py-2 !text-xs !font-semibold"
             >
-              Join MLA
+              Join
             </Link>
           </div>
         )}
@@ -299,14 +310,14 @@ export function NavClient({
                   onClick={() => setMobileOpen(false)}
                   className="btn-primary w-full text-center"
                 >
-                  Create Free Account
+                  Register
                 </Link>
                 <Link
                   href="/login"
                   onClick={() => setMobileOpen(false)}
                   className="btn-secondary w-full text-center"
                 >
-                  Sign In
+                  Login
                 </Link>
               </div>
             )}

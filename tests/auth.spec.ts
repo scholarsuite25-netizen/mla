@@ -12,7 +12,7 @@ test.describe('Authentication Flow', () => {
     await expect(page.locator('input[name="password"]')).toBeVisible();
     
     // Check for submit button
-    await expect(page.locator('button[type="submit"]')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
   });
 
   test('should load the registration page successfully', async ({ page }) => {
@@ -26,5 +26,6 @@ test.describe('Authentication Flow', () => {
     await expect(page.locator('input[name="email"]')).toBeVisible();
     await expect(page.locator('input[name="institution"]')).toBeVisible();
     await expect(page.locator('input[name="password"]')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Join MLA Academy' })).toBeVisible();
   });
 });

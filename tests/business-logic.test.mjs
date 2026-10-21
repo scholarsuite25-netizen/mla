@@ -1,6 +1,6 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
-import { checkRateLimit } from "../lib/rate-limit.ts";
+import { checkRateLimit } from "../lib/rate-limit.js";
 
 describe("Membership Pricing & Discounts", () => {
   const MEMBERSHIP_PRICE_NGN = 20000;

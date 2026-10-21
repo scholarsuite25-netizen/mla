@@ -4,31 +4,31 @@ import { NavClient, NavLink } from "@/components/nav-client";
 
 const publicLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "About S. B. Omotoso", href: "/profile" },
+  { label: "About", href: "/profile" },
   {
-    label: "Lecture Notes & Shop",
+    label: "Shop",
     href: "/shop",
     children: [
-      { label: "Lecture Materials & Bundles", href: "/shop", description: "Keynote notes, slides & licensed toolkits" },
-      { label: "My Downloads & Library", href: "/dashboard/library", description: "Access purchased notes & watermarked PDFs" },
+      { label: "Materials", href: "/shop", description: "Keynote notes, slides & licensed toolkits" },
+      { label: "Downloads", href: "/dashboard/library", description: "Access purchased notes & watermarked PDFs" },
     ],
   },
-  { label: "Membership (₦20k)", href: "/membership" },
+  { label: "Membership", href: "/membership" },
   {
     label: "Community",
     href: "/forum",
     children: [
-      { label: "Community Forum", href: "/forum", description: "Peer discussions, clinical scenarios & study groups" },
-      { label: "Notice Board", href: "/notices", description: "Official bulletins, schedule alerts & exam memos" },
+      { label: "Forum", href: "/forum", description: "Peer discussions, clinical scenarios & study groups" },
+      { label: "Notices", href: "/notices", description: "Official bulletins, schedule alerts & exam memos" },
     ],
   },
-  { label: "Invite to Speak", href: "/speaking" },
+  { label: "Speaking", href: "/speaking" },
   {
     label: "Courses",
     href: "/courses",
     children: [
-      { label: "Course Catalog", href: "/courses", description: "AI Literacy, Vibe Coding & Leadership" },
-      { label: "My Learning", href: "/dashboard/learning", description: "Track your enrolled modules & progress" },
+      { label: "Catalog", href: "/courses", description: "AI Literacy, Vibe Coding & Leadership" },
+      { label: "Learning", href: "/dashboard/learning", description: "Track your enrolled modules & progress" },
     ],
   },
   { label: "Blog", href: "/blog" },
