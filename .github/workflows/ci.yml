@@ -38,9 +38,9 @@ jobs:
         run: npm run test:e2e
         env:
           CI: true
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://sjtmgkkxqwepooudchzv.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqdG1na2t4cXdlcG9vdWRjaHp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzNDEyMzUsImV4cCI6MjEwNDkxNzIzNX0.5e1yI6hUQaLFl1d0XVWVhqMmDK4V_Vz8crMJQ6vkoag' }}
-          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_SUPABASE_URL: "https://sjtmgkkxqwepooudchzv.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqdG1na2t4cXdlcG9vdWRjaHp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzNDEyMzUsImV4cCI6MjEwNDkxNzIzNX0.5e1yI6hUQaLFl1d0XVWVhqMmDK4V_Vz8crMJQ6vkoag"
+          NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3000"
 
       - name: Upload Playwright report
         if: always()
