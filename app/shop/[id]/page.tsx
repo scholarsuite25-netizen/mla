@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BuyButton } from "@/components/shop/buy-button";
 import { ShieldAlert, Fingerprint, RefreshCw, Lock, ShieldCheck, ChevronLeft } from "lucide-react";
+import { ProductCover } from "@/components/product-cover";
 
 export const dynamic = "force-dynamic";
 
@@ -95,26 +96,13 @@ export default async function ProductDetailPage({
 
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] items-start">
           {/* Left Column: Product Render */}
-          <div className="relative aspect-[4/5] w-full max-w-md mx-auto lg:mx-0 lg:max-w-none overflow-hidden rounded-2xl bg-white border border-slate-200/90 p-4 shadow-sm">
-            <div className="h-full w-full rounded-xl bg-slate-100 overflow-hidden relative">
-              {product.cover_image_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={product.cover_image_url}
-                  alt={product.title}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-slate-300">
-                  <span className="font-display text-4xl font-bold italic">MLA</span>
-                </div>
-              )}
-              {/* Floating Security Badge on Image */}
-              <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md rounded-full px-3 py-1 shadow-sm border border-slate-200 flex items-center gap-1.5">
-                <Lock size={12} className="text-[#0284C7]" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-800">DRM Secured</span>
-              </div>
-            </div>
+          <div className="relative aspect-[4/5] w-full max-w-md mx-auto lg:mx-0 lg:max-w-none overflow-hidden rounded-2xl bg-white border border-slate-200/90 p-3 shadow-sm">
+            <ProductCover
+              title={product.title}
+              type={product.type}
+              coverUrl={product.cover_image_url}
+              aspectRatio="aspect-auto h-full"
+            />
           </div>
 
           {/* Right Column: Details & Actions */}

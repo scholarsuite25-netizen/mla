@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ResetPasswordForm } from "@/components/reset-password-form";
+import { Lock } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -13,16 +14,18 @@ export default async function ResetPasswordPage() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    // If there's no session, they shouldn't be here (or the link expired)
     redirect("/login?error=expired");
   }
 
   return (
-    <div className="mx-auto max-w-md px-4 py-20">
-      <div className="rounded-md border border-parchment/10 bg-panel p-8">
-        <h1 className="font-display text-3xl text-parchment">Set New Password</h1>
-        <p className="mt-2 text-sm text-parchment/70">
-          Please enter your new password below.
+    <div className="min-h-screen bg-[#FAFAFD] flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-50 text-[#0284C7] mb-4">
+          <Lock size={20} />
+        </div>
+        <h1 className="font-display text-2xl font-bold text-slate-900">Set New Password</h1>
+        <p className="mt-1.5 text-xs sm:text-sm text-slate-600 mb-6">
+          Enter your strong new password below to secure your account.
         </p>
         <ResetPasswordForm />
       </div>

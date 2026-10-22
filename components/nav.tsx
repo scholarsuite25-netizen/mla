@@ -4,7 +4,7 @@ import { NavClient, NavLink } from "@/components/nav-client";
 
 const publicLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "About us", href: "/profile" },
+  { label: "About us", href: "/about" },
   {
     label: "Services",
     href: "/courses",
@@ -24,8 +24,8 @@ const publicLinks: NavLink[] = [
       { label: "Institutions", href: "/institutions", description: "50+ partner university hubs & networks" },
     ],
   },
-  { label: "Contact us", href: "/speaking" },
   { label: "Blog", href: "/blog" },
+  { label: "Contact us", href: "/speaking" },
 ];
 
 export async function Nav() {

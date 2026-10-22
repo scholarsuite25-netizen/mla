@@ -1,4 +1,5 @@
 import { ForgotPasswordForm } from "@/components/forgot-password-form";
+import { KeyRound } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -8,11 +9,14 @@ export const metadata = {
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="mx-auto max-w-md px-4 py-20">
-      <div className="rounded-md border border-parchment/10 bg-panel p-8">
-        <h1 className="font-display text-3xl text-parchment">Reset Password</h1>
-        <p className="mt-2 text-sm text-parchment/70">
-          Enter your email address and we&apos;ll send you a link to reset your password.
+    <div className="min-h-screen bg-[#FAFAFD] flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-50 text-[#0284C7] mb-4">
+          <KeyRound size={20} />
+        </div>
+        <h1 className="font-display text-2xl font-bold text-slate-900">Reset Password</h1>
+        <p className="mt-1.5 text-xs sm:text-sm text-slate-600 mb-6">
+          Enter your registered email address and we&apos;ll send you an instant link to recover your account.
         </p>
         <ForgotPasswordForm />
       </div>

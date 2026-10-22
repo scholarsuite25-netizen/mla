@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ShieldCheck, Lock, Fingerprint, Star, ArrowRight, ShoppingBag, Eye, Heart } from "lucide-react";
+import { ProductCover } from "@/components/product-cover";
 
 export const dynamic = "force-dynamic";
 
@@ -146,20 +147,13 @@ export default async function ShopPage() {
               href={`/shop/${product.id}`}
               className="group relative flex flex-col rounded-2xl bg-white border border-slate-200/90 p-3.5 shadow-sm transition-all hover:border-cyan-400/60 hover:shadow-md"
             >
-              {/* Product Image Container */}
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl bg-slate-100">
-                {product.cover_image_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={product.cover_image_url}
-                    alt={product.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-slate-100 text-slate-400">
-                    <ShoppingBag size={40} />
-                  </div>
-                )}
+              {/* Product Cover (Executive Dynamic Cover if no uploaded image) */}
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl">
+                <ProductCover
+                  title={product.title}
+                  type={product.type}
+                  coverUrl={product.cover_image_url}
+                />
                 
                 {/* Floating Tags */}
                 <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 items-start">
