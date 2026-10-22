@@ -62,10 +62,10 @@ function AdminCard({
 }) {
   if (!ready) {
     return (
-      <div className="rounded-md border border-parchment/10 bg-panel/50 p-6 opacity-60">
-        <p className="font-display text-xl text-parchment">{title}</p>
-        <p className="mt-1 text-sm text-parchment/60">{description}</p>
-        <p className="mt-3 text-xs uppercase tracking-widest text-gold">
+      <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-6 opacity-60">
+        <p className="font-display text-base sm:text-lg font-bold text-slate-400">{title}</p>
+        <p className="mt-1 text-xs text-slate-400">{description}</p>
+        <p className="mt-3 text-[10px] uppercase font-bold tracking-wider text-slate-400">
           Later phase
         </p>
       </div>
@@ -74,12 +74,12 @@ function AdminCard({
   return (
     <Link
       href={href}
-      className="group rounded-md border border-parchment/10 bg-panel p-6 transition-colors hover:border-gold/60"
+      className="group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm hover:border-cyan-400/80 hover:shadow-md transition-all"
     >
-      <p className="font-display text-xl text-parchment group-hover:text-gold">
+      <p className="font-display text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0284C7] transition-colors">
         {title}
       </p>
-      <p className="mt-1 text-sm text-parchment/60">{description}</p>
+      <p className="mt-1.5 text-xs sm:text-sm text-slate-500 leading-relaxed">{description}</p>
     </Link>
   );
 }

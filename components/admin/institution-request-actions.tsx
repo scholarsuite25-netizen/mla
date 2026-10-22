@@ -22,7 +22,7 @@ export function InstitutionRequestActions({ requestId }: { requestId: string }) 
             router.refresh();
           })
         }
-        className="rounded-sm bg-crest-red px-3 py-1 text-xs font-medium text-white hover:bg-crest-red/90 disabled:opacity-50"
+        className="rounded-lg bg-[#00D2FF] px-3.5 py-1.5 text-xs font-bold text-[#0A0E2A] hover:bg-[#38BDF8] shadow-sm transition-all disabled:opacity-50 cursor-pointer"
       >
         Approve
       </button>
@@ -35,7 +35,7 @@ export function InstitutionRequestActions({ requestId }: { requestId: string }) 
             router.refresh();
           })
         }
-        className="rounded-sm border border-parchment/20 px-3 py-1 text-xs text-parchment/70 hover:border-crest-red hover:text-crest-red disabled:opacity-50"
+        className="rounded-lg border border-slate-200 px-3.5 py-1.5 text-xs font-semibold text-slate-600 hover:border-red-300 hover:text-red-600 hover:bg-red-50/50 transition-all disabled:opacity-50 cursor-pointer"
       >
         Reject
       </button>

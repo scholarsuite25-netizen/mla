@@ -3,7 +3,6 @@ import {
   Award,
   BookOpen,
   CheckCircle2,
-  ExternalLink,
   GraduationCap,
   Mail,
   MapPin,
@@ -11,10 +10,7 @@ import {
   Mic,
   Phone,
   ShieldCheck,
-  Sparkles,
   Zap,
-  Building2,
-  Briefcase,
 } from "lucide-react";
 
 export const metadata = {

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BecomeMentorForm } from "@/components/mentorship/become-form";
-import { Sparkles, Award } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 

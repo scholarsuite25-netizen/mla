@@ -1,25 +1,19 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getInstitutionCount, getMentorCount, getPublishedPosts } from "@/lib/blog";
+import { getInstitutionCount, getPublishedPosts } from "@/lib/blog";
 import { BlogCard } from "@/components/blog-card";
 import { InstitutionTicker } from "@/components/institution-ticker";
 import { FaqAccordion } from "@/components/faq-accordion";
 import {
   ArrowRight,
   GraduationCap,
-  Users,
   Sparkles,
   Award,
-  BookOpen,
-  Calendar,
-  ShoppingBag,
   CheckCircle2,
-  Compass,
   Briefcase,
   Rocket,
   Zap,
   Building,
-  ArrowUpRight,
   Code2,
   Cloud,
   ShieldCheck,
@@ -29,10 +23,9 @@ import {
 
 export default async function Home() {
   const supabase = await createClient();
-  const [{ data: { user } }, institutions, mentors, posts] = await Promise.all([
+  const [{ data: { user } }, institutions, posts] = await Promise.all([
     supabase.auth.getUser(),
     getInstitutionCount(),
-    getMentorCount(),
     getPublishedPosts(3),
   ]);
 

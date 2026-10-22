@@ -111,14 +111,14 @@ export function AdminNav() {
   return (
     <>
       {/* Mobile Bar */}
-      <div className="flex items-center justify-between border-b border-white/10 bg-[#120D09] p-4 lg:hidden">
+      <div className="flex items-center justify-between border-b border-white/10 bg-[#120D42] p-4 lg:hidden">
         <div className="flex items-center gap-2">
-          <span className="inline-block h-2 w-2 rotate-45 bg-gold" />
-          <span className="font-display font-bold text-sm text-parchment">MLA Admin Suite</span>
+          <span className="inline-block h-2 w-2 rounded-full bg-[#00D2FF] shadow-[0_0_8px_#00D2FF]" />
+          <span className="font-display font-bold text-sm text-white">MLA Admin Suite</span>
         </div>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="rounded-md border border-white/10 p-1.5 text-parchment/80 hover:text-gold"
+          className="rounded-lg border border-white/15 p-1.5 text-slate-300 hover:text-white hover:bg-white/5 transition"
           aria-label="Toggle admin navigation"
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -129,15 +129,15 @@ export function AdminNav() {
       <aside
         className={`${
           mobileOpen ? "block" : "hidden"
-        } lg:block shrink-0 w-full lg:w-64 border-b lg:border-b-0 lg:border-r border-white/10 bg-[#120D09]/95 backdrop-blur-xl p-5`}
+        } lg:block shrink-0 w-full lg:w-64 border-b lg:border-b-0 lg:border-r border-white/10 bg-[#120D42] backdrop-blur-xl p-5 shadow-xl`}
       >
         <div className="hidden lg:flex items-center gap-2.5 pb-6 border-b border-white/10 mb-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/15 border border-gold/30 text-gold">
-            <span className="font-display font-bold text-sm">M</span>
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/15 border border-cyan-400/30 text-[#00D2FF] font-bold">
+            <span className="font-display text-base">M</span>
           </div>
           <div>
-            <h2 className="font-display font-bold text-sm text-parchment leading-tight">MLA Admin</h2>
-            <p className="text-[10px] uppercase tracking-wider text-gold font-semibold">Super Admin Suite</p>
+            <h2 className="font-display font-bold text-sm text-white leading-tight">MLA Admin</h2>
+            <p className="text-[10px] uppercase tracking-wider text-[#00D2FF] font-semibold">Super Admin Suite</p>
           </div>
         </div>
 
@@ -155,15 +155,15 @@ export function AdminNav() {
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all ${
                   isActive
-                    ? "bg-gradient-to-r from-gold/20 to-gold/5 border border-gold/40 text-gold font-semibold shadow-sm"
-                    : "text-parchment/70 hover:text-parchment hover:bg-white/5 border border-transparent"
+                    ? "bg-white/10 border border-cyan-400/40 text-[#00D2FF] font-semibold shadow-sm"
+                    : "text-slate-300 hover:text-white hover:bg-white/5 border border-transparent"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon size={16} className={isActive ? "text-gold" : "text-parchment/50"} />
+                  <Icon size={16} className={isActive ? "text-[#00D2FF]" : "text-slate-400"} />
                   <span>{item.label}</span>
                 </div>
-                {isActive && <ChevronRight size={13} className="text-gold" />}
+                {isActive && <ChevronRight size={13} className="text-[#00D2FF]" />}
               </Link>
             );
           })}
@@ -173,7 +173,7 @@ export function AdminNav() {
           <Link
             href="/"
             target="_blank"
-            className="flex items-center justify-between rounded-xl border border-white/5 px-3 py-2 text-xs text-parchment/60 hover:text-gold hover:border-gold/30 hover:bg-white/5 transition-all"
+            className="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2 text-xs text-slate-300 hover:text-[#00D2FF] hover:border-cyan-400/40 hover:bg-white/5 transition-all"
           >
             <span className="flex items-center gap-2">
               <ExternalLink size={14} />

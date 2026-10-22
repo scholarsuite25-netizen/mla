@@ -18,7 +18,7 @@ export function ApproveRequestButton({ requestId }: { requestId: string }) {
           router.refresh();
         })
       }
-      className="rounded-sm bg-gold px-4 py-1.5 text-xs font-medium text-ink hover:bg-gold/90 disabled:opacity-50"
+      className="rounded-lg bg-[#00D2FF] px-4 py-1.5 text-xs font-bold text-[#0A0E2A] hover:bg-[#38BDF8] shadow-sm transition-all disabled:opacity-50 cursor-pointer"
     >
       {pending ? "Approving…" : "Approve"}
     </button>

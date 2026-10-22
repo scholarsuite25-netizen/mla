@@ -88,9 +88,6 @@ export default async function LibraryPage() {
           const product = Array.isArray(lic.digital_products)
             ? lic.digital_products[0]
             : (lic.digital_products as { title: string; type: string });
-          const order = Array.isArray(lic.orders)
-            ? lic.orders[0]
-            : (lic.orders as { paystack_reference: string | null; amount: number });
           const consumed = lic.activation_count;
 
           return (

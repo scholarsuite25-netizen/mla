@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { BookOpen, Presentation, FileText, Headphones, Award, ShieldCheck, Sparkles } from "lucide-react";
 
 interface ProductCoverProps {

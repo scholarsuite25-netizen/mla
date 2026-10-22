@@ -29,8 +29,8 @@ export default async function AdminLicensesPage({
 
   return (
     <div>
-      <h2 className="font-display text-2xl text-parchment">Product Licences</h2>
-      <p className="mt-1 text-xs text-parchment/50">
+      <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-900">Product Licences</h2>
+      <p className="mt-1 text-xs sm:text-sm text-slate-500 leading-relaxed">
         All cryptographic licences issued from paid orders or manual administrative assignment. Reset device activations, revoke keys, or issue manual licences.
       </p>
       <div className="mt-6">

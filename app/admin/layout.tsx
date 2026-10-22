@@ -24,7 +24,7 @@ export default async function AdminLayout({
   if (profile?.role !== "super_admin") redirect("/dashboard");
 
   return (
-    <div className="min-h-screen bg-[#0A0806] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#FAFAFD] text-slate-900 flex flex-col lg:flex-row">
       <AdminNav />
       <main className="flex-1 overflow-x-hidden p-4 sm:p-8 lg:p-10 max-w-7xl">
         {children}

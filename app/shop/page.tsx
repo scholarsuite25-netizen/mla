@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ShieldCheck, Lock, Fingerprint, Star, ArrowRight, ShoppingBag, Eye, Heart } from "lucide-react";
+import { ShieldCheck, Lock, Fingerprint, Star, ArrowRight, Eye, Heart } from "lucide-react";
 import { ProductCover } from "@/components/product-cover";
 
 export const dynamic = "force-dynamic";
