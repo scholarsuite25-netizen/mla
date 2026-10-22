@@ -1,4 +1,4 @@
-import { Fraunces, Sora } from "next/font/google";
+import { Poppins } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Nav } from "@/components/nav";
@@ -7,18 +7,15 @@ import { FloatingContact } from "@/components/floating-contact";
 import { RegistrationPopup } from "@/components/registration-popup";
 import { AppProviders } from "@/components/providers/app-providers";
 
-const fraunces = Fraunces({
-  variable: "--font-display",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-});
-
-const sora = Sora({
-  variable: "--font-body",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0A0806",
+  themeColor: "#140F47",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -28,7 +25,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "MLA — Mentorship & Leadership Academy",
   description:
-    "Accelerate your career, business, and craft with applied AI and verified mentorship. Purpose-built tracks for working professionals, fresh graduates, job seekers, entrepreneurs, and campus scholars nationwide.",
+    "We solve business and career problems with technology. Applied AI literacy, verified 1-on-1 industry mentorship, and licensed digital toolkits across Nigeria.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
@@ -55,11 +52,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="scroll-smooth">
       <head>
         <link rel="apple-touch-icon" href="/icons/icon.svg" />
       </head>
-      <body className={`${fraunces.variable} ${sora.variable} flex min-h-screen flex-col antialiased bg-[#0A0806] text-parchment selection:bg-gold/30 selection:text-gold-light`}>
+      <body className={`${poppins.variable} font-sans flex min-h-screen flex-col antialiased bg-[#FAFAFD] text-slate-800 selection:bg-cyan-400 selection:text-slate-950`}>
         <AppProviders>
           <Nav />
           <main className="flex-1">{children}</main>

@@ -16,10 +16,10 @@ export function BlogCard({ post }: { post: PublishedPost }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1"
+      className="card-biru group flex flex-col overflow-hidden p-4 transition-all duration-300"
     >
       {/* Cover Image Container */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-black/40 shadow-lg border border-white/5">
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-slate-100">
         {post.cover_image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -28,8 +28,8 @@ export function BlogCard({ post }: { post: PublishedPost }) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-end bg-gradient-to-br from-[#261D16] to-[#120E0B] p-5 transition-transform duration-500 group-hover:scale-105">
-            <span className="text-xs font-semibold uppercase tracking-widest text-gold/60">
+          <div className="flex h-full w-full items-end bg-gradient-to-br from-[#161152] to-[#2B1B8A] p-5 transition-transform duration-500 group-hover:scale-105">
+            <span className="text-xs font-bold uppercase tracking-widest text-cyan-300">
               MLA Academy Dispatch
             </span>
           </div>
@@ -37,37 +37,39 @@ export function BlogCard({ post }: { post: PublishedPost }) {
 
         {/* Category Pill Over Cover */}
         <div className="absolute top-3 left-3">
-          <span className="inline-block rounded-lg bg-black/60 backdrop-blur-md px-2.5 py-1 text-[11px] font-semibold tracking-wide text-gold border border-gold/30">
+          <span className="inline-block rounded-md bg-[#161152]/80 backdrop-blur-md px-2.5 py-1 text-[11px] font-bold tracking-wide text-cyan-300 border border-white/15">
             {post.category || "Leadership"}
           </span>
         </div>
       </div>
 
-      {/* Card Body (No Padding, Flush with Image) */}
-      <div className="flex flex-col gap-1.5 mt-1 px-1">
-        {/* Metadata */}
-        <div className="flex items-center gap-1.5 text-[11px] font-medium text-parchment/50">
-          {date && <span>{date}</span>}
-          {date && <span>•</span>}
-          <span>{readTime} min read</span>
+      {/* Card Body */}
+      <div className="flex flex-col gap-1.5 mt-3 px-1 flex-1 justify-between">
+        <div>
+          {/* Metadata */}
+          <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
+            {date && <span>{date}</span>}
+            {date && <span>•</span>}
+            <span>{readTime} min read</span>
+          </div>
+
+          {/* Title */}
+          <h3 className="font-display text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-blue-700 line-clamp-2 mt-1">
+            {post.title}
+          </h3>
+
+          {/* Excerpt */}
+          <p className="text-[12px] leading-relaxed text-slate-500 line-clamp-2 mt-1">
+            {post.excerpt ? post.excerpt : post.body.replace(/[#*`_~[\]]/g, "").slice(0, 90) + "..."}
+          </p>
         </div>
 
-        {/* Title */}
-        <h3 className="font-display text-base font-bold leading-snug text-parchment transition-colors group-hover:text-gold line-clamp-2">
-          {post.title}
-        </h3>
-
-        {/* Excerpt */}
-        <p className="text-[12px] leading-relaxed text-parchment/65 line-clamp-2 mt-0.5">
-          {post.excerpt ? post.excerpt : post.body.replace(/[#*`_~[\]]/g, "").slice(0, 90) + "..."}
-        </p>
-
-        {/* Author Footer (No 'Read Article' Button) */}
-        <div className="mt-2.5 flex items-center gap-2">
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/15 border border-gold/30 text-gold font-display text-[9px] font-bold">
+        {/* Author Footer */}
+        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-100 text-cyan-700 font-display text-[10px] font-bold">
             M
           </div>
-          <span className="text-[11px] font-semibold text-parchment/70">
+          <span className="text-[11px] font-semibold text-slate-600">
             MLA Editorial
           </span>
         </div>

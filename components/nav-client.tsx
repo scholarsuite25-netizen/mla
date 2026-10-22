@@ -81,36 +81,36 @@ function Dropdown({ link }: { link: NavLink }) {
     >
       <Link
         href={link.href}
-        className={`inline-flex items-center gap-1.5 rounded-md px-3.5 py-2 text-sm font-medium transition-all ${
+        className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-all ${
           isActive
-            ? "text-gold font-semibold"
-            : "text-parchment/80 hover:text-gold hover:bg-white/[0.03]"
+            ? "text-cyan-300 font-semibold"
+            : "text-white/85 hover:text-cyan-300 hover:bg-white/[0.06]"
         }`}
       >
         {link.label}
         <ChevronDown
           size={14}
-          className={`transition-transform duration-200 ${open ? "rotate-180 text-gold" : "text-parchment/50"}`}
+          className={`transition-transform duration-200 ${open ? "rotate-180 text-cyan-300" : "text-white/60"}`}
         />
       </Link>
       {open && (
-        <div className="absolute left-0 top-full pt-1 w-64 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-          <div className="rounded-xl border border-gold/20 bg-[#16120E]/95 p-2 backdrop-blur-2xl shadow-[0_12px_40px_rgba(0,0,0,0.7)]">
+        <div className="absolute left-0 top-full pt-1.5 w-64 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+          <div className="rounded-xl border border-white/15 bg-[#181259]/98 p-2 backdrop-blur-2xl shadow-[0_20px_50px_rgba(10,8,30,0.8)]">
             {link.children?.map((child) => (
               <Link
                 key={child.href}
                 href={child.href}
-                className="group flex items-start gap-3 rounded-lg p-2.5 transition-colors hover:bg-gold/10"
+                className="group flex items-start gap-3 rounded-lg p-2.5 transition-colors hover:bg-white/10"
               >
-                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/5 bg-white/[0.03] group-hover:border-gold/30">
-                  {iconMap[child.label] ?? <Sparkles size={14} className="text-gold" />}
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5 group-hover:border-cyan-400/40 text-cyan-300">
+                  {iconMap[child.label] ?? <Sparkles size={14} className="text-cyan-300" />}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-parchment group-hover:text-gold">
+                  <p className="text-sm font-medium text-white group-hover:text-cyan-300">
                     {child.label}
                   </p>
                   {child.description && (
-                    <p className="text-xs text-parchment/50 group-hover:text-parchment/70">
+                    <p className="text-xs text-white/60 group-hover:text-white/80">
                       {child.description}
                     </p>
                   )}
@@ -156,10 +156,10 @@ export function NavClient({
             <Link
               key={link.href}
               href={link.href}
-              className={`rounded-md px-3.5 py-2 text-sm font-medium transition-all ${
+              className={`rounded-lg px-3.5 py-2 text-sm font-medium transition-all ${
                 pathname === link.href
-                  ? "text-gold font-semibold"
-                  : "text-parchment/80 hover:text-gold hover:bg-white/[0.03]"
+                  ? "text-cyan-300 font-semibold"
+                  : "text-white/85 hover:text-cyan-300 hover:bg-white/[0.06]"
               }`}
             >
               {link.label}
@@ -175,12 +175,12 @@ export function NavClient({
             {/* Notification Bell */}
             <Link
               href="/dashboard/notifications"
-              className="relative rounded-lg border border-white/5 p-2 text-parchment/75 transition-colors hover:border-gold/30 hover:bg-gold/5 hover:text-gold"
+              className="relative rounded-lg border border-white/10 p-2 text-white/80 transition-colors hover:border-cyan-400/40 hover:bg-white/5 hover:text-cyan-300"
               aria-label="Notifications"
             >
               <Bell size={18} />
               {unread > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-crest-red px-1 text-[9px] font-bold text-white shadow-[0_0_8px_rgba(220,38,38,0.7)] animate-pulse">
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-cyan-400 px-1 text-[9px] font-bold text-slate-900 shadow-[0_0_8px_rgba(0,210,255,0.8)] animate-pulse">
                   {unread > 9 ? "9+" : unread}
                 </span>
               )}
@@ -190,7 +190,7 @@ export function NavClient({
             {isAdmin && (
               <Link
                 href="/admin"
-                className="hidden items-center gap-1.5 rounded-lg border border-gold/40 bg-gold/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-gold transition-all hover:bg-gold hover:text-ink sm:inline-flex shadow-sm"
+                className="hidden items-center gap-1.5 rounded-lg border border-cyan-400/40 bg-cyan-400/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-cyan-300 transition-all hover:bg-cyan-400 hover:text-slate-900 sm:inline-flex shadow-sm"
               >
                 <ShieldCheck size={14} />
                 Admin
@@ -201,26 +201,26 @@ export function NavClient({
             <div className="relative">
               <button
                 onClick={() => setAvatarOpen((v) => !v)}
-                className="flex items-center gap-2 rounded-full border border-white/10 bg-[#1A1410] p-1 pr-2.5 transition-all hover:border-gold/40 hover:bg-[#241B15]"
+                className="flex items-center gap-2 rounded-full border border-white/15 bg-[#181259] p-1 pr-2.5 transition-all hover:border-cyan-400/50 hover:bg-[#201875]"
                 aria-label="Account menu"
               >
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-tr from-crest-red to-red-500 font-display text-xs font-bold text-white shadow-sm">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 font-display text-xs font-bold text-slate-950 shadow-sm">
                   {user.full_name?.charAt(0)?.toUpperCase() || "U"}
                 </div>
-                <span className="hidden text-xs font-medium text-parchment/90 md:block max-w-[100px] truncate">
+                <span className="hidden text-xs font-medium text-white/90 md:block max-w-[100px] truncate">
                   {user.full_name?.split(" ")[0] || "Account"}
                 </span>
-                <ChevronDown size={12} className="text-parchment/50" />
+                <ChevronDown size={12} className="text-white/50" />
               </button>
 
               {avatarOpen && (
                 <div
-                  className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-gold/20 bg-[#16120E]/95 p-1.5 backdrop-blur-2xl shadow-[0_12px_40px_rgba(0,0,0,0.8)] z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+                  className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-white/15 bg-[#181259]/98 p-1.5 backdrop-blur-2xl shadow-[0_20px_50px_rgba(10,8,30,0.8)] z-50 animate-in fade-in slide-in-from-top-2 duration-150"
                   onMouseLeave={() => setAvatarOpen(false)}
                 >
                   <div className="border-b border-white/[0.08] px-3 py-2.5">
-                    <p className="text-xs font-semibold text-parchment truncate">{user.full_name || "Member"}</p>
-                    <p className="mt-0.5 text-[10px] uppercase tracking-wider font-semibold text-gold">
+                    <p className="text-xs font-semibold text-white truncate">{user.full_name || "Member"}</p>
+                    <p className="mt-0.5 text-[10px] uppercase tracking-wider font-semibold text-cyan-400">
                       {user.role === "super_admin" ? "Super Admin" : user.role === "institution_admin" ? "Institution Admin" : "Member"}
                     </p>
                   </div>
@@ -236,7 +236,7 @@ export function NavClient({
                         router.push("/");
                         router.refresh();
                       }}
-                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-medium text-parchment/70 transition-colors hover:bg-crest-red/15 hover:text-red-400"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-medium text-white/70 transition-colors hover:bg-red-500/15 hover:text-red-300"
                     >
                       <LogOut size={14} /> Logout
                     </button>
@@ -246,25 +246,25 @@ export function NavClient({
             </div>
           </>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="rounded-lg px-3.5 py-2 text-sm font-medium text-parchment/80 transition-colors hover:text-gold"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-white/85 transition-colors hover:text-cyan-300"
             >
               Login
             </Link>
             <Link
               href="/register"
-              className="btn-primary !px-4 !py-2 !text-xs !font-semibold"
+              className="btn-cyan !px-5 !py-2.5 !text-xs !font-bold"
             >
-              Join
+              Get Started
             </Link>
           </div>
         )}
 
         {/* Mobile Hamburger */}
         <button
-          className="rounded-lg border border-white/5 p-2 text-parchment hover:border-gold/30 hover:text-gold lg:hidden"
+          className="rounded-lg border border-white/10 p-2 text-white hover:border-cyan-400/50 hover:text-cyan-300 lg:hidden"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -274,14 +274,14 @@ export function NavClient({
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="absolute left-0 right-0 top-18 border-b border-white/[0.08] bg-[#0E0B08]/98 backdrop-blur-2xl lg:hidden shadow-2xl animate-in slide-in-from-top-4 duration-200">
+        <div className="absolute left-0 right-0 top-20 border-b border-white/10 bg-[#140F47]/98 backdrop-blur-2xl lg:hidden shadow-2xl animate-in slide-in-from-top-4 duration-200">
           <div className="mx-auto max-w-6xl space-y-2 px-6 py-6 max-h-[80vh] overflow-y-auto">
             {links.map((link) => (
-              <div key={link.href} className="border-b border-white/[0.04] pb-2 last:border-0">
+              <div key={link.href} className="border-b border-white/[0.06] pb-2 last:border-0">
                 <Link
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block py-1.5 text-sm font-semibold text-parchment hover:text-gold"
+                  className="block py-1.5 text-sm font-semibold text-white hover:text-cyan-300"
                 >
                   {link.label}
                 </Link>

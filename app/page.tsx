@@ -20,6 +20,11 @@ import {
   Zap,
   Building,
   ArrowUpRight,
+  Code2,
+  Cloud,
+  ShieldCheck,
+  Check,
+  Laptop,
 } from "lucide-react";
 
 export default async function Home() {
@@ -32,133 +37,124 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="relative overflow-hidden bg-[#0A0806]">
-      {/* 1. HERO SECTION */}
-      <section className="relative pt-12 pb-20 md:pt-20 md:pb-28">
-        {/* Ambient Radial Lights */}
+    <div className="relative overflow-hidden bg-[#FAFAFD] text-slate-800">
+      {/* =========================================================================
+          1. HERO SECTION (VIBRANT ROYAL INK/INDIGO GRADIENT MATCHING THE REFERENCE)
+         ========================================================================= */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#120D42] via-[#1A1359] to-[#2B1B8A] pt-12 pb-36 sm:pt-20 sm:pb-44 text-white">
+        {/* Subtle Tech Circuit Background Overlay */}
         <div
-          className="pointer-events-none absolute -top-40 left-1/2 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-radial from-gold/15 via-gold/5 to-transparent blur-3xl"
+          className="pointer-events-none absolute inset-0 opacity-15"
+          style={{
+            backgroundImage: `radial-gradient(#38bdf8 0.75px, transparent 0.75px), radial-gradient(#818cf8 0.75px, #120D42 0.75px)`,
+            backgroundSize: `32px 32px`,
+            backgroundPosition: `0 0, 16px 16px`,
+          }}
           aria-hidden
         />
-        <div
-          className="pointer-events-none absolute top-1/3 right-0 h-[450px] w-[500px] rounded-full bg-radial from-crest-red/12 to-transparent blur-3xl"
-          aria-hidden
-        />
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            {/* Nationwide Trust Pill */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3.5 py-1.5 text-xs font-semibold text-gold-light backdrop-blur-md">
-              <Sparkles size={14} className="text-gold animate-pulse" />
-              <span>Applied AI &amp; Nationwide Mentorship Academy</span>
-            </div>
+        {/* Ambient Glow Orbs */}
+        <div className="pointer-events-none absolute -top-32 left-1/4 h-96 w-96 rounded-full bg-[#00D2FF]/15 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/2 right-10 h-96 w-96 rounded-full bg-[#7C3AED]/20 blur-3xl" />
 
-            {/* Universal Headline */}
-            <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-parchment sm:text-5xl lg:text-6xl leading-[1.12]">
-              Accelerate your career, business &amp; craft — with applied AI and mentorship.
-            </h1>
-
-            <p className="mt-5 text-base leading-relaxed text-parchment/75 sm:text-lg">
-              Nigeria&apos;s premier multitrack leadership academy. Tailored for working professionals, ambitious
-              graduates, entrepreneurs, career switchers, pre- &amp; post-retirees, and campus scholars.
-              Master career planning, business setup and management, applied AI, and purposeful second-act occupations.
-            </p>
-
-            {/* Community Marker */}
-            <div className="mt-5 flex items-center gap-2.5">
-              <CheckCircle2 size={15} className="text-gold shrink-0" />
-              <span className="text-xs font-semibold text-parchment/80">
-                Free core syllabus on every career track
-              </span>
-            </div>
-
-            {/* Action CTAs */}
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link href={user ? "/dashboard" : "/register"} className="btn-primary">
-                <span>{user ? "Open My Dashboard" : "Start Learning Free"}</span>
-                <ArrowRight size={16} />
-              </Link>
-              <Link href="/mentorship/find" className="btn-secondary">
-                <Users size={16} className="text-gold" />
-                <span>Find an Industry Mentor</span>
-              </Link>
-            </div>
-
-            {/* Stats Row */}
-            <div className="mt-14 grid grid-cols-3 gap-4 border-t border-white/[0.08] pt-8">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gold/10">
-                  <Briefcase size={18} className="text-gold" />
-                </div>
-                <div>
-                  <p className="font-display text-2xl font-bold text-parchment">{institutions} Networks</p>
-                  <p className="text-[11px] uppercase tracking-wider text-parchment/50">Hubs &amp; Campus</p>
-                </div>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
+            {/* Left Content Column */}
+            <div className="z-10">
+              {/* Upper Subtitle Pill / Badge */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span>WELCOME TO MLA</span>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-crest-red/30 bg-crest-red/10">
-                  <Users size={18} className="text-red-400" />
-                </div>
-                <div>
-                  <p className="font-display text-2xl font-bold text-parchment">{mentors}</p>
-                  <p className="text-[11px] uppercase tracking-wider text-parchment/50">Active Mentors</p>
-                </div>
+              {/* Bold Primary Display Headline */}
+              <h1 className="mt-5 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl leading-[1.2]">
+                We solve business &amp; career problems with technology.
+              </h1>
+
+              {/* Supporting Copy */}
+              <p className="mt-4 text-sm leading-relaxed text-indigo-100/85 sm:text-base max-w-xl">
+                Our performance is your success. Our passion is innovation. Our verified mentorship, applied AI literacy, and vibe coding are unmatched. We get you more.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Link
+                  href={user ? "/dashboard" : "/register"}
+                  className="rounded-lg bg-[#00D2FF] px-8 py-3.5 text-sm font-bold text-[#0A0E2A] shadow-xl shadow-cyan-500/25 transition-all hover:bg-[#38BDF8] hover:scale-105 active:scale-95"
+                >
+                  Get Started
+                </Link>
+                <Link
+                  href="/courses"
+                  className="rounded-lg border border-white/35 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/10 active:scale-95"
+                >
+                  View Case Study
+                </Link>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gold/25 bg-gold/10">
-                  <Award size={18} className="text-gold" />
-                </div>
-                <div>
-                  <p className="font-display text-2xl font-bold text-parchment">100%</p>
-                  <p className="text-[11px] uppercase tracking-wider text-parchment/50">Free Curriculum</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* High-End Photography Hero Visual with Floating Glass Overlays */}
-          <div className="relative">
-            {/* Glow Aura */}
-            <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-gold/25 via-crest-red/25 to-transparent blur-2xl opacity-60" />
-
-            {/* Framed Image Container */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-[#140F0C] shadow-[0_24px_60px_rgba(0,0,0,0.85)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/hero-mentor.jpg"
-                alt="Nigerian professional and scholar collaborating on AI workflows"
-                className="aspect-[4/3] w-full object-cover brightness-[0.92] contrast-[1.05]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0E0B08] via-transparent to-black/20" />
-
-              {/* Floating Chip 1: Mentor Matching */}
-              <div className="absolute top-4 left-4 rounded-xl border border-white/20 bg-black/75 px-3.5 py-2 backdrop-blur-xl shadow-lg">
+              {/* Micro Perks Row */}
+              <div className="mt-10 flex flex-wrap items-center gap-6 text-xs text-indigo-200/80">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span className="text-xs font-semibold text-parchment">Mentor matching open</span>
-                  <span className="rounded bg-gold/20 px-1.5 py-0.5 text-[10px] font-bold text-gold">
-                    Executive &amp; campus
-                  </span>
+                  <CheckCircle2 size={16} className="text-cyan-400 shrink-0" />
+                  <span>Free core curriculum on all tracks</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-cyan-400 shrink-0" />
+                  <span>Verified 1-on-1 industry mentors</span>
                 </div>
               </div>
+            </div>
 
-              {/* Floating Chip 2: Bottom Progress Highlight */}
-              <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-gold/25 bg-black/80 p-4 backdrop-blur-xl shadow-2xl">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gold/15 text-gold border border-gold/30">
-                      <Zap size={18} />
+            {/* Right Graphic Column (Exact Reference Style with Laptop Portrait & Graphic Shapes) */}
+            <div className="relative flex justify-center lg:justify-end">
+              {/* Floating Geometric Pill Shapes Matching the Reference Design */}
+              <div
+                className="absolute -top-10 -right-6 h-28 w-80 rotate-[-35deg] rounded-full bg-gradient-to-r from-indigo-500/35 to-blue-400/20 blur-xs -z-0 pointer-events-none"
+                aria-hidden
+              />
+              <div
+                className="absolute top-24 -right-12 h-20 w-36 rotate-[-35deg] rounded-full bg-gradient-to-r from-purple-500/30 to-indigo-500/20 blur-xs -z-0 pointer-events-none"
+                aria-hidden
+              />
+              <div
+                className="absolute -bottom-8 -left-8 h-24 w-64 rotate-[-35deg] rounded-full bg-cyan-400/15 blur-sm -z-0 pointer-events-none"
+                aria-hidden
+              />
+
+              {/* Small Graphic Floating Dots & Accents */}
+              <div className="absolute top-10 right-2 h-3.5 w-3.5 rounded-full bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.8)]" />
+              <div className="absolute top-2 left-6 text-2xl font-light text-pink-400 select-none">+</div>
+              <div className="absolute bottom-16 right-0 text-xl font-light text-cyan-300 select-none">+</div>
+
+              {/* Main Photo Cutout / Frame */}
+              <div className="relative z-10 w-full max-w-md overflow-hidden rounded-3xl border border-white/20 bg-white/5 shadow-[0_30px_70px_rgba(10,8,40,0.6)] backdrop-blur-sm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/hero-biru.jpg"
+                  alt="Friendly modern tech professional holding laptop"
+                  className="aspect-[3/4] w-full object-cover object-top"
+                />
+
+                {/* Subtle Bottom Light Vignette */}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#140F47]/60 via-transparent to-transparent" />
+
+                {/* Floating Micro Badge */}
+                <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-white/20 bg-[#161152]/90 p-3.5 backdrop-blur-xl shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
+                        <Laptop size={18} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white">Applied AI &amp; Vibe Coding</p>
+                        <p className="text-[10px] text-cyan-200/80">Self-paced &amp; mentor-guided</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs font-bold text-parchment">AI Literacy &amp; Vibe Coding</p>
-                      <p className="text-[10px] text-parchment/60">Core curriculum · self-paced</p>
-                    </div>
-                  </div>
-<span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/20">
-                      <CheckCircle2 size={10} /> Free access
+                    <span className="rounded-full bg-cyan-400/20 px-2.5 py-1 text-[10px] font-bold text-cyan-300 border border-cyan-400/30">
+                      Live Cohort
                     </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -166,60 +162,251 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 2. CONTINUOUS TICKER: MULTI-SECTOR ECOSYSTEM */}
-      <InstitutionTicker />
-
-      {/* 3. NEW DEDICATED SECTION: "TAILORED FOR EVERY STAGE OF YOUR CAREER" */}
-      <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold mb-3">
-            <Sparkles size={12} />
-            <span>Inclusive Nationwide Pathways</span>
+      {/* =========================================================================
+          2. 3 OVERLAPPING FLOATING SERVICE CARDS (MATCHING THE REFERENCE)
+         ========================================================================= */}
+      <section className="relative z-20 mx-auto -mt-20 max-w-7xl px-4 sm:-mt-28 sm:px-6 lg:px-8">
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Card 1: Software & AI Services */}
+          <div className="card-biru p-8 text-center flex flex-col items-center justify-between">
+            <div className="flex flex-col items-center">
+              {/* Badge Icon */}
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#181259] text-white shadow-md mb-6">
+                <Code2 size={24} />
+              </div>
+              <h3 className="font-display text-base sm:text-lg font-bold text-slate-900">
+                Software Services
+              </h3>
+              <p className="mt-2.5 text-xs leading-relaxed text-slate-500 max-w-xs">
+                Applied AI literacy, autonomous agent workflows, and vibe coding. Build real production systems without prior syntax hurdles.
+              </p>
+            </div>
+            <div className="mt-6">
+              <Link href="/courses" className="btn-royal">
+                Learn more
+              </Link>
+            </div>
           </div>
-          <h2 className="font-display text-3xl font-bold text-parchment sm:text-4xl">
+
+          {/* Card 2: Cloud & Enterprise Services */}
+          <div className="card-biru p-7 text-center flex flex-col items-center justify-between">
+            <div className="flex flex-col items-center">
+              {/* Badge Icon */}
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-600 shadow-sm mb-5">
+                <Cloud size={22} />
+              </div>
+              <h3 className="font-display text-base sm:text-lg font-bold text-slate-900">
+                Cloud Services
+              </h3>
+              <p className="mt-2.5 text-xs leading-relaxed text-slate-500 max-w-xs">
+                Comprehensive business formalization: CAC setup, unit economics, automated Paystack integration, and team operating systems.
+              </p>
+            </div>
+            <div className="mt-6">
+              <Link href="/shop" className="btn-royal">
+                Learn more
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 3: Security & Mentorship Services */}
+          <div className="card-biru p-7 text-center flex flex-col items-center justify-between">
+            <div className="flex flex-col items-center">
+              {/* Badge Icon */}
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 border border-blue-100 text-blue-600 shadow-sm mb-5">
+                <ShieldCheck size={22} />
+              </div>
+              <h3 className="font-display text-base sm:text-lg font-bold text-slate-900">
+                Security services
+              </h3>
+              <p className="mt-2.5 text-xs leading-relaxed text-slate-500 max-w-xs">
+                Verified 1-on-1 industry mentorship and institutional governance across 50+ Nigerian higher institutions and top companies.
+              </p>
+            </div>
+            <div className="mt-6">
+              <Link href="/mentorship/find" className="btn-royal">
+                Learn more
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          3. SOCIAL PROOF / LOGO BAR ("Join our 30,000 happy customers")
+         ========================================================================= */}
+      <section className="mx-auto max-w-7xl px-4 pt-16 pb-10 sm:px-6 lg:px-8 text-center">
+        <h2 className="font-display text-base sm:text-lg font-bold text-slate-800">
+          Join our 30,000 happy customers
+        </h2>
+
+        {/* Clean Logo Row */}
+        <div className="mt-8 grid grid-cols-2 items-center justify-center gap-8 md:grid-cols-6 opacity-70 grayscale transition-all hover:grayscale-0">
+          <div className="flex items-center justify-center font-display font-black tracking-widest text-slate-700 text-base">
+            UNILAG
+          </div>
+          <div className="flex items-center justify-center font-display font-bold tracking-wider text-slate-700 text-sm">
+            UI · IBADAN
+          </div>
+          <div className="flex items-center justify-center font-display font-extrabold tracking-widest text-slate-700 text-base">
+            ABU ZARIA
+          </div>
+          <div className="flex items-center justify-center font-display font-black tracking-wider text-slate-700 text-sm">
+            COVENANT
+          </div>
+          <div className="flex items-center justify-center font-display font-bold tracking-widest text-slate-700 text-base">
+            FINTECH
+          </div>
+          <div className="flex items-center justify-center font-display font-black tracking-wider text-slate-700 text-sm">
+            OAU IFE
+          </div>
+        </div>
+
+        {/* Dynamic Continuous Marquee Ticker */}
+        <div className="mt-8">
+          <InstitutionTicker />
+        </div>
+      </section>
+
+      {/* =========================================================================
+          4. SPLIT FEATURE SECTION ("Let us do the work, so you can focus on what matters.")
+         ========================================================================= */}
+      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-12 lg:grid-cols-3">
+          {/* Left Column: Heading & Description */}
+          <div className="space-y-4">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 leading-snug">
+              Let us do the work, so you can focus on what matters.
+            </h2>
+            <p className="text-sm leading-relaxed text-slate-500">
+              Accelerate your career transition, business formalization, and applied AI workflows. We handle the curriculum design, 1-on-1 matching, and verified credentialing.
+            </p>
+            <div className="pt-2">
+              <Link href="/courses" className="btn-royal">
+                Learn more
+              </Link>
+            </div>
+          </div>
+
+          {/* Center Column: Professional Image with Tech Watermark */}
+          <div className="relative flex justify-center">
+            {/* Subtle Circuit Background Watermark */}
+            <div
+              className="pointer-events-none absolute -inset-4 opacity-15"
+              style={{
+                backgroundImage: `radial-gradient(#0284c7 1px, transparent 1px)`,
+                backgroundSize: `24px 24px`,
+              }}
+              aria-hidden
+            />
+            <div className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/student-mobile.jpg"
+                alt="Student smiling using smartphone"
+                className="aspect-[3/4] w-full object-cover object-top"
+              />
+            </div>
+          </div>
+
+          {/* Right Column: 3 Stacked Cards (Card 2 is the Active Blue Gradient Highlight) */}
+          <div className="space-y-4">
+            {/* Card 1: Remote & Campus Cohorts */}
+            <div className="flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-slate-300">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cyan-50 text-cyan-600 border border-cyan-200">
+                <Check size={14} className="stroke-[3]" />
+              </div>
+              <div>
+                <h4 className="font-display text-sm font-bold text-slate-900">
+                  Remote Home Office
+                </h4>
+                <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                  Flexible weekly live sessions, mentor reviews, and recorded modules accessible from any device.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2: Active Highlighted Royal Blue Gradient Card */}
+            <div className="flex items-start gap-4 rounded-xl bg-gradient-to-r from-[#181259] to-[#0284C7] p-5 text-white shadow-xl">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/20 text-white border border-white/30">
+                <Check size={14} className="stroke-[3]" />
+              </div>
+              <div>
+                <h4 className="font-display text-sm font-bold text-white">
+                  Virtual Workstation
+                </h4>
+                <p className="mt-1 text-xs text-indigo-100/90 leading-relaxed">
+                  Build real production-ready web apps and automated agents using plain natural language and vibe coding.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3: Terminal Server / Protected Toolkits */}
+            <div className="flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-slate-300">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cyan-50 text-cyan-600 border border-cyan-200">
+                <Check size={14} className="stroke-[3]" />
+              </div>
+              <div>
+                <h4 className="font-display text-sm font-bold text-slate-900">
+                  Terminal Server
+                </h4>
+                <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                  Instant access to watermarked executive slides, legal business templates, and curriculum notes.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          5. CAREER TRACKS GRID (INCLUSIVE PATHWAYS WITH MODERN ELEVATED STYLING)
+         ========================================================================= */}
+      <section className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 border-t border-slate-200/80">
+        <div className="text-center max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-bold text-cyan-700 mb-3">
+            <Sparkles size={13} className="text-cyan-600" />
+            <span>Inclusive Multitrack Academy</span>
+          </div>
+          <h2 className="font-display text-2xl font-bold text-slate-900 sm:text-3xl">
             Tailored for every stage of your career
           </h2>
-          <p className="mt-3 text-sm text-parchment/65 leading-relaxed">
-            Whether you are climbing the corporate ladder, launching after graduation, switching fields,
-            scaling an enterprise, or studying on campus — MLA delivers tailored tools and mentorship.
+          <p className="mt-3 text-sm text-slate-500 leading-relaxed">
+            Whether you are climbing the corporate ladder, launching after graduation, switching fields, scaling an enterprise, or studying on campus — MLA delivers tailored tools and mentorship.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Card 1: Working Professionals */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-gold/40 transition-all">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Card 1: Corporate Track */}
+          <div className="card-biru p-6 flex flex-col justify-between">
             <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/10 text-gold mb-5 group-hover:scale-105 transition-transform">
-                <Briefcase size={22} />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-700 border border-blue-200 mb-4">
+                <Briefcase size={20} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-gold">Corporate Track</span>
-              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600">Corporate Track</span>
+              <h3 className="mt-1 font-display text-base font-bold text-slate-900">
                 Career Planning &amp; Professionals
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Strategic career planning, executive presence, high-stakes negotiation, and AI workflow automation
-                to accelerate your trajectory into C-suite and senior management.
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                Strategic career planning, executive presence, high-stakes negotiation, and AI workflow automation to accelerate your trajectory into C-suite and senior management.
               </p>
-              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+              <ul className="mt-4 space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold shrink-0" />
-                  <span>Executive career planning &amp; promotion roadmaps</span>
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
+                  <span>Executive roadmaps &amp; promotion planning</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>1-on-1 industry mentor matching</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Flexible evening &amp; weekend pacing</span>
                 </li>
               </ul>
             </div>
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <Link
-                href={user ? "/courses#career-planning" : "/register"}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light"
-              >
+            <div className="mt-6 pt-4 border-t border-slate-100">
+              <Link href={user ? "/courses#career-planning" : "/register"} className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900">
                 <span>{user ? "Access Corporate Track" : "Join Corporate Track"}</span>
                 <ArrowRight size={13} />
               </Link>
@@ -227,39 +414,35 @@ export default async function Home() {
           </div>
 
           {/* Card 2: Fresh Graduates & NYSC */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-crest-red/40 transition-all">
+          <div className="card-biru p-6 flex flex-col justify-between">
             <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-crest-red/30 bg-crest-red/10 text-red-400 mb-5 group-hover:scale-105 transition-transform">
-                <GraduationCap size={22} />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-50 text-cyan-700 border border-cyan-200 mb-4">
+                <GraduationCap size={20} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-red-400">Launch Track</span>
-              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-red-400 transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-600">Launch Track</span>
+              <h3 className="mt-1 font-display text-base font-bold text-slate-900">
                 Fresh Graduates &amp; NYSC
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Early-career planning and corporate readiness. Build proof-of-work with vibe coding,
-                master ATS-optimized CVs, and receive direct mock interview coaching.
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                Early-career planning and corporate readiness. Build proof-of-work with vibe coding, master ATS-optimized CVs, and receive direct mock interview coaching.
               </p>
-              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+              <ul className="mt-4 space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-red-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Hands-on proof-of-work projects</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-red-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Mentor-led CV &amp; interview coaching</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-red-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Cross-institution peer networking</span>
                 </li>
               </ul>
             </div>
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <Link
-                href={user ? "/courses#graduate-planning" : "/register"}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-400 group-hover:text-red-300"
-              >
+            <div className="mt-6 pt-4 border-t border-slate-100">
+              <Link href={user ? "/courses#graduate-planning" : "/register"} className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-700 hover:text-cyan-900">
                 <span>{user ? "Access Graduate Track" : "Join Graduate Track"}</span>
                 <ArrowRight size={13} />
               </Link>
@@ -267,159 +450,143 @@ export default async function Home() {
           </div>
 
           {/* Card 3: Entrepreneurs & Founders */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-emerald-500/40 transition-all">
+          <div className="card-biru p-6 flex flex-col justify-between">
             <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 mb-5 group-hover:scale-105 transition-transform">
-                <Zap size={22} />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 mb-4">
+                <Zap size={20} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400">Enterprise Track</span>
-              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-emerald-400 transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Enterprise Track</span>
+              <h3 className="mt-1 font-display text-base font-bold text-slate-900">
                 Entrepreneurship &amp; Business Setup
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Comprehensive business formalization: CAC registration, unit economics, Paystack checkout integration,
-                operating procedures (SOPs), and autonomous AI agent operations.
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                Comprehensive business formalization: CAC registration, unit economics, Paystack checkout integration, operating procedures (SOPs), and autonomous AI agent operations.
               </p>
-              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+              <ul className="mt-4 space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>CAC setup, governance &amp; legal structure</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Unit economics, pricing &amp; Paystack setup</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Autonomous AI agents &amp; team management</span>
                 </li>
               </ul>
             </div>
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <Link
-                href={user ? "/courses#entrepreneurship-management" : "/register"}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 group-hover:text-emerald-300"
-              >
+            <div className="mt-6 pt-4 border-t border-slate-100">
+              <Link href={user ? "/courses#entrepreneurship-management" : "/register"} className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:text-indigo-900">
                 <span>{user ? "Access Founder Track" : "Join Founder Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
           </div>
 
-          {/* Card 4: Retirement Planning & Post-Retirement Occupation */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-purple-500/40 transition-all">
+          {/* Card 4: Second-Act Track */}
+          <div className="card-biru p-6 flex flex-col justify-between">
             <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-purple-500/30 bg-purple-500/10 text-purple-400 mb-5 group-hover:scale-105 transition-transform">
-                <Award size={22} />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-700 border border-purple-200 mb-4">
+                <Award size={20} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-purple-400">Second-Act Track</span>
-              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-purple-400 transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-purple-600">Second-Act Track</span>
+              <h3 className="mt-1 font-display text-base font-bold text-slate-900">
                 Retirement Planning &amp; Legacy
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Structured transition for senior leaders: pension optimization, wealth preservation,
-                advisory and high-ticket consulting, and second-act venture building.
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                Structured transition for senior leaders: pension optimization, wealth preservation, advisory and high-ticket consulting, and second-act venture building.
               </p>
-              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+              <ul className="mt-4 space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Structured retirement &amp; legacy planning</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>High-ticket consulting &amp; advisory practice</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-purple-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Guided second-act venture building</span>
                 </li>
               </ul>
             </div>
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <Link
-                href={user ? "/courses#retirement-planning" : "/register"}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-400 group-hover:text-purple-300"
-              >
+            <div className="mt-6 pt-4 border-t border-slate-100">
+              <Link href={user ? "/courses#retirement-planning" : "/register"} className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 hover:text-purple-900">
                 <span>{user ? "Access Second-Act Track" : "Join Second-Act Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
           </div>
 
-          {/* Card 5: Job Seekers & Career Switchers */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-gold/40 transition-all">
+          {/* Card 5: Transition Track */}
+          <div className="card-biru p-6 flex flex-col justify-between">
             <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/30 bg-gold/10 text-gold mb-5 group-hover:scale-105 transition-transform">
-                <Rocket size={22} />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 mb-4">
+                <Rocket size={20} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-gold">Transition Track</span>
-              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Transition Track</span>
+              <h3 className="mt-1 font-display text-base font-bold text-slate-900">
                 Job Seekers &amp; Switchers
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Transition smoothly into high-demand AI and tech roles without a computer science degree.
-                Master modern tools that companies are actively hiring for.
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                Transition smoothly into high-demand AI and tech roles without a computer science degree. Master modern tools that companies are actively hiring for.
               </p>
-              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+              <ul className="mt-4 space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>High-income practical skill acquisition</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>1-on-1 career transition coaching</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Remote job and freelance positioning</span>
                 </li>
               </ul>
             </div>
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <Link
-                href={user ? "/courses#career-planning" : "/register"}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold group-hover:text-gold-light"
-              >
+            <div className="mt-6 pt-4 border-t border-slate-100">
+              <Link href={user ? "/courses#career-planning" : "/register"} className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-900">
                 <span>{user ? "Access Transition Track" : "Join Career Switch Track"}</span>
                 <ArrowRight size={13} />
               </Link>
             </div>
           </div>
 
-          {/* Card 6: Campus Scholars & Students */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-7 border border-white/10 hover:border-blue-500/40 transition-all">
+          {/* Card 6: Campus Scholars */}
+          <div className="card-biru p-6 flex flex-col justify-between">
             <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-400 mb-5 group-hover:scale-105 transition-transform">
-                <Building size={22} />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-sky-700 border border-sky-200 mb-4">
+                <Building size={20} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">Campus Track</span>
-              <h3 className="mt-1 font-display text-xl font-bold text-parchment group-hover:text-blue-400 transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-sky-600">Campus Track</span>
+              <h3 className="mt-1 font-display text-base font-bold text-slate-900">
                 Campus Scholars (Students)
               </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/70">
-                Excel in your academic coursework, build cross-campus peer networks across {institutions} institutions,
-                and graduate with a practical technical edge.
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                Excel in academic coursework, build cross-campus peer networks across {institutions} institutions, and graduate with a verifiable technical edge.
               </p>
-              <ul className="mt-4 space-y-2 text-xs text-parchment/75">
+              <ul className="mt-4 space-y-2 text-xs text-slate-600">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Cross-campus scholar networks</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Mentor &amp; fellow guidance</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-blue-400 shrink-0" />
+                  <CheckCircle2 size={13} className="text-cyan-600 shrink-0" />
                   <span>Campus meetups &amp; masterclasses</span>
                 </li>
               </ul>
             </div>
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <Link
-                href={user ? "/courses#ai-vibe-coding" : "/register"}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 group-hover:text-blue-300"
-              >
+            <div className="mt-6 pt-4 border-t border-slate-100">
+              <Link href={user ? "/courses#ai-vibe-coding" : "/register"} className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 hover:text-sky-900">
                 <span>{user ? "Access Student Track" : "Join Campus Track"}</span>
                 <ArrowRight size={13} />
               </Link>
@@ -428,313 +595,74 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 4. NUMBERED 4-PILLAR SOLUTIONS */}
-      <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto">
-          <p className="text-xs uppercase font-semibold tracking-widest text-gold">The MLA Architecture</p>
-          <h2 className="mt-2 font-display text-3xl font-bold text-parchment sm:text-4xl">
-            Everything designed for leadership &amp; practical mastery
-          </h2>
-          <p className="mt-3 text-sm text-parchment/65">
-            Four pillars integrated into a single unified workspace to empower you at every career stage.
-          </p>
-        </div>
-
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Pillar 01 */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-6 overflow-hidden">
-            <span className="absolute top-3 right-4 font-display text-4xl font-bold text-white/[0.04] transition-colors group-hover:text-gold/10">
-              01
-            </span>
+      {/* =========================================================================
+          6. LATEST DISPATCHES / BLOG SECTION
+         ========================================================================= */}
+      {posts && posts.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 border-t border-slate-200/80">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/25 bg-gold/10 text-gold transition-transform group-hover:scale-105">
-                <BookOpen size={22} />
-              </div>
-              <h3 className="mt-5 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
-                Curriculum &amp; Capstones
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Structured modules in Career Planning, Business Setup &amp; Management, Retirement Strategy, and Applied AI Vibe Coding.
-              </p>
-              <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Executive &amp; founder roadmaps</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Real-world practical projects</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>100% Free core syllabus</span>
-                </li>
-              </ul>
-            </div>
-            <Link href="/courses" className="mt-6 flex items-center justify-between border-t border-white/[0.08] pt-4 text-xs font-semibold text-gold group-hover:text-gold-light">
-              <span>View Curriculum</span>
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-
-          {/* Pillar 02 */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-6 overflow-hidden">
-            <span className="absolute top-3 right-4 font-display text-4xl font-bold text-white/[0.04] transition-colors group-hover:text-gold/10">
-              02
-            </span>
-            <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-crest-red/30 bg-crest-red/10 text-red-400 transition-transform group-hover:scale-105">
-                <Users size={22} />
-              </div>
-              <h3 className="mt-5 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
-                1-on-1 Mentorship
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Cross-industry and cross-campus mentor matching pairing learners with verified corporate leads and senior fellows.
-              </p>
-              <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Executive &amp; technical coaching</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Vetted mentor credentials</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Direct request &amp; milestone approval</span>
-                </li>
-              </ul>
-            </div>
-            <Link href="/mentorship/find" className="mt-6 flex items-center justify-between border-t border-white/[0.08] pt-4 text-xs font-semibold text-gold group-hover:text-gold-light">
-              <span>Find Mentors</span>
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-
-          {/* Pillar 03 */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-6 overflow-hidden">
-            <span className="absolute top-3 right-4 font-display text-4xl font-bold text-white/[0.04] transition-colors group-hover:text-gold/10">
-              03
-            </span>
-            <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold/25 bg-gold/10 text-gold transition-transform group-hover:scale-105">
-                <Calendar size={22} />
-              </div>
-              <h3 className="mt-5 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
-                Masterclass Events
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Virtual webinars, technical deep dives, and corporate leadership workshops with live RSVP for members.
-              </p>
-              <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Live webinars &amp; workshops</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Industry technical masterclasses</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>RSVP &amp; event reminders</span>
-                </li>
-              </ul>
-            </div>
-            <Link href="/events" className="mt-6 flex items-center justify-between border-t border-white/[0.08] pt-4 text-xs font-semibold text-gold group-hover:text-gold-light">
-              <span>See Schedule</span>
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-
-          {/* Pillar 04 */}
-          <div className="glass-card group relative flex flex-col justify-between rounded-2xl p-6 overflow-hidden">
-            <span className="absolute top-3 right-4 font-display text-4xl font-bold text-white/[0.04] transition-colors group-hover:text-gold/10">
-              04
-            </span>
-            <div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-crest-red/30 bg-crest-red/10 text-red-400 transition-transform group-hover:scale-105">
-                <ShoppingBag size={22} />
-              </div>
-              <h3 className="mt-5 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
-                Protected Shop
-              </h3>
-              <p className="mt-2 text-xs leading-relaxed text-parchment/65">
-                Curated digital textbooks, software starter kits, and professional tools secured with Paystack and HMAC licensing.
-              </p>
-              <ul className="mt-4 space-y-1.5 text-xs text-parchment/70">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Cryptographic HMAC licenses</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Hardware activation limits</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 size={13} className="text-gold" />
-                  <span>Instant Paystack checkout in NGN</span>
-                </li>
-              </ul>
-            </div>
-            <Link href="/shop" className="mt-6 flex items-center justify-between border-t border-white/[0.08] pt-4 text-xs font-semibold text-gold group-hover:text-gold-light">
-              <span>Explore Store</span>
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. SPOTLIGHT FELLOW & MENTOR */}
-      <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
-        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1A1410] to-[#0D0A08] p-8 md:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.7)]">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
-            <div className="relative overflow-hidden rounded-2xl border border-gold/20 shadow-2xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/mentor-spotlight.jpg"
-                alt="Featured Nigerian tech executive and mentor"
-                className="aspect-square w-full object-cover brightness-[0.95]"
-              />
-              <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/20 bg-black/80 p-3.5 backdrop-blur-xl">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-bold text-parchment">MLA Fellows &amp; Mentorship Guild</p>
-                    <p className="text-[10px] text-parchment/60">Community spotlight</p>
-                  </div>
-                  <span className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
-                    Featured
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">
-                <Sparkles size={13} />
-                <span>Mentor Spotlight</span>
-              </div>
-              <h2 className="font-display text-3xl font-bold text-parchment sm:text-4xl">
-                “Mentorship transforms practical AI skills into industry leadership.”
+              <p className="text-xs font-bold uppercase tracking-wider text-cyan-600">Dispatches &amp; Insights</p>
+              <h2 className="mt-1 font-display text-xl sm:text-2xl font-bold text-slate-900">
+                Latest from the Academy
               </h2>
-              <p className="text-sm leading-relaxed text-parchment/75">
-                “At MLA, we bridge the divide between corporate offices, independent startups, and university campuses.
-                A banker in Lagos can learn vibe coding alongside an engineer in Abuja. That cross-pollination of ideas
-                powers real career breakthroughs.”
-              </p>
-
-              <div className="flex flex-wrap gap-2 pt-2">
-                <span className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-parchment/80">
-                  #WorkflowAutomation
-                </span>
-                <span className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-parchment/80">
-                  #AutonomousAgents
-                </span>
-                <span className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-parchment/80">
-                  #CareerElevation
-                </span>
-              </div>
-
-              <div className="pt-2">
-                <Link href="/mentorship/find" className="btn-primary">
-                  <span>Connect with Mentors</span>
-                  <ArrowUpRight size={16} />
-                </Link>
-              </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. BLOG DISPATCHES */}
-      <section className="relative border-t border-white/[0.08] bg-[#0E0B08]/60 py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase font-semibold tracking-widest text-gold">Dispatches &amp; Knowledge</p>
-              <h2 className="mt-2 font-display text-3xl font-bold text-parchment">From the Academy Blog</h2>
-            </div>
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold hover:text-gold-light transition-colors"
-            >
-              <span>Explore all articles</span>
+            <Link href="/blog" className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:text-blue-900">
+              <span>View all dispatches</span>
               <ArrowRight size={14} />
             </Link>
           </div>
 
-          {posts.length > 0 ? (
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post) => (
-                <BlogCard key={post.id} post={post} />
-              ))}
-            </div>
-          ) : (
-            <div className="mt-10 rounded-xl border border-white/[0.08] bg-panel p-8 text-center">
-              <Sparkles size={24} className="mx-auto text-gold/40" />
-              <p className="mt-3 text-sm text-parchment/60">
-                Staff dispatches and academic articles are being curated. Check back soon.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => (
+              <BlogCard key={post.id} post={post} />
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* 7. FREQUENTLY ASKED QUESTIONS */}
-      <section className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
-        <div className="text-center max-w-xl mx-auto mb-14">
-          <p className="text-xs uppercase font-semibold tracking-widest text-gold">Have Questions?</p>
-          <h2 className="mt-2 font-display text-3xl font-bold text-parchment">Frequently Asked Questions</h2>
-          <p className="mt-3 text-xs sm:text-sm text-parchment/65">
-            Everything you need to know about joining MLA, career tracks, and mentorship.
+      {/* =========================================================================
+          7. FAQ ACCORDION SECTION
+         ========================================================================= */}
+      <section className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 border-t border-slate-200/80">
+        <div className="text-center">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-900">
+            Frequently Asked Questions
+          </h2>
+          <p className="mt-2 text-xs sm:text-sm text-slate-500">
+            Everything you need to know about tracks, mentorship matching, and curriculum access.
           </p>
         </div>
-
-        <FaqAccordion />
+        <div className="mt-8">
+          <FaqAccordion />
+        </div>
       </section>
 
-      {/* 8. HIGH-CONVERSION BENTO CTA BANNER */}
-      <section className="relative mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-        <div className="relative overflow-hidden rounded-3xl border border-gold/30 bg-gradient-to-r from-[#1E1712] via-[#2A1F18] to-[#16110D] p-8 sm:p-14 text-center shadow-[0_20px_60px_rgba(212,175,55,0.1)]">
-          {/* Ambient Accent Light */}
-          <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-96 rounded-full bg-gold/20 blur-3xl" />
-
-          <div className="relative mx-auto max-w-2xl space-y-5">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/15 px-3 py-1 text-xs font-semibold text-gold-light">
-              <Compass size={14} className="text-gold" />
-              Start Your Journey Today
-            </span>
-
-            <h2 className="font-display text-3xl font-bold text-parchment sm:text-4xl lg:text-5xl leading-tight">
-              Ready to lead your field with AI?
+      {/* =========================================================================
+          8. CALL TO ACTION BANNER (ROYAL INK/INDIGO GRADIENT)
+         ========================================================================= */}
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#140F47] via-[#1A1359] to-[#2B1B8A] px-8 py-12 text-center text-white shadow-2xl sm:px-16">
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">
+              Ready to accelerate your career &amp; business?
             </h2>
-
-            <p className="text-sm leading-relaxed text-parchment/75 sm:text-base">
-              Join working professionals, ambitious graduates, job seekers, entrepreneurs, and campus scholars
-              across Nigeria. Build your proof-of-work portfolio, receive 1-on-1 mentorship, and take the lead.
+            <p className="mt-3 text-sm text-indigo-100/80">
+              Join thousands of working professionals, ambitious graduates, and campus scholars nationwide. Free access to core courses today.
             </p>
-
-            <div className="pt-4 flex flex-wrap justify-center items-center gap-4">
-              <Link href={user ? "/dashboard" : "/register"} className="btn-primary !px-7 !py-3.5 !text-sm">
-                <span>{user ? "Open My Dashboard" : "Join MLA for Free"}</span>
-                <ArrowRight size={16} />
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/register"
+                className="rounded-lg bg-[#00D2FF] px-7 py-3 text-sm font-bold text-[#0A0E2A] shadow-xl shadow-cyan-500/30 transition-all hover:bg-[#38BDF8] hover:scale-105 active:scale-95"
+              >
+                Get Started Free
               </Link>
-              <Link href="/about" className="btn-secondary !px-7 !py-3.5 !text-sm">
-                <span>Learn More</span>
+              <Link
+                href="/courses"
+                className="rounded-lg border border-white/35 px-7 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10 active:scale-95"
+              >
+                Browse Syllabus
               </Link>
-            </div>
-
-            <div className="pt-4 flex items-center justify-center gap-6 text-xs text-parchment/60">
-              <span className="inline-flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-gold" />
-                No tuition or credit card required
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-gold" />
-                Instant free account access
-              </span>
             </div>
           </div>
         </div>

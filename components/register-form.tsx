@@ -142,14 +142,14 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-6 space-y-5">
+    <form onSubmit={onSubmit} className="mt-5 space-y-4">
       {/* 1. PATHWAY SELECTOR */}
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs uppercase tracking-widest text-parchment/70 font-semibold">
+          <span className="text-xs uppercase tracking-wider text-slate-600 font-semibold">
             Choose Your Track / Background
           </span>
-          <span className="text-[11px] text-gold font-medium">
+          <span className="text-[11px] text-[#0284C7] font-semibold">
             Personalized for your goals
           </span>
         </div>
@@ -165,13 +165,13 @@ export function RegisterForm() {
                 onClick={() => handleSelectPathway(p)}
                 className={`group flex items-center gap-2 rounded-xl p-2.5 text-left text-xs font-medium transition-all ${
                   isSelected
-                    ? "border border-gold bg-gold/15 text-gold shadow-sm shadow-gold/20"
-                    : "border border-white/10 bg-white/5 text-parchment/75 hover:border-gold/40 hover:text-parchment hover:bg-white/10"
+                    ? "border border-cyan-400 bg-cyan-50 text-[#0284C7] shadow-sm font-semibold"
+                    : "border border-slate-200 bg-slate-50/70 text-slate-700 hover:border-cyan-300 hover:text-slate-900 hover:bg-white"
                 }`}
               >
                 <div
                   className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${
-                    isSelected ? "bg-gold text-ink" : "bg-white/10 text-parchment/60 group-hover:text-gold"
+                    isSelected ? "bg-[#00D2FF] text-[#0A0E2A]" : "bg-slate-200/70 text-slate-500 group-hover:text-slate-800"
                   }`}
                 >
                   <Icon size={13} />
@@ -181,22 +181,22 @@ export function RegisterForm() {
             );
           })}
         </div>
-        <p className="mt-2 text-xs text-parchment/60 leading-relaxed">
+        <p className="mt-2 text-xs text-slate-500 leading-relaxed">
           {currentPathway.helperText}
         </p>
       </div>
 
       {/* 2. PERSONAL DETAILS */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3.5 sm:grid-cols-2">
         <label className="block">
-          <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60 font-medium">
+          <span className="mb-1 block text-xs uppercase tracking-wider text-slate-600 font-semibold">
             Full Name
           </span>
-          <input name="full_name" required autoComplete="name" className={inputClass} />
+          <input name="full_name" required autoComplete="name" placeholder="Adebayo Ogunlesi" className={inputClass} />
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60 font-medium">
+          <span className="mb-1 block text-xs uppercase tracking-wider text-slate-600 font-semibold">
             Email Address
           </span>
           <input
@@ -204,6 +204,7 @@ export function RegisterForm() {
             name="email"
             required
             autoComplete="email"
+            placeholder="adebayo@example.com"
             className={inputClass}
           />
         </label>
@@ -211,7 +212,7 @@ export function RegisterForm() {
 
       {/* 3. AFFILIATION / ORGANIZATION / SCHOOL */}
       <div className="block">
-        <label className="mb-1 block text-xs uppercase tracking-widest text-parchment/60 font-medium">
+        <label className="mb-1 block text-xs uppercase tracking-wider text-slate-600 font-semibold">
           Organization, Company, Institution, or Field
         </label>
 
@@ -231,7 +232,7 @@ export function RegisterForm() {
           />
 
           {open && matches.length > 0 && (
-            <ul className="absolute z-10 mt-1 max-h-48 overflow-y-auto w-full rounded-md border border-parchment/15 bg-panel shadow-2xl">
+            <ul className="absolute z-10 mt-1 max-h-48 overflow-y-auto w-full rounded-xl border border-slate-200 bg-white shadow-xl">
               {matches.map((m) => (
                 <li key={m}>
                   <button
@@ -242,7 +243,7 @@ export function RegisterForm() {
                       setOpen(false);
                       dirty.current = false;
                     }}
-                    className="block w-full px-3 py-2 text-left text-sm text-parchment/90 hover:bg-ink hover:text-gold transition-colors"
+                    className="block w-full px-3.5 py-2 text-left text-xs sm:text-sm text-slate-700 hover:bg-cyan-50 hover:text-[#0284C7] transition-colors"
                   >
                     {m}
                   </button>
@@ -251,14 +252,14 @@ export function RegisterForm() {
             </ul>
           )}
         </div>
-        <p className="mt-1.5 text-[11px] text-parchment/50">
-          Tip: You can keep <span className="text-gold">&quot;{query}&quot;</span> or type your specific company, school, or industry.
+        <p className="mt-1 text-[11px] text-slate-500">
+          Tip: You can keep <span className="text-[#0284C7] font-semibold">&quot;{query}&quot;</span> or type your specific company, school, or industry.
         </p>
       </div>
 
       {/* 4. PASSWORD */}
       <label className="block">
-        <span className="mb-1 block text-xs uppercase tracking-widest text-parchment/60 font-medium">
+        <span className="mb-1 block text-xs uppercase tracking-wider text-slate-600 font-semibold">
           Create Password
         </span>
         <input
@@ -267,24 +268,25 @@ export function RegisterForm() {
           required
           minLength={8}
           autoComplete="new-password"
+          placeholder="Minimum 8 characters"
           className={inputClass}
         />
       </label>
 
       {/* NOTIFICATIONS CHECKBOX */}
-      <label className="flex items-center gap-2 text-xs text-parchment/70 cursor-pointer pt-1">
+      <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer pt-0.5">
         <input
           type="checkbox"
           name="email_notifications"
           value="on"
           defaultChecked
-          className="h-4 w-4 accent-gold rounded"
+          className="h-4 w-4 accent-cyan-500 rounded"
         />
         Send me announcements when new courses, masterclasses, or mentor cohorts launch
       </label>
 
       {error && (
-        <div className="rounded-lg border border-red-500/30 bg-red-950/40 p-3 text-xs text-red-300">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-600 font-medium">
           {error}
         </div>
       )}
@@ -293,14 +295,14 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-lg bg-crest-red py-3.5 text-sm font-bold text-white shadow-lg shadow-crest-red/30 transition-all hover:bg-crest-red/90 hover:shadow-crest-red/50 active:scale-[0.99] disabled:opacity-60 cursor-pointer"
+        className="w-full rounded-lg bg-[#00D2FF] py-3 text-xs sm:text-sm font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 transition-all hover:bg-[#38BDF8] active:scale-[0.99] disabled:opacity-60 cursor-pointer"
       >
         {pending ? "Creating member account…" : "Join MLA Academy"}
       </button>
 
-      <p className="text-center text-xs text-parchment/60 pt-2">
+      <p className="text-center text-xs text-slate-500 pt-1">
         Already registered?{" "}
-        <Link href="/login" className="font-semibold text-gold hover:underline">
+        <Link href="/login" className="font-semibold text-[#0284C7] hover:underline">
           Sign in to your member dashboard
         </Link>
       </p>

@@ -31,13 +31,14 @@ export function LoginForm({ next }: { next?: string }) {
           name="email"
           required
           autoComplete="email"
+          placeholder="your.email@example.com"
           className={inputClass}
         />
       </Field>
       <Field 
         label="Password"
         action={
-          <Link href="/forgot-password" className="text-gold hover:underline">
+          <Link href="/forgot-password" className="text-[#0284C7] hover:underline font-semibold">
             Forgot?
           </Link>
         }
@@ -47,20 +48,21 @@ export function LoginForm({ next }: { next?: string }) {
           name="password"
           required
           autoComplete="current-password"
+          placeholder="••••••••"
           className={inputClass}
         />
       </Field>
-      {error && <p className="text-sm text-crest-red">{error}</p>}
+      {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-sm bg-crest-red px-4 py-3 text-sm font-medium text-white hover:bg-crest-red/90 disabled:opacity-60"
+        className="w-full rounded-lg bg-[#00D2FF] px-4 py-3 text-xs sm:text-sm font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 hover:bg-[#38BDF8] transition-all disabled:opacity-60 cursor-pointer"
       >
-        {pending ? "Signing in…" : "Sign in"}
+        {pending ? "Signing in…" : "Sign in to Dashboard"}
       </button>
-      <p className="text-sm text-parchment/60">
+      <p className="text-center text-xs text-slate-500 pt-1">
         New here?{" "}
-        <Link href="/register" className="text-gold hover:underline">
+        <Link href="/register" className="text-[#0284C7] hover:underline font-semibold">
           Create an account
         </Link>
       </p>
@@ -69,7 +71,7 @@ export function LoginForm({ next }: { next?: string }) {
 }
 
 export const inputClass =
-  "w-full rounded-sm border border-parchment/20 bg-ink px-3 py-2 text-sm text-parchment placeholder:text-parchment/40 focus:border-gold focus:outline-none";
+  "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-all";
 
 function Field({
   label,
@@ -82,8 +84,8 @@ function Field({
 }) {
   return (
     <label className="block">
-      <div className="mb-1 flex items-center justify-between">
-        <span className="block text-xs uppercase tracking-widest text-parchment/60">
+      <div className="mb-1.5 flex items-center justify-between">
+        <span className="block text-xs uppercase tracking-wider text-slate-600 font-semibold">
           {label}
         </span>
         {action && (

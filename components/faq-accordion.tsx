@@ -64,7 +64,7 @@ export function FaqAccordion() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl divide-y divide-white/[0.08]">
+    <div className="mx-auto max-w-3xl divide-y divide-slate-200">
       {faqs.map((faq, idx) => {
         const isOpen = openIndex === idx;
         return (
@@ -74,20 +74,20 @@ export function FaqAccordion() {
               className="flex w-full items-center justify-between text-left transition-colors group"
               aria-expanded={isOpen}
             >
-              <span className="flex items-center gap-3 text-sm font-semibold text-parchment group-hover:text-gold sm:text-base">
-                <HelpCircle size={16} className="text-gold shrink-0 opacity-70 group-hover:opacity-100" />
+              <span className="flex items-center gap-3 text-sm font-bold text-slate-800 group-hover:text-blue-700 sm:text-base">
+                <HelpCircle size={16} className="text-cyan-600 shrink-0" />
                 {faq.question}
               </span>
               <div
-                className={`ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 transition-transform duration-200 ${
-                  isOpen ? "rotate-180 border-gold/40 text-gold" : "text-parchment/50"
+                className={`ml-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-slate-200 transition-transform duration-200 ${
+                  isOpen ? "rotate-180 border-blue-600 text-blue-700 bg-blue-50" : "text-slate-400"
                 }`}
               >
                 <ChevronDown size={14} />
               </div>
             </button>
             {isOpen && (
-              <div className="mt-3 pl-7 pr-4 text-xs sm:text-sm leading-relaxed text-parchment/70 animate-in fade-in duration-200">
+              <div className="mt-3 pl-7 pr-4 text-xs sm:text-sm leading-relaxed text-slate-600 animate-in fade-in duration-200">
                 {faq.answer}
               </div>
             )}

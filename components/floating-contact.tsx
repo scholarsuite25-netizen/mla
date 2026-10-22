@@ -21,7 +21,7 @@ export function FloatingContact() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-3 rounded-full border border-emerald-500/30 bg-[#0E1A14]/95 px-4 py-2.5 backdrop-blur-xl shadow-2xl transition-all hover:scale-105 hover:border-emerald-400 hover:bg-emerald-950/80"
+            className="group flex items-center gap-3 rounded-full border border-emerald-500/30 bg-[#0B1A14]/95 px-4 py-2.5 backdrop-blur-xl shadow-2xl transition-all hover:scale-105 hover:border-emerald-400 hover:bg-emerald-950/80"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_0_12px_rgba(16,185,129,0.5)]">
               <MessageCircle size={16} />
@@ -30,23 +30,23 @@ export function FloatingContact() {
               <p className="text-xs font-bold text-emerald-400 group-hover:text-emerald-300">
                 Chat on WhatsApp
               </p>
-              <p className="text-[10px] text-parchment/60">Instant response</p>
+              <p className="text-[10px] text-white/70">Instant response</p>
             </div>
           </a>
 
           {/* Direct Phone Call Option */}
           <a
             href={`tel:+${phoneNumber}`}
-            className="group flex items-center gap-3 rounded-full border border-gold/30 bg-[#1A140E]/95 px-4 py-2.5 backdrop-blur-xl shadow-2xl transition-all hover:scale-105 hover:border-gold hover:bg-amber-950/80"
+            className="group flex items-center gap-3 rounded-full border border-cyan-400/30 bg-[#140F47]/95 px-4 py-2.5 backdrop-blur-xl shadow-2xl transition-all hover:scale-105 hover:border-cyan-300 hover:bg-[#1E1668]"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gold text-ink shadow-[0_0_12px_rgba(212,175,55,0.5)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-cyan-400 text-slate-950 shadow-[0_0_12px_rgba(0,210,255,0.5)]">
               <Phone size={15} />
             </div>
             <div className="text-left">
-              <p className="text-xs font-bold text-gold group-hover:text-gold-light">
+              <p className="text-xs font-bold text-cyan-300 group-hover:text-white">
                 Call Helpline
               </p>
-              <p className="text-[10px] text-parchment/70 font-mono">{formattedPhone}</p>
+              <p className="text-[10px] text-white/80 font-mono">{formattedPhone}</p>
             </div>
           </a>
         </div>
@@ -56,19 +56,19 @@ export function FloatingContact() {
       <button
         onClick={() => setOpen((prev) => !prev)}
         aria-label="Contact MLA Helpline"
-        className="group relative flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 bg-gradient-to-br from-[#241A12] to-[#120D09] text-gold shadow-[0_8px_30px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all hover:scale-110 hover:border-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] active:scale-95"
+        className="group relative flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/40 bg-gradient-to-br from-[#1E1668] to-[#120D42] text-cyan-300 shadow-[0_8px_30px_rgba(10,8,40,0.8)] backdrop-blur-md transition-all hover:scale-110 hover:border-cyan-300 hover:shadow-[0_0_25px_rgba(0,210,255,0.4)] active:scale-95"
       >
         {/* Pulsing Outer Ring */}
         {!open && (
-          <span className="absolute -inset-1 rounded-full border border-gold/30 opacity-75 animate-ping" />
+          <span className="absolute -inset-1 rounded-full border border-cyan-400/30 opacity-75 animate-ping" />
         )}
 
         {open ? (
-          <X size={22} className="text-parchment transition-transform group-hover:rotate-90" />
+          <X size={22} className="text-white transition-transform group-hover:rotate-90" />
         ) : (
           <div className="relative">
-            <Headphones size={22} className="text-gold" />
-            <span className="absolute -bottom-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-emerald-500 ring-2 ring-[#120D09]" />
+            <Headphones size={22} className="text-cyan-300" />
+            <span className="absolute -bottom-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-emerald-400 ring-2 ring-[#120D42]" />
           </div>
         )}
       </button>

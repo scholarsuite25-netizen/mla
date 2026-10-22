@@ -126,32 +126,32 @@ export default async function BlogPostPage({
   };
 
   return (
-    <div className="min-h-screen bg-[#0E0A08] text-parchment selection:bg-gold/30 selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFD] text-slate-800">
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
         {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-2 text-xs text-parchment/50">
-          <Link href="/" className="hover:text-gold transition">
+        <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+          <Link href="/" className="hover:text-[#0284C7] transition">
             Home
           </Link>
           <ChevronRight size={12} />
-          <Link href="/blog" className="hover:text-gold transition">
+          <Link href="/blog" className="hover:text-[#0284C7] transition">
             Blog
           </Link>
           <ChevronRight size={12} />
           <Link
             href={`/blog?category=${encodeURIComponent(post.category || "Leadership")}`}
-            className="text-gold/80 hover:text-gold transition"
+            className="text-[#0284C7] hover:underline transition"
           >
             {post.category || "Leadership"}
           </Link>
           <ChevronRight size={12} />
-          <span className="truncate max-w-[200px] text-parchment/40">
+          <span className="truncate max-w-[200px] text-slate-400">
             {post.title}
           </span>
         </nav>
@@ -160,7 +160,7 @@ export default async function BlogPostPage({
         <div className="mb-6">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 text-xs text-parchment/60 hover:text-gold transition"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-[#0284C7] transition"
           >
             <ArrowLeft size={13} />
             <span>Back to all dispatches</span>
@@ -172,54 +172,54 @@ export default async function BlogPostPage({
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href={`/blog?category=${encodeURIComponent(post.category || "Leadership")}`}
-              className="inline-block rounded-xl border border-gold/40 bg-gold/15 px-3 py-1 text-xs font-bold text-gold tracking-wide hover:bg-gold hover:text-midnight transition-all"
+              className="inline-block rounded-lg border border-cyan-300 bg-cyan-50 px-3 py-1 text-xs font-bold text-[#0284C7] tracking-wide hover:bg-[#00D2FF] hover:text-[#0A0E2A] transition-all"
             >
               {post.category || "Leadership"}
             </Link>
 
             {post.featured && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-crest-red/20 border border-crest-red/40 px-2.5 py-0.5 text-[11px] font-semibold text-amber-300">
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700">
                 <Sparkles size={11} /> Featured Dispatch
               </span>
             )}
           </div>
 
-          <h1 className="font-display text-2xl font-bold leading-tight text-parchment sm:text-3xl md:text-4xl">
+          <h1 className="font-display text-2xl font-bold leading-tight text-slate-900 sm:text-3xl md:text-4xl">
             {post.title}
           </h1>
 
           {post.excerpt && (
-            <p className="text-base sm:text-lg leading-relaxed text-parchment/80 font-light italic border-l-2 border-gold/40 pl-4">
+            <p className="text-base sm:text-lg leading-relaxed text-slate-600 font-light italic border-l-2 border-cyan-400 pl-4">
               {post.excerpt}
             </p>
           )}
 
           {/* Author, Date & Stats Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-y border-white/10 py-4 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-y border-slate-200 py-3.5 text-xs">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/15 border border-gold/30 text-gold font-display font-bold">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#120D42] text-[#00D2FF] font-display font-bold">
                 M
               </div>
               <div>
-                <span className="font-semibold text-parchment block leading-none">
+                <span className="font-semibold text-slate-900 block leading-none">
                   MLA Editorial Directorate
                 </span>
-                <span className="text-[11px] text-parchment/50">
+                <span className="text-[11px] text-slate-500">
                   Leadership, Research &amp; Fellowship
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 text-parchment/50">
+            <div className="flex items-center gap-4 text-slate-500">
               {date && (
                 <div className="flex items-center gap-1.5">
-                  <Calendar size={13} className="text-gold" />
+                  <Calendar size={13} className="text-[#0284C7]" />
                   <span>{date}</span>
                 </div>
               )}
               <span>•</span>
               <div className="flex items-center gap-1.5">
-                <Clock size={13} className="text-gold" />
+                <Clock size={13} className="text-[#0284C7]" />
                 <span>{readTime} min read</span>
               </div>
               {post.allow_comments && (
@@ -227,9 +227,9 @@ export default async function BlogPostPage({
                   <span>•</span>
                   <a
                     href="#comments"
-                    className="flex items-center gap-1.5 hover:text-gold transition"
+                    className="flex items-center gap-1.5 hover:text-[#0284C7] transition"
                   >
-                    <MessageSquare size={13} className="text-gold" />
+                    <MessageSquare size={13} className="text-[#0284C7]" />
                     <span>{comments.length} comments</span>
                   </a>
                 </>
@@ -240,34 +240,34 @@ export default async function BlogPostPage({
 
         {/* Featured Cover Image */}
         {post.cover_image_url && (
-          <div className="my-10 overflow-hidden rounded-3xl border border-white/15 bg-black/40 shadow-2xl">
+          <div className="my-8 overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-100 shadow-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.cover_image_url}
               alt={post.title}
-              className="h-64 md:h-80 w-full object-cover"
+              className="h-64 md:h-96 w-full object-cover"
             />
           </div>
         )}
 
         {/* Article Body with Text-Wrap Image Support */}
-        <article className="mt-8">
-          <Markdown className="text-base leading-relaxed sm:text-lg">
+        <article className="mt-8 prose prose-slate max-w-none">
+          <Markdown className="text-base leading-relaxed sm:text-lg text-slate-800">
             {post.body}
           </Markdown>
         </article>
 
         {/* Post Tags */}
         {post.tags && post.tags.length > 0 && (
-          <div className="mt-12 flex flex-wrap items-center gap-2 border-t border-white/10 pt-6">
-            <span className="text-xs font-semibold uppercase tracking-wider text-parchment/50 mr-1 flex items-center gap-1">
+          <div className="mt-10 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-6">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 mr-1 flex items-center gap-1">
               <Hash size={13} /> Tags:
             </span>
             {post.tags.map((t) => (
               <Link
                 key={t}
                 href={`/blog?tag=${encodeURIComponent(t)}`}
-                className="rounded-xl border border-white/10 bg-[#140E0A] px-3 py-1 text-xs font-medium text-parchment/80 hover:border-gold hover:text-gold transition-all"
+                className="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 hover:border-cyan-400 hover:text-[#0284C7] transition-all"
               >
                 #{t}
               </Link>
@@ -276,32 +276,32 @@ export default async function BlogPostPage({
         )}
 
         {/* Social Sharing Bar */}
-        <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-white/10 bg-[#120D09] p-5">
+        <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <ShareButtons title={post.title} url={postUrl} />
 
           <Link
             href="/mentorship/become"
-            className="text-xs text-gold hover:underline font-medium self-start sm:self-auto"
+            className="text-xs text-[#0284C7] hover:underline font-semibold self-start sm:self-auto"
           >
             Interested in publishing an academic dispatch? Join Faculty →
           </Link>
         </div>
 
         {/* Author Bio Card */}
-        <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-5 rounded-3xl border border-white/15 bg-gradient-to-br from-[#18120D] to-[#0F0B08] p-6 sm:p-8 shadow-xl">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gold/15 border border-gold/40 text-gold font-display text-2xl font-bold">
+        <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#120D42] text-[#00D2FF] font-display text-xl font-bold">
             M
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <h3 className="font-display text-lg font-bold text-parchment">
+              <h3 className="font-display text-base font-bold text-slate-900">
                 Mentorship &amp; Leadership Academy
               </h3>
-              <span className="rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-bold text-gold">
+              <span className="rounded-full bg-cyan-100 px-2 py-0.5 text-[10px] font-bold text-[#0284C7]">
                 Verified Faculty
               </span>
             </div>
-            <p className="text-xs leading-relaxed text-parchment/70">
+            <p className="text-xs leading-relaxed text-slate-600">
               MLA produces actionable leadership intelligence, rigorous curriculum frameworks, and career governance doctrines for university scholars, corporate executives, and emerging industry founders across Nigeria and Africa.
             </p>
           </div>
@@ -317,25 +317,25 @@ export default async function BlogPostPage({
 
         {/* Related Articles in Same Category */}
         {relatedPosts.length > 0 && (
-          <section className="mt-20 border-t border-white/10 pt-12">
+          <section className="mt-16 border-t border-slate-200 pt-10">
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <span className="text-xs uppercase tracking-wider text-gold font-bold">
+                <span className="text-xs uppercase tracking-wider text-[#0284C7] font-bold">
                   Continue Reading
                 </span>
-                <h3 className="font-display text-2xl font-bold text-parchment">
+                <h3 className="font-display text-xl font-bold text-slate-900">
                   Related Dispatches in {post.category || "Leadership"}
                 </h3>
               </div>
               <Link
                 href={`/blog?category=${encodeURIComponent(post.category || "Leadership")}`}
-                className="text-xs text-gold hover:underline"
+                className="text-xs text-[#0284C7] font-semibold hover:underline"
               >
                 View all in category →
               </Link>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {relatedPosts.map((rPost) => (
                 <BlogCard key={rPost.id} post={rPost} />
               ))}

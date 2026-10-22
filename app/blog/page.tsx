@@ -37,10 +37,10 @@ function FeaturedHero({ post }: { post: PublishedPost }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group relative block overflow-hidden rounded-3xl border border-white/10 bg-[#140E0A]"
+      className="group relative block overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm hover:border-cyan-400/60 hover:shadow-md transition-all"
     >
       <div className="grid md:grid-cols-2">
-        <div className="relative min-h-[220px] overflow-hidden">
+        <div className="relative min-h-[220px] overflow-hidden bg-slate-100">
           {post.cover_image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -49,27 +49,26 @@ function FeaturedHero({ post }: { post: PublishedPost }) {
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gold/5">
-              <BookOpen size={48} className="text-gold/40" />
+            <div className="absolute inset-0 flex items-center justify-center bg-cyan-50/50">
+              <BookOpen size={48} className="text-[#0284C7]/40" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#120D09] via-transparent to-transparent md:bg-gradient-to-r" />
         </div>
-        <div className="flex flex-col justify-center gap-3 p-8 sm:p-10">
-          <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-gold">
-            <Sparkles size={11} /> Featured
+        <div className="flex flex-col justify-center gap-3 p-6 sm:p-8">
+          <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#0284C7]">
+            <Sparkles size={11} /> Featured Dispatch
           </div>
-          <span className="text-xs text-parchment/50">
+          <span className="text-xs text-slate-500">
             {post.category} · {post.published_at ? new Date(post.published_at).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" }) : ""}
           </span>
-          <h2 className="font-display text-2xl font-bold leading-tight text-parchment sm:text-3xl group-hover:text-gold transition-colors line-clamp-2">
+          <h2 className="font-display text-xl sm:text-2xl font-bold leading-snug text-slate-900 group-hover:text-[#0284C7] transition-colors line-clamp-2">
             {post.title}
           </h2>
-          <p className="line-clamp-3 text-sm text-parchment/65">
+          <p className="line-clamp-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
             {post.excerpt || post.body.replace(/[#>*`\[\]()-]/g, "").slice(0, 220)}
           </p>
-          <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-gold">
-            Read the dispatch <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+          <span className="mt-2 inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#0284C7]">
+            Read the dispatch <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
           </span>
         </div>
       </div>
@@ -105,23 +104,24 @@ export default async function BlogIndex({
   ).slice(0, 15);
 
   return (
-    <div className="min-h-screen bg-[#0E0A08] text-parchment selection:bg-gold/30 selection:text-white">
-      {/* Header Banner */}
-      <section className="relative overflow-hidden border-b border-white/10 bg-gradient-to-b from-[#18110B] to-[#0E0A08] py-16 sm:py-24">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-gold/10 via-transparent to-transparent opacity-50 pointer-events-none" />
+    <div className="min-h-screen bg-[#FAFAFD] text-slate-800">
+      {/* Royal Navy Hero Banner */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#120D42] via-[#161152] to-[#241468] text-white py-14 sm:py-20 px-4 sm:px-6">
+        <div className="pointer-events-none absolute -top-24 -left-20 h-72 w-72 rounded-full bg-[#00D2FF]/20 blur-3xl" />
+        <div className="pointer-events-none absolute top-10 right-0 h-72 w-72 rounded-full bg-[#7C3AED]/25 blur-3xl" />
 
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex flex-col items-start gap-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3.5 py-1 text-xs font-semibold tracking-widest text-gold uppercase">
-              <Sparkles size={13} />
+        <div className="relative mx-auto max-w-6xl">
+          <div className="flex flex-col items-start gap-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-semibold tracking-wider text-[#00D2FF] uppercase">
+              <Sparkles size={12} />
               <span>Academy Dispatches</span>
             </div>
 
-            <h1 className="font-display text-4xl font-bold tracking-tight text-parchment sm:text-5xl lg:text-6xl">
+            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white">
               Intellect, Strategy &amp; Leadership.
             </h1>
 
-            <p className="max-w-2xl text-sm leading-relaxed text-parchment/70 sm:text-base">
+            <p className="max-w-2xl text-xs sm:text-sm leading-relaxed text-slate-300">
               Peer-reviewed frameworks, executive mentorship insights, career blueprints, and dispatches from MLA fellows shaping Africa and global industry.
             </p>
 
@@ -129,22 +129,22 @@ export default async function BlogIndex({
             <div className="mt-4 w-full max-w-xl">
               <form method="GET" action="/blog" className="relative flex items-center">
                 <Search
-                  size={18}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-parchment/40"
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                 />
                 <input
                   type="text"
                   name="search"
                   defaultValue={search}
                   placeholder="Search articles by title, topic, or keyword..."
-                  className="w-full rounded-2xl border border-white/15 bg-black/50 py-3.5 pl-11 pr-24 text-xs sm:text-sm text-parchment placeholder-parchment/40 backdrop-blur-md focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-all"
+                  className="w-full rounded-xl border border-white/20 bg-white/10 py-3 pl-11 pr-24 text-xs sm:text-sm text-white placeholder-slate-400 backdrop-blur-md focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-all"
                 />
                 {category !== "all" && (
                   <input type="hidden" name="category" value={category} />
                 )}
                 <button
                   type="submit"
-                  className="absolute right-2 rounded-xl bg-gold px-4 py-2 text-xs font-bold text-midnight hover:brightness-110 transition"
+                  className="absolute right-1.5 rounded-lg bg-[#00D2FF] px-4 py-2 text-xs font-bold text-[#0A0E2A] hover:bg-[#38BDF8] transition"
                 >
                   Search
                 </button>
@@ -157,14 +157,14 @@ export default async function BlogIndex({
       {/* Main Content Area */}
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         {/* Category Navigation Pills */}
-        <div className="mb-10 flex items-center justify-between gap-4 border-b border-white/10 pb-4 overflow-x-auto">
+        <div className="mb-8 flex items-center justify-between gap-4 border-b border-slate-200/80 pb-4 overflow-x-auto">
           <div className="flex items-center gap-2">
             <Link
               href="/blog"
               className={`flex shrink-0 items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition-all ${
                 category === "all" && !tag
-                  ? "bg-gradient-to-r from-gold to-amber-500 text-midnight shadow-md font-bold"
-                  : "bg-[#140E0A] text-parchment/70 border border-white/10 hover:border-gold/40 hover:text-parchment"
+                  ? "bg-[#00D2FF] text-[#0A0E2A] shadow-sm font-bold"
+                  : "bg-white text-slate-600 border border-slate-200 hover:border-cyan-400 hover:text-slate-900"
               }`}
             >
               <span>All Articles</span>
@@ -178,14 +178,14 @@ export default async function BlogIndex({
                   href={`/blog?category=${encodeURIComponent(cat.name)}`}
                   className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition-all ${
                     isActive
-                      ? "bg-gradient-to-r from-gold to-amber-500 text-midnight shadow-md font-bold"
-                      : "bg-[#140E0A] text-parchment/70 border border-white/10 hover:border-gold/40 hover:text-parchment"
+                      ? "bg-[#00D2FF] text-[#0A0E2A] shadow-sm font-bold"
+                      : "bg-white text-slate-600 border border-slate-200 hover:border-cyan-400 hover:text-slate-900"
                   }`}
                 >
                   <span>{cat.name}</span>
                   <span
                     className={`rounded-full px-1.5 py-0.2 text-[10px] ${
-                      isActive ? "bg-black/20 text-midnight" : "bg-white/10 text-parchment/50"
+                      isActive ? "bg-black/15 text-[#0A0E2A]" : "bg-slate-100 text-slate-500"
                     }`}
                   >
                     {cat.count}
@@ -198,7 +198,7 @@ export default async function BlogIndex({
           {(category !== "all" || search || tag) && (
             <Link
               href="/blog"
-              className="shrink-0 text-xs text-gold/80 hover:text-gold underline"
+              className="shrink-0 text-xs text-[#0284C7] hover:underline"
             >
               Clear filters
             </Link>
@@ -207,20 +207,20 @@ export default async function BlogIndex({
 
         {/* Active Filter Notice */}
         {(category !== "all" || search || tag) && (
-          <div className="mb-8 flex flex-wrap items-center gap-2 text-xs text-parchment/60">
+          <div className="mb-6 flex flex-wrap items-center gap-2 text-xs text-slate-600">
             <span>Showing results for:</span>
             {category !== "all" && (
-              <span className="rounded-lg bg-gold/15 border border-gold/30 px-2.5 py-1 text-gold font-semibold">
+              <span className="rounded-lg bg-cyan-50 border border-cyan-200 px-2.5 py-1 text-[#0284C7] font-semibold">
                 Category: {category}
               </span>
             )}
             {search && (
-              <span className="rounded-lg bg-gold/15 border border-gold/30 px-2.5 py-1 text-gold font-semibold">
+              <span className="rounded-lg bg-cyan-50 border border-cyan-200 px-2.5 py-1 text-[#0284C7] font-semibold">
                 Search: &ldquo;{search}&rdquo;
               </span>
             )}
             {tag && (
-              <span className="rounded-lg bg-gold/15 border border-gold/30 px-2.5 py-1 text-gold font-semibold">
+              <span className="rounded-lg bg-cyan-50 border border-cyan-200 px-2.5 py-1 text-[#0284C7] font-semibold">
                 Tag: #{tag}
               </span>
             )}
@@ -230,30 +230,30 @@ export default async function BlogIndex({
 
         {/* Featured Hero */}
         {featuredPost && (
-          <div className="mt-8">
+          <div className="mb-8">
             <FeaturedHero post={featuredPost} />
           </div>
         )}
 
         {/* Article Grid */}
         {posts.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-8">
+          <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {posts.map((post) => (
               <BlogCard key={post.id} post={post} />
             ))}
           </div>
         ) : (
-          <div className="rounded-3xl border border-white/10 bg-[#120D09] p-12 text-center space-y-4">
-            <BookOpen size={40} className="mx-auto text-gold/50" />
-            <h3 className="font-display text-xl font-bold text-parchment">
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-12 text-center space-y-4 shadow-sm">
+            <BookOpen size={40} className="mx-auto text-slate-400" />
+            <h3 className="font-display text-lg font-bold text-slate-900">
               No articles found
             </h3>
-            <p className="mx-auto max-w-md text-xs text-parchment/60">
+            <p className="mx-auto max-w-md text-xs text-slate-500">
               There are no published articles matching your current search or category filter. Check back soon or explore another topic!
             </p>
             <Link
               href="/blog"
-              className="inline-block rounded-xl bg-gold px-5 py-2 text-xs font-bold text-midnight hover:brightness-110 transition"
+              className="inline-block rounded-lg bg-[#00D2FF] px-5 py-2 text-xs font-bold text-[#0A0E2A] hover:bg-[#38BDF8] transition"
             >
               Reset All Filters
             </Link>
@@ -274,16 +274,16 @@ export default async function BlogIndex({
                     page: String(currentPage - 1),
                   },
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-[#140E0A] px-4 py-2 text-xs font-medium text-parchment/70 hover:border-gold/40 hover:text-gold"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:border-cyan-400"
               >
                 <ChevronLeft size={14} /> Previous
               </Link>
             ) : (
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/5 px-4 py-2 text-xs text-parchment/30">
+              <span className="inline-flex items-center gap-1.5 rounded-xl border border-slate-100 bg-slate-50 px-4 py-2 text-xs text-slate-400">
                 <ChevronLeft size={14} /> Previous
               </span>
             )}
-            <span className="rounded-xl border border-white/10 bg-[#140E0A] px-4 py-2 text-xs font-semibold text-gold">
+            <span className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-800">
               Page {currentPage} of {totalPages}
             </span>
             {currentPage < totalPages ? (
@@ -297,12 +297,12 @@ export default async function BlogIndex({
                     page: String(currentPage + 1),
                   },
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-[#140E0A] px-4 py-2 text-xs font-medium text-parchment/70 hover:border-gold/40 hover:text-gold"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-700 hover:border-cyan-400"
               >
                 Next <ChevronRight size={14} />
               </Link>
             ) : (
-              <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/5 px-4 py-2 text-xs text-parchment/30">
+              <span className="inline-flex items-center gap-1.5 rounded-xl border border-slate-100 bg-slate-50 px-4 py-2 text-xs text-slate-400">
                 Next <ChevronRight size={14} />
               </span>
             )}
@@ -311,10 +311,10 @@ export default async function BlogIndex({
 
         {/* Popular Tags Discovery Cloud */}
         {allTags.length > 0 && (
-          <section className="mt-16 rounded-3xl border border-white/10 bg-[#120D09]/60 p-8">
+          <section className="mt-14 rounded-2xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
-              <Tag size={16} className="text-gold" />
-              <h3 className="font-display text-base font-bold text-parchment">
+              <Tag size={16} className="text-[#0284C7]" />
+              <h3 className="font-display text-sm sm:text-base font-bold text-slate-900">
                 Explore by Topic &amp; Tags
               </h3>
             </div>
@@ -325,8 +325,8 @@ export default async function BlogIndex({
                   href={`/blog?tag=${encodeURIComponent(t)}`}
                   className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
                     tag.toLowerCase() === t.toLowerCase()
-                      ? "border-gold bg-gold text-midnight font-bold"
-                      : "border-white/10 bg-black/30 text-parchment/70 hover:border-gold/40 hover:text-gold"
+                      ? "border-cyan-500 bg-[#00D2FF] text-[#0A0E2A] font-bold"
+                      : "border-slate-200 bg-slate-50 text-slate-600 hover:border-cyan-300 hover:text-slate-900"
                   }`}
                 >
                   #{t}

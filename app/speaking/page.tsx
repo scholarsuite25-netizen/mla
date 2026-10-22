@@ -47,65 +47,68 @@ export default function SpeakingPage() {
     );
 
   return (
-    <div className="min-h-screen bg-ink w-full">
+    <div className="min-h-screen bg-[#FAFAFD] text-slate-800 w-full">
       {/* Top Banner */}
-      <div className="w-full bg-[#18110C] py-2.5 px-4 text-center border-b border-white/5">
-        <p className="text-xs sm:text-sm text-parchment/80 font-medium flex items-center justify-center gap-2">
-          <Mic size={15} className="text-gold" />
+      <div className="w-full bg-[#120D42] py-2 px-4 text-center border-b border-white/10 text-white">
+        <p className="text-xs sm:text-sm font-medium flex items-center justify-center gap-2">
+          <Mic size={14} className="text-[#00D2FF]" />
           <span>Official Speaking &amp; Keynote Portal for S. B. Omotoso, FCIA</span>
         </p>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-12 lg:py-16 space-y-16">
+      <div className="mx-auto max-w-6xl px-4 py-10 lg:py-14 space-y-12">
         {/* Executive Hero with Photograph */}
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#120D09] via-[#0E0A07] to-black border border-gold/20 p-8 sm:p-12 shadow-2xl">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 items-center">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#120D42] via-[#161152] to-[#241468] text-white p-8 sm:p-12 shadow-xl">
+          <div className="pointer-events-none absolute -top-24 -left-20 h-72 w-72 rounded-full bg-[#00D2FF]/20 blur-3xl" />
+          <div className="pointer-events-none absolute top-10 right-0 h-72 w-72 rounded-full bg-[#7C3AED]/25 blur-3xl" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-center relative z-10">
             {/* Left Content */}
-            <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-gold">
-                <Sparkles size={14} /> Keynote Speaker · Institution Builder · Executive Advisor
+            <div className="space-y-4">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-[#00D2FF]">
+                <Sparkles size={12} /> Keynote Speaker · Institution Builder · Executive Advisor
               </span>
 
-              <div className="space-y-2">
-                <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-parchment leading-[1.1]">
+              <div className="space-y-1">
+                <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl text-white font-bold tracking-tight leading-tight">
                   S. B. Omotoso
                 </h1>
-                <p className="font-mono text-sm sm:text-base text-gold tracking-wide">
+                <p className="font-mono text-xs sm:text-sm text-[#00D2FF] tracking-wide font-semibold">
                   FCIA │ MILR │ MSc. │ MNIM
                 </p>
-                <p className="text-sm sm:text-base text-parchment/80 font-medium pt-1">
+                <p className="text-xs sm:text-sm text-slate-300 font-medium pt-0.5">
                   Twice Appointed University Registrar • AI Literacy &amp; Vibe Coding Pioneer
                 </p>
               </div>
 
-              <p className="text-base sm:text-lg text-parchment/70 font-light leading-relaxed max-w-2xl">
+              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-2xl">
                 Delivering content-rich, practice-validated keynotes on institutional governance, enterprise AI adoption, and strategic leadership. Equipping executive audiences with pragmatic blueprints born from over three decades of university take-offs and corporate consultancy.
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-2">
                 <a
                   href="#booking"
-                  className="rounded-full bg-gradient-to-r from-gold-dark to-gold px-8 py-4 font-bold text-ink shadow-[0_0_25px_rgba(212,175,55,0.3)] hover:shadow-[0_0_35px_rgba(212,175,55,0.5)] transition-all flex items-center gap-2 text-sm"
+                  className="rounded-lg bg-[#00D2FF] px-6 py-2.5 font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 hover:bg-[#38BDF8] transition-all flex items-center gap-1.5 text-xs sm:text-sm"
                 >
-                  <Mic size={17} />
+                  <Mic size={15} />
                   <span>Request Speaking Availability</span>
-                  <ArrowRight size={18} />
+                  <ArrowRight size={15} />
                 </a>
 
                 <a
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-[#25D366] px-6 py-4 font-bold text-white shadow-[0_0_20px_rgba(37,211,102,0.3)] hover:bg-[#1EBE5D] transition-all flex items-center gap-2 text-sm"
+                  className="rounded-lg bg-[#25D366] px-5 py-2.5 font-bold text-white shadow-md hover:bg-[#1EBE5D] transition-all flex items-center gap-1.5 text-xs sm:text-sm"
                 >
-                  <MessageCircle size={18} />
+                  <MessageCircle size={15} />
                   <span>Instant WhatsApp Inquiry</span>
                 </a>
 
                 <Link
                   href="/profile"
-                  className="rounded-full bg-white/5 border border-white/10 px-6 py-4 font-semibold text-parchment hover:bg-white/10 transition-all flex items-center gap-2 text-sm"
+                  className="rounded-lg border border-white/20 bg-white/10 px-5 py-2.5 font-semibold text-white hover:bg-white/15 transition-all flex items-center gap-1.5 text-xs sm:text-sm"
                 >
                   <span>View Full Executive CV</span>
                 </Link>
@@ -114,18 +117,18 @@ export default function SpeakingPage() {
 
             {/* Right: Speaker Photograph */}
             <div className="flex justify-center">
-              <div className="relative aspect-[4/5] w-full max-w-[300px] rounded-3xl overflow-hidden border-2 border-gold/40 shadow-[0_0_40px_rgba(212,175,55,0.25)] bg-[#1A140F]">
+              <div className="relative aspect-[4/5] w-full max-w-[280px] rounded-2xl overflow-hidden border-2 border-cyan-400/30 shadow-xl bg-slate-900">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/images/speaker-omotoso.jpg"
                   alt="S. B. Omotoso"
                   className="h-full w-full object-cover object-top"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 text-center">
-                  <p className="font-display font-bold text-sm text-parchment">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-3 text-center">
+                  <p className="font-display font-bold text-xs text-white">
                     S. B. Omotoso
                   </p>
-                  <p className="text-[10px] text-gold font-mono uppercase tracking-wider">
+                  <p className="text-[10px] text-[#00D2FF] font-mono uppercase tracking-wider">
                     Official Speaker Profile
                   </p>
                 </div>
@@ -136,39 +139,39 @@ export default function SpeakingPage() {
 
         {/* Quick Speaker Statistics Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="rounded-2xl border border-white/10 bg-[#140F0B] p-5 text-center">
-            <p className="font-display text-3xl font-bold text-gold">5 Universities</p>
-            <p className="text-xs text-parchment/60 mt-1">Licensing &amp; Administrative Take-Off</p>
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 text-center shadow-sm">
+            <p className="font-display text-2xl font-bold text-[#0284C7]">5 Universities</p>
+            <p className="text-xs text-slate-500 mt-0.5">Licensing &amp; Administrative Take-Off</p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#140F0B] p-5 text-center">
-            <p className="font-display text-3xl font-bold text-gold">2x Registrar</p>
-            <p className="text-xs text-parchment/60 mt-1">Chief Administrative Officer</p>
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 text-center shadow-sm">
+            <p className="font-display text-2xl font-bold text-[#0284C7]">2x Registrar</p>
+            <p className="text-xs text-slate-500 mt-0.5">Chief Administrative Officer</p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#140F0B] p-5 text-center">
-            <p className="font-display text-3xl font-bold text-gold">30+ Years</p>
-            <p className="text-xs text-parchment/60 mt-1">Executive Leadership &amp; Advisory</p>
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 text-center shadow-sm">
+            <p className="font-display text-2xl font-bold text-[#0284C7]">30+ Years</p>
+            <p className="text-xs text-slate-500 mt-0.5">Executive Leadership &amp; Advisory</p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#140F0B] p-5 text-center">
-            <p className="font-display text-3xl font-bold text-gold">FCIA · MNIM</p>
-            <p className="text-xs text-parchment/60 mt-1">Chartered Administration Fellow</p>
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 text-center shadow-sm">
+            <p className="font-display text-2xl font-bold text-[#0284C7]">FCIA · MNIM</p>
+            <p className="text-xs text-slate-500 mt-0.5">Chartered Administration Fellow</p>
           </div>
         </div>
 
         {/* Signature Keynote Topics */}
-        <div className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-3">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-gold">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#0284C7]">
                 Curated Presentations
               </span>
-              <h2 className="font-display text-3xl text-parchment mt-1">
+              <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">
                 Signature Keynote Topics
               </h2>
             </div>
-            <p className="text-xs text-parchment/50 max-w-xs">
+            <p className="text-xs text-slate-500 max-w-xs">
               Every presentation is customized with companion lecture notes, presentation slides, and actionable checklists for your attendees.
             </p>
           </div>
@@ -177,29 +180,29 @@ export default function SpeakingPage() {
             {topics.map((topic, i) => (
               <div
                 key={i}
-                className="rounded-3xl border border-white/10 bg-[#140F0B] p-6 sm:p-8 flex flex-col justify-between hover:border-gold/30 hover:shadow-[0_15px_30px_rgba(0,0,0,0.5)] transition-all group"
+                className="rounded-2xl border border-slate-200/90 bg-white p-6 flex flex-col justify-between hover:border-cyan-400/60 hover:shadow-md transition-all shadow-sm group"
               >
-                <div className="space-y-4">
-                  <span className="inline-block rounded-full bg-gold/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-gold">
+                <div className="space-y-3">
+                  <span className="inline-block rounded-full bg-cyan-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0284C7] border border-cyan-200">
                     {topic.tag}
                   </span>
-                  <h3 className="font-display text-xl text-parchment group-hover:text-gold transition-colors">
+                  <h3 className="font-display text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0284C7] transition-colors">
                     {topic.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-parchment/65 font-light leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     {topic.summary}
                   </p>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-parchment/40 font-semibold mb-2">
+                <div className="pt-4 mt-5 border-t border-slate-100">
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-2">
                     Key Outcomes:
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {topic.outcomes.map((o, idx) => (
                       <span
                         key={idx}
-                        className="rounded-md bg-white/5 px-2.5 py-1 text-[11px] text-parchment/80 font-medium"
+                        className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] text-slate-700 font-medium"
                       >
                         {o}
                       </span>
@@ -212,41 +215,41 @@ export default function SpeakingPage() {
         </div>
 
         {/* What Event Planners Receive Card */}
-        <div className="rounded-3xl border border-gold/20 bg-gradient-to-br from-[#16100B] to-[#100C08] p-8 sm:p-12 space-y-6">
-          <h3 className="font-display text-2xl text-parchment flex items-center gap-2">
-            <Award size={24} className="text-gold" />
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-10 space-y-6 shadow-sm">
+          <h3 className="font-display text-xl font-bold text-slate-900 flex items-center gap-2">
+            <Award size={20} className="text-[#0284C7]" />
             <span>The Executive Speaker Standard: What Event Planners Receive</span>
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
-            <div className="space-y-2">
-              <CheckCircle2 size={18} className="text-gold" />
-              <h4 className="font-bold text-sm text-parchment">Pre-Event Alignment</h4>
-              <p className="text-xs text-parchment/60 leading-relaxed">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 pt-1">
+            <div className="space-y-1.5">
+              <CheckCircle2 size={16} className="text-[#0284C7]" />
+              <h4 className="font-bold text-xs sm:text-sm text-slate-900">Pre-Event Alignment</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
                 A dedicated discovery briefing to align key presentation themes directly with your committee&apos;s objectives.
               </p>
             </div>
 
-            <div className="space-y-2">
-              <CheckCircle2 size={18} className="text-gold" />
-              <h4 className="font-bold text-sm text-parchment">Custom Presentation Slides</h4>
-              <p className="text-xs text-parchment/60 leading-relaxed">
+            <div className="space-y-1.5">
+              <CheckCircle2 size={16} className="text-[#0284C7]" />
+              <h4 className="font-bold text-xs sm:text-sm text-slate-900">Custom Presentation Slides</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Bespoke high-contrast slide deck (.pptx) formatted for flawless projection and AV tech compatibility.
               </p>
             </div>
 
-            <div className="space-y-2">
-              <CheckCircle2 size={18} className="text-gold" />
-              <h4 className="font-bold text-sm text-parchment">Attendee Lecture Bundles</h4>
-              <p className="text-xs text-parchment/60 leading-relaxed">
+            <div className="space-y-1.5">
+              <CheckCircle2 size={16} className="text-[#0284C7]" />
+              <h4 className="font-bold text-xs sm:text-sm text-slate-900">Attendee Lecture Bundles</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Companion lecture notes, frameworks, and scannable QR download codes for all attendees.
               </p>
             </div>
 
-            <div className="space-y-2">
-              <CheckCircle2 size={18} className="text-gold" />
-              <h4 className="font-bold text-sm text-parchment">Interactive Q&amp;A</h4>
-              <p className="text-xs text-parchment/60 leading-relaxed">
+            <div className="space-y-1.5">
+              <CheckCircle2 size={16} className="text-[#0284C7]" />
+              <h4 className="font-bold text-xs sm:text-sm text-slate-900">Interactive Q&amp;A</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
                 High-engagement audience interaction, executive roundtables, and VIP photo sessions included.
               </p>
             </div>
@@ -254,20 +257,20 @@ export default function SpeakingPage() {
         </div>
 
         {/* Booking Form Section */}
-        <div id="booking" className="scroll-mt-24 space-y-6">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-gold">
+        <div id="booking" className="scroll-mt-24 space-y-5">
+          <div className="text-center max-w-2xl mx-auto space-y-1.5">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#0284C7]">
               Direct Speaking Inquiry
             </span>
-            <h2 className="font-display text-3xl sm:text-4xl text-parchment">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-900">
               Invite S. B. Omotoso to Speak
             </h2>
-            <p className="text-xs sm:text-sm text-parchment/60">
+            <p className="text-xs text-slate-500">
               Submit your event details below or connect immediately via WhatsApp for expedited scheduling.
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto rounded-3xl border border-white/10 bg-[#120D09] p-6 sm:p-10 shadow-2xl">
+          <div className="max-w-3xl mx-auto rounded-2xl border border-slate-200 bg-white p-6 sm:p-10 shadow-sm">
             <SpeakingBookingForm />
           </div>
         </div>

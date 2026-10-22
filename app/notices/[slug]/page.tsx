@@ -43,26 +43,26 @@ export default async function SingleNoticePage({
   if (!notice) notFound();
 
   return (
-    <div className="min-h-screen bg-ink text-parchment">
-      <div className="mx-auto max-w-4xl px-4 py-12 lg:py-20">
+    <div className="min-h-screen bg-[#FAFAFD] text-slate-800">
+      <div className="mx-auto max-w-4xl px-4 py-10 lg:py-16">
         <Link
           href="/notices"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-parchment/60 hover:text-gold transition mb-8"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-[#0284C7] transition mb-6"
         >
           <ChevronLeft size={16} /> Back to All Notices
         </Link>
 
-        <article className="rounded-3xl border border-white/10 bg-[#120D09] p-8 sm:p-12 shadow-2xl">
-          <div className="flex flex-wrap items-center gap-3 border-b border-white/10 pb-6 mb-8">
+        <article className="rounded-2xl border border-slate-200/90 bg-white p-7 sm:p-12 shadow-sm">
+          <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 pb-5 mb-6">
             {notice.is_pinned && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-gold/20 text-gold border border-gold/40 px-3 py-1 text-xs font-bold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1 rounded-full bg-cyan-100 text-[#0284C7] border border-cyan-200 px-3 py-0.5 text-xs font-bold uppercase tracking-wider">
                 <Pin size={12} /> Pinned Notice
               </span>
             )}
-            <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-gold capitalize">
+            <span className="rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-slate-700 capitalize">
               {notice.category}
             </span>
-            <span className="text-xs text-parchment/40 flex items-center gap-1.5 ml-auto">
+            <span className="text-xs text-slate-400 flex items-center gap-1.5 ml-auto">
               <Calendar size={13} />
               {new Date(notice.published_at).toLocaleDateString("en-NG", {
                 weekday: "long",
@@ -73,22 +73,22 @@ export default async function SingleNoticePage({
             </span>
           </div>
 
-          <h1 className="font-display text-3xl sm:text-5xl font-bold text-parchment leading-tight mb-8">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 leading-tight mb-6">
             {notice.title}
           </h1>
 
-          <div className="prose prose-invert prose-parchment max-w-none text-parchment/80 leading-relaxed text-sm sm:text-base font-light whitespace-pre-wrap">
+          <div className="text-slate-700 leading-relaxed text-sm sm:text-base font-normal whitespace-pre-wrap">
             {notice.content}
           </div>
 
-          <div className="mt-12 pt-8 border-t border-white/10 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs text-parchment/40">
-              <Bell size={14} className="text-gold" />
+          <div className="mt-10 pt-6 border-t border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <Bell size={14} className="text-[#0284C7]" />
               <span>Official Circular · Mentorship &amp; Leadership Academy</span>
             </div>
             <Link
               href="/notices"
-              className="text-xs font-bold text-gold hover:underline"
+              className="text-xs font-bold text-[#0284C7] hover:underline"
             >
               Browse More Bulletins →
             </Link>

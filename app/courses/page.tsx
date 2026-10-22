@@ -212,179 +212,194 @@ export default async function CoursesCatalogPage() {
     .order("updated_at", { ascending: false });
 
   return (
-    <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      {/* Header Banner */}
-      <div className="max-w-3xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold mb-3">
-          <Sparkles size={12} />
-          <span>Curated Capability Curriculum</span>
-        </div>
-        <h1 className="font-display text-3xl font-bold text-parchment sm:text-5xl">
-          Academy Curriculum &amp; Modules
-        </h1>
-        <p className="mt-4 text-base text-parchment/70 leading-relaxed">
-          Comprehensive, career-defining curricula tailored for working professionals, entrepreneurs,
-          retirees seeking second-act occupations, fresh graduates, and campus scholars. All core modules
-          are free, self-paced, and paired with 1-on-1 verified mentorship.
-        </p>
-      </div>
+    <div className="relative min-h-screen bg-[#FAFAFD] text-slate-800">
+      {/* Royal Navy Hero Banner */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#120D42] via-[#161152] to-[#241468] text-white py-14 sm:py-20 px-4 sm:px-6">
+        <div className="pointer-events-none absolute -top-24 -left-20 h-72 w-72 rounded-full bg-[#00D2FF]/20 blur-3xl" />
+        <div className="pointer-events-none absolute top-10 right-0 h-72 w-72 rounded-full bg-[#7C3AED]/25 blur-3xl" />
 
-      {/* Quick Stats Banner */}
-      <div className="mt-10 grid grid-cols-2 gap-4 rounded-2xl border border-white/10 bg-[#140F0B] p-5 sm:grid-cols-4">
-        <div>
-          <p className="text-2xl font-bold text-gold">5 Core</p>
-          <p className="text-xs text-parchment/60">Career &amp; Life Tracks</p>
-        </div>
-        <div>
-          <p className="text-2xl font-bold text-gold">19 Modules</p>
-          <p className="text-xs text-parchment/60">Practical Syllabus</p>
-        </div>
-        <div>
-          <p className="text-2xl font-bold text-emerald-400">100% Free</p>
-          <p className="text-xs text-parchment/60">Core Access</p>
-        </div>
-        <div>
-          <p className="text-2xl font-bold text-purple-400">1-on-1</p>
-          <p className="text-xs text-parchment/60">Executive Mentorship</p>
-        </div>
-      </div>
-
-      {/* Dynamic Database Courses (If populated in Supabase) */}
-      {courses && courses.length > 0 && (
-        <section className="mt-16">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-2xl font-bold text-parchment">Interactive LMS Courses</h2>
-            <span className="text-xs text-gold">Directly Enrolled</span>
+        <div className="relative mx-auto max-w-6xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-semibold text-[#00D2FF] mb-3">
+            <Sparkles size={12} />
+            <span>Curated Capability Curriculum</span>
           </div>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2">
-            {courses.map((course) => (
-              <Link
-                key={course.id}
-                href={`/courses/${course.id}`}
-                className="group rounded-2xl border border-white/10 bg-panel p-6 transition-all hover:border-gold/60 hover:bg-[#16110D]"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-gold/10 px-2.5 py-0.5 text-[10px] font-semibold text-gold border border-gold/20">
-                    Active Enrollment
-                  </span>
-                  <ArrowRight size={14} className="text-gold opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <p className="mt-3 font-display text-xl font-bold text-parchment group-hover:text-gold transition-colors">
-                  {course.title}
-                </p>
-                <p className="mt-2 line-clamp-3 text-xs text-parchment/65 leading-relaxed">
-                  {course.description}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Master Syllabus Section */}
-      <section className="mt-16 space-y-12">
-        <div>
-          <h2 className="font-display text-2xl font-bold text-parchment sm:text-3xl">
-            Official Academy Tracks &amp; Detailed Modules
-          </h2>
-          <p className="mt-2 text-sm text-parchment/65">
-            Explore the structured modules for Career Planning, Entrepreneurship, Retirement Strategy, AI Vibe Coding, and Graduate Launch.
+          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white">
+            Academy Curriculum &amp; Modules
+          </h1>
+          <p className="mt-3 text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
+            Comprehensive, career-defining curricula tailored for working professionals, entrepreneurs,
+            retirees seeking second-act occupations, fresh graduates, and campus scholars. All core modules
+            are free, self-paced, and paired with 1-on-1 verified mentorship.
           </p>
-        </div>
 
-        <div className="space-y-10">
-          {officialCurriculum.map((track) => {
-            const Icon = track.icon;
-            return (
-              <div
-                key={track.id}
-                id={track.id}
-                className="rounded-3xl border border-white/10 bg-gradient-to-b from-[#18120D] to-[#0E0A08] p-6 sm:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-all hover:border-gold/30"
-              >
-                {/* Track Header */}
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 border-b border-white/10 pb-6">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-gold">
-                        <Icon size={18} />
-                      </div>
-                      <span className={`inline-flex rounded-full px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider border ${track.badgeColor}`}>
-                        {track.badge}
-                      </span>
-                    </div>
-                    <h3 className="font-display text-2xl font-bold text-parchment sm:text-3xl">
-                      {track.title}
-                    </h3>
-                    <p className="text-sm text-parchment/75 leading-relaxed max-w-3xl">
-                      {track.tagline}
-                    </p>
-                    <p className="text-xs text-parchment/50">
-                      <span className="font-semibold text-parchment/70">Audience:</span> {track.targetAudience}
-                    </p>
-                  </div>
-
-                  <div className="shrink-0 pt-2 md:pt-0">
-                    <Link
-                      href="/register"
-                      className="btn-primary !py-2.5 !px-5 !text-xs whitespace-nowrap"
-                    >
-                      <span>Enroll in Track</span>
-                      <ChevronRight size={14} />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Modules Grid */}
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  {track.modules.map((module, mIdx) => (
-                    <div
-                      key={mIdx}
-                      className="flex flex-col justify-between rounded-xl border border-white/5 bg-black/40 p-4 transition-colors hover:border-white/15"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between text-xs text-parchment/50 mb-2">
-                          <span className="font-mono text-gold/80 font-bold">0{mIdx + 1}</span>
-                          <span className="inline-flex items-center gap-1 text-[11px] text-parchment/60">
-                            <Clock size={11} /> {module.duration}
-                          </span>
-                        </div>
-                        <h4 className="font-semibold text-sm text-parchment">
-                          {module.title}
-                        </h4>
-                        <p className="mt-2 text-xs text-parchment/65 leading-relaxed">
-                          {module.summary}
-                        </p>
-                      </div>
-
-                      <div className="mt-4 flex items-center gap-1.5 text-[11px] text-gold font-medium">
-                        <CheckCircle2 size={12} />
-                        <span>Curated Syllabus &amp; Practical Resources</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          {/* Quick Stats Grid */}
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 max-w-4xl">
+            <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4">
+              <p className="text-xl sm:text-2xl font-bold text-[#00D2FF]">5 Core</p>
+              <p className="text-xs text-slate-300 mt-0.5">Career &amp; Life Tracks</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4">
+              <p className="text-xl sm:text-2xl font-bold text-[#00D2FF]">19 Modules</p>
+              <p className="text-xs text-slate-300 mt-0.5">Practical Syllabus</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4">
+              <p className="text-xl sm:text-2xl font-bold text-emerald-300">100% Free</p>
+              <p className="text-xs text-slate-300 mt-0.5">Core Access</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4">
+              <p className="text-xl sm:text-2xl font-bold text-indigo-300">1-on-1</p>
+              <p className="text-xs text-slate-300 mt-0.5">Executive Mentorship</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Footer Call to Action */}
-      <div className="mt-16 rounded-3xl border border-gold/30 bg-gradient-to-r from-[#201812] to-[#120D0A] p-8 sm:p-12 text-center">
-        <h3 className="font-display text-2xl sm:text-3xl font-bold text-parchment">
-          Ready to begin your tailored learning journey?
-        </h3>
-        <p className="mt-3 text-sm text-parchment/70 max-w-xl mx-auto">
-          Create your free account to access syllabi, participate in masterclasses, and get paired with an executive or peer mentor.
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-          <Link href="/register" className="btn-primary !px-7 !py-3">
-            <span>Register Free Today</span>
-            <ArrowRight size={15} />
-          </Link>
-          <Link href="/mentorship/find" className="btn-secondary !px-7 !py-3">
-            <span>Browse Mentors</span>
-          </Link>
+      {/* Main Content Body */}
+      <div className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        {/* Dynamic Database Courses (If populated in Supabase) */}
+        {courses && courses.length > 0 && (
+          <section className="mb-14">
+            <div className="flex items-center justify-between">
+              <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-900">Interactive LMS Courses</h2>
+              <span className="text-xs font-semibold text-[#0284C7]">Directly Enrolled</span>
+            </div>
+            <div className="mt-5 grid gap-5 sm:grid-cols-2">
+              {courses.map((course) => (
+                <Link
+                  key={course.id}
+                  href={`/courses/${course.id}`}
+                  className="group rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm transition-all hover:border-cyan-400/60 hover:shadow-md"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="rounded-full bg-cyan-50 px-2.5 py-0.5 text-[11px] font-semibold text-[#0284C7] border border-cyan-200">
+                      Active Enrollment
+                    </span>
+                    <ArrowRight size={14} className="text-[#0284C7] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                  <p className="mt-3 font-display text-lg font-bold text-slate-900 group-hover:text-[#0284C7] transition-colors">
+                    {course.title}
+                  </p>
+                  <p className="mt-2 line-clamp-3 text-xs text-slate-600 leading-relaxed">
+                    {course.description}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Master Syllabus Section */}
+        <section className="space-y-8">
+          <div>
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-900">
+              Official Academy Tracks &amp; Detailed Modules
+            </h2>
+            <p className="mt-1.5 text-sm text-slate-600">
+              Explore structured modules for Career Planning, Entrepreneurship, Retirement Strategy, AI Vibe Coding, and Graduate Launch.
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            {officialCurriculum.map((track) => {
+              const Icon = track.icon;
+              return (
+                <div
+                  key={track.id}
+                  id={track.id}
+                  className="rounded-2xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm transition-all hover:border-cyan-400/50 hover:shadow-md"
+                >
+                  {/* Track Header */}
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 border-b border-slate-100 pb-6">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-[#120D42]">
+                          <Icon size={18} />
+                        </div>
+                        <span className="inline-flex rounded-full px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
+                          {track.badge}
+                        </span>
+                      </div>
+                      <h3 className="font-display text-xl sm:text-2xl font-bold text-slate-900">
+                        {track.title}
+                      </h3>
+                      <p className="text-sm text-slate-600 leading-relaxed max-w-3xl">
+                        {track.tagline}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        <span className="font-semibold text-slate-700">Audience:</span> {track.targetAudience}
+                      </p>
+                    </div>
+
+                    <div className="shrink-0 pt-2 md:pt-0">
+                      <Link
+                        href="/register"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#00D2FF] px-5 py-2.5 text-xs font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 hover:bg-[#38BDF8] transition-all"
+                      >
+                        <span>Enroll in Track</span>
+                        <ChevronRight size={14} />
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Modules Grid */}
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                    {track.modules.map((module, mIdx) => (
+                      <div
+                        key={mIdx}
+                        className="flex flex-col justify-between rounded-xl border border-slate-200/70 bg-slate-50/70 p-4 transition-colors hover:bg-slate-50 hover:border-cyan-300"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+                            <span className="font-mono text-[#0284C7] font-bold">0{mIdx + 1}</span>
+                            <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
+                              <Clock size={11} /> {module.duration}
+                            </span>
+                          </div>
+                          <h4 className="font-semibold text-sm text-slate-900">
+                            {module.title}
+                          </h4>
+                          <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+                            {module.summary}
+                          </p>
+                        </div>
+
+                        <div className="mt-4 flex items-center gap-1.5 text-[11px] text-[#0284C7] font-medium">
+                          <CheckCircle2 size={12} />
+                          <span>Curated Syllabus &amp; Practical Resources</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Footer Call to Action */}
+        <div className="mt-14 rounded-2xl bg-gradient-to-br from-[#120D42] via-[#161152] to-[#241468] p-8 sm:p-12 text-center text-white relative overflow-hidden shadow-xl">
+          <div className="pointer-events-none absolute -bottom-10 right-0 h-64 w-64 rounded-full bg-[#00D2FF]/20 blur-3xl" />
+          <h3 className="font-display text-xl sm:text-2xl font-bold text-white">
+            Ready to begin your tailored learning journey?
+          </h3>
+          <p className="mt-2.5 text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
+            Create your free account to access syllabi, participate in masterclasses, and get paired with an executive or peer mentor.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/register"
+              className="rounded-lg bg-[#00D2FF] px-6 py-3 text-xs sm:text-sm font-bold text-[#0A0E2A] shadow-lg shadow-cyan-500/25 hover:bg-[#38BDF8] transition-all"
+            >
+              <span>Register Free Today</span>
+              <ArrowRight size={14} className="inline ml-1.5" />
+            </Link>
+            <Link
+              href="/mentorship/find"
+              className="rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-xs sm:text-sm font-semibold text-white hover:bg-white/15 transition-all"
+            >
+              <span>Browse Mentors</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

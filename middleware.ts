@@ -1,15 +1,25 @@
 "use server";
 
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
-  const { supabaseResponse, user } = await updateSession(request);
-
   const protectedPrefixes = ["/dashboard", "/admin", "/settings"];
   const isProtected = protectedPrefixes.some((p) =>
     request.nextUrl.pathname.startsWith(p)
   );
+
+  // Fast-path: If the route is public and no auth session cookie is present,
+  // skip the expensive remote Supabase getUser() network round-trip.
+  const hasAuthCookie = request.cookies
+    .getAll()
+    .some((c) => c.name.includes("-auth-token") || c.name.startsWith("sb-"));
+
+  if (!isProtected && !hasAuthCookie) {
+    return NextResponse.next({ request });
+  }
+
+  const { supabaseResponse, user } = await updateSession(request);
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone();
