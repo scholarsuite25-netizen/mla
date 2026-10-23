@@ -55,38 +55,41 @@ True leadership and authority are not established through titles or ceremonial p
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-gold/30 bg-[#120D09] shadow-2xl flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-[#18110C] shrink-0">
-          <div className="flex items-center gap-2.5">
-            <BookOpen size={20} className="text-gold" />
+        <div className="flex items-center justify-between px-6 py-4 bg-[#120D42] text-white shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-cyan-400">
+              <BookOpen size={18} />
+            </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-gold block">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-300 block">
                 Sample Excerpt & Outline
               </span>
-              <h2 className="font-display text-base text-parchment truncate max-w-md">
+              <h2 className="font-sans font-bold text-base text-white truncate max-w-md">
                 {title}
               </h2>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-full p-2 text-parchment/60 hover:bg-white/10 hover:text-parchment transition-colors"
+            aria-label="Close modal"
+            className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Tab Selector */}
-        <div className="flex border-b border-white/10 bg-black/30 px-6 shrink-0">
+        <div className="flex border-b border-slate-200 bg-slate-50 px-6 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab("excerpt")}
             className={`py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all mr-6 ${
               activeTab === "excerpt"
-                ? "border-gold text-gold"
-                : "border-transparent text-parchment/50 hover:text-parchment"
+                ? "border-cyan-500 text-[#120D42]"
+                : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
             Read Sample Excerpt
@@ -96,8 +99,8 @@ True leadership and authority are not established through titles or ceremonial p
             onClick={() => setActiveTab("contents")}
             className={`py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
               activeTab === "contents"
-                ? "border-gold text-gold"
-                : "border-transparent text-parchment/50 hover:text-parchment"
+                ? "border-cyan-500 text-[#120D42]"
+                : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
             Table of Contents ({defaultContents.length})
@@ -105,27 +108,27 @@ True leadership and authority are not established through titles or ceremonial p
         </div>
 
         {/* Reader Area */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 bg-white">
           {activeTab === "excerpt" ? (
-            <div className="prose prose-invert prose-parchment max-w-none space-y-4 text-parchment/80 leading-relaxed font-light">
-              <div className="rounded-2xl border border-gold/20 bg-gold/5 p-4 text-xs text-gold/90 flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-gold shrink-0" />
-                <span>You are previewing a free sample excerpt of these official lecture notes.</span>
+            <div className="max-w-none space-y-4 text-slate-700 leading-relaxed font-normal">
+              <div className="rounded-2xl border border-cyan-200 bg-cyan-50/70 p-4 text-xs font-medium text-slate-800 flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-cyan-600 shrink-0" />
+                <span>You are previewing a free sample excerpt of these official keynote lecture notes.</span>
               </div>
 
-              <div className="whitespace-pre-line text-sm md:text-base leading-relaxed">
+              <div className="whitespace-pre-line text-sm md:text-base leading-relaxed bg-slate-50 border border-slate-100 rounded-2xl p-6 font-mono text-slate-800">
                 {defaultExcerpt}
               </div>
 
               {/* Locked Notice Card */}
-              <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.03] to-white/[0.08] p-6 text-center space-y-3 mt-8">
-                <div className="flex h-10 w-10 mx-auto items-center justify-center rounded-full bg-gold/20 text-gold">
+              <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-cyan-50/30 p-6 text-center space-y-3 mt-8">
+                <div className="flex h-11 w-11 mx-auto items-center justify-center rounded-2xl bg-[#120D42] text-cyan-400 shadow-md">
                   <Lock size={20} />
                 </div>
-                <h4 className="font-display text-lg text-parchment">
+                <h4 className="font-bold text-lg text-slate-900">
                   Unlock the Complete 28-Page Lecture Notes & Slides
                 </h4>
-                <p className="text-xs text-parchment/60 max-w-md mx-auto">
+                <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
                   Includes full presentation transcripts, downloadable PDF, accompanying slide deck (.pptx), and personal forensic watermarking.
                 </p>
                 <button
@@ -134,30 +137,30 @@ True leadership and authority are not established through titles or ceremonial p
                     onClose();
                     onBuyClick?.();
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-gold-dark to-gold px-8 py-3 text-xs font-bold text-ink hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#120D42] hover:bg-[#1b145a] px-8 py-3 text-xs font-bold text-white shadow-md hover:shadow-lg transition-all cursor-pointer"
                 >
-                  <ShoppingBag size={15} />
+                  <ShoppingBag size={15} className="text-cyan-300" />
                   <span>Get Full Material (₦{Number(price).toLocaleString()})</span>
                 </button>
               </div>
             </div>
           ) : (
             <div className="space-y-3">
-              <p className="text-xs text-parchment/60 mb-4">
+              <p className="text-xs font-medium text-slate-500 mb-4">
                 Structured module overview and topical lecture breakdown:
               </p>
               {defaultContents.map((chapter, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.02] p-4 text-sm text-parchment/90 hover:border-gold/20 transition-colors"
+                  className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-800 hover:border-cyan-200 hover:bg-cyan-50/20 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gold/10 text-gold text-xs font-mono font-bold">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-white border border-slate-200 text-[#120D42] text-xs font-bold shadow-xs">
                       {i + 1}
                     </span>
-                    <span className="font-medium">{chapter}</span>
+                    <span className="font-semibold text-slate-800">{chapter}</span>
                   </div>
-                  <ChevronRight size={16} className="text-parchment/40" />
+                  <ChevronRight size={16} className="text-slate-400" />
                 </div>
               ))}
             </div>
@@ -165,8 +168,8 @@ True leadership and authority are not established through titles or ceremonial p
         </div>
 
         {/* Footer */}
-        <div className="border-t border-white/10 px-6 py-4 bg-[#18110C] flex items-center justify-between shrink-0">
-          <span className="text-xs text-parchment/50">
+        <div className="border-t border-slate-200 px-6 py-4 bg-slate-50 flex items-center justify-between shrink-0">
+          <span className="text-xs text-slate-500 font-medium">
             Official Keynote Materials by Tintol Business Services
           </span>
           <button
@@ -175,7 +178,7 @@ True leadership and authority are not established through titles or ceremonial p
               onClose();
               onBuyClick?.();
             }}
-            className="flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-xs font-bold text-ink hover:bg-gold-light transition-all cursor-pointer"
+            className="flex items-center gap-2 rounded-xl bg-[#00D2FF] hover:bg-[#38BDF8] px-6 py-2.5 text-xs font-bold text-[#120D42] shadow-sm transition-all cursor-pointer"
           >
             <span>Buy Full Notes (₦{Number(price).toLocaleString()})</span>
           </button>

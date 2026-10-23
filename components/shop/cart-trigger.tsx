@@ -12,12 +12,12 @@ export function CartTrigger() {
     <button
       type="button"
       onClick={() => setIsOpen(true)}
-      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full bg-gradient-to-r from-gold-dark to-gold px-5 py-3.5 font-bold text-ink shadow-[0_0_25px_rgba(212,175,55,0.4)] hover:shadow-[0_0_35px_rgba(212,175,55,0.6)] transition-all animate-bounce-subtle cursor-pointer"
+      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-2xl bg-[#120D42] border border-cyan-400/30 px-5 py-3.5 font-bold text-white shadow-xl shadow-cyan-950/25 hover:bg-[#161152] transition-all cursor-pointer"
       aria-label="Open Shopping Cart"
     >
-      <ShoppingBag size={20} />
-      <span className="text-sm">Vault Cart</span>
-      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-gold text-xs font-bold">
+      <ShoppingBag size={18} className="text-[#00D2FF]" />
+      <span className="text-xs sm:text-sm font-bold">Cart</span>
+      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00D2FF] text-[#0A0E2A] text-xs font-bold">
         {cartCount}
       </span>
     </button>

@@ -105,6 +105,7 @@ export type BankTransferOrderResult = {
 export async function createBankTransferOrder({
   productId,
   bundleId,
+  cartItems,
   buyerName,
   buyerEmail,
   buyerId,
@@ -113,6 +114,7 @@ export async function createBankTransferOrder({
 }: {
   productId?: string;
   bundleId?: string;
+  cartItems?: { id: string; type: "product" | "bundle"; price: number; title: string }[];
   buyerName: string;
   buyerEmail: string;
   buyerId?: string;
@@ -130,10 +132,17 @@ export async function createBankTransferOrder({
 
   let itemTitle = "";
   let basePrice = 0;
-
   let isMembershipDeal = false;
 
-  if (bundleId) {
+  const hasCart = Array.isArray(cartItems) && cartItems.length > 0;
+
+  if (hasCart) {
+    basePrice = cartItems.reduce((acc, i) => acc + Number(i.price), 0);
+    itemTitle =
+      cartItems.length === 1
+        ? cartItems[0].title
+        : `${cartItems[0].title} (+${cartItems.length - 1} more items)`;
+  } else if (bundleId) {
     const { data: bundle } = await admin
       .from("product_bundles")
       .select("id, title, price, status")
@@ -193,8 +202,8 @@ export async function createBankTransferOrder({
       buyer_id: buyerId || null,
       buyer_name: buyerName.trim(),
       buyer_email: buyerEmail.trim().toLowerCase(),
-      product_id: productId || null,
-      bundle_id: bundleId || null,
+      product_id: hasCart ? (cartItems[0].type === "product" ? cartItems[0].id : null) : productId || null,
+      bundle_id: hasCart ? (cartItems[0].type === "bundle" ? cartItems[0].id : null) : bundleId || null,
       amount: finalAmount,
       payment_method: "bank_transfer",
       transfer_reference: transferRef,
@@ -208,6 +217,20 @@ export async function createBankTransferOrder({
 
   if (oErr) {
     return { success: false, error: `Could not create order: ${oErr.message}` };
+  }
+
+  // Insert individual items into order_items if cart checkout
+  if (hasCart) {
+    for (const it of cartItems) {
+      await admin.from("order_items").insert({
+        order_id: order.id,
+        product_id: it.type === "product" ? it.id : null,
+        bundle_id: it.type === "bundle" ? it.id : null,
+        title: it.title,
+        unit_price: it.price,
+        quantity: 1,
+      });
+    }
   }
 
   // Increment coupon redemption count if used
@@ -260,35 +283,64 @@ export async function createBankTransferOrder({
   };
 }
 
-export async function approveBankTransferOrder(orderId: string): Promise<{ success: boolean; error?: string }> {
+/**
+ * Universal Order Fulfillment:
+ * Marks order paid, inspects order_items / bundle / product, issues HMAC licenses,
+ * and sends confirmation email with direct download links.
+ */
+export async function fulfillOrder(orderId: string): Promise<{ success: boolean; error?: string }> {
   const admin = createAdminClient();
 
   const { data: order } = await admin
     .from("orders")
-    .select("id, buyer_id, buyer_name, buyer_email, product_id, bundle_id, amount, status, transfer_reference")
+    .select("id, buyer_id, buyer_name, buyer_email, product_id, bundle_id, amount, status, transfer_reference, paystack_reference")
     .eq("id", orderId)
     .single();
 
   if (!order) return { success: false, error: "Order not found." };
-  if (order.status === "paid") return { success: true }; // Already approved
 
   const buyerEmail = order.buyer_email || "";
   const buyerName = order.buyer_name || buyerEmail || "Valued Reader";
   const buyerIdentifier = order.buyer_id || order.buyer_email || order.id;
 
-  const productIdsToIssue: string[] = [];
+  const productIdsToIssue: { pid: string; bundleId?: string | null }[] = [];
 
-  if (order.bundle_id) {
-    const { data: bundleItems } = await admin
-      .from("product_bundle_items")
-      .select("product_id")
-      .eq("bundle_id", order.bundle_id);
+  // 1. Check order_items first
+  const { data: orderItems } = await admin
+    .from("order_items")
+    .select("product_id, bundle_id")
+    .eq("order_id", order.id);
 
-    for (const item of bundleItems ?? []) {
-      productIdsToIssue.push(item.product_id);
+  if (orderItems && orderItems.length > 0) {
+    for (const item of orderItems) {
+      if (item.product_id) {
+        productIdsToIssue.push({ pid: item.product_id, bundleId: item.bundle_id });
+      }
+      if (item.bundle_id) {
+        const { data: bundleItems } = await admin
+          .from("product_bundle_items")
+          .select("product_id")
+          .eq("bundle_id", item.bundle_id);
+        for (const bi of bundleItems ?? []) {
+          productIdsToIssue.push({ pid: bi.product_id, bundleId: item.bundle_id });
+        }
+      }
     }
-  } else if (order.product_id) {
-    productIdsToIssue.push(order.product_id);
+  }
+
+  // 2. Fallback to order.bundle_id or order.product_id
+  if (productIdsToIssue.length === 0) {
+    if (order.bundle_id) {
+      const { data: bundleItems } = await admin
+        .from("product_bundle_items")
+        .select("product_id")
+        .eq("bundle_id", order.bundle_id);
+      for (const item of bundleItems ?? []) {
+        productIdsToIssue.push({ pid: item.product_id, bundleId: order.bundle_id });
+      }
+    } else if (order.product_id) {
+      productIdsToIssue.push({ pid: order.product_id });
+    }
   }
 
   if (productIdsToIssue.length === 0) {
@@ -298,14 +350,31 @@ export async function approveBankTransferOrder(orderId: string): Promise<{ succe
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mla.org.ng";
   const issuedLicenses: { title: string; key: string }[] = [];
 
-  for (const pid of productIdsToIssue) {
-    // Generate HMAC-SHA256 license
-    const licenseKey = generateLicenseKey(pid, buyerIdentifier);
+  for (const item of productIdsToIssue) {
+    // Check if license was already issued
+    const { data: existingLic } = await admin
+      .from("product_licenses")
+      .select("id, license_key")
+      .eq("order_id", order.id)
+      .eq("product_id", item.pid)
+      .maybeSingle();
+
+    if (existingLic) {
+      const { data: prod } = await admin.from("digital_products").select("title").eq("id", item.pid).single();
+      issuedLicenses.push({
+        title: prod?.title ?? "Lecture Notes",
+        key: existingLic.license_key,
+      });
+      continue;
+    }
+
+    // Generate cryptographic license
+    const licenseKey = generateLicenseKey(item.pid, buyerIdentifier);
 
     const { error: licErr } = await admin.from("product_licenses").insert({
       order_id: order.id,
-      product_id: pid,
-      bundle_id: order.bundle_id || null,
+      product_id: item.pid,
+      bundle_id: item.bundleId || null,
       buyer_id: order.buyer_id || null,
       buyer_email: buyerEmail,
       license_key: licenseKey,
@@ -313,7 +382,7 @@ export async function approveBankTransferOrder(orderId: string): Promise<{ succe
     });
 
     if (!licErr) {
-      const { data: prod } = await admin.from("digital_products").select("title").eq("id", pid).single();
+      const { data: prod } = await admin.from("digital_products").select("title").eq("id", item.pid).single();
       issuedLicenses.push({
         title: prod?.title ?? "Lecture Notes",
         key: licenseKey,
@@ -325,34 +394,35 @@ export async function approveBankTransferOrder(orderId: string): Promise<{ succe
   await admin.from("orders").update({ status: "paid" }).eq("id", order.id);
 
   // Send delivery email with licenses & instructions
-  if (buyerEmail) {
+  if (buyerEmail && order.status !== "paid") {
     const licensesHtml = issuedLicenses
       .map(
         (l) => `
-        <div style="margin-bottom:12px;padding:12px;background:#f7f7f7;border-radius:6px;border-left:4px solid #D4AF37;">
-          <strong style="color:#111;">${l.title}</strong><br/>
-          <span style="font-family:monospace;font-size:15px;color:#333;">License Key: ${l.key}</span>
+        <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:8px;border-left:4px solid #00D2FF;">
+          <strong style="color:#0f172a;font-size:14px;">${l.title}</strong><br/>
+          <span style="font-family:monospace;font-size:13px;color:#0284c7;font-weight:bold;">License Key: ${l.key}</span>
         </div>`
       )
       .join("");
 
+    const deliveryUrl = `${site}/shop/delivery/${order.id}?email=${encodeURIComponent(buyerEmail)}`;
+
     await sendTransactionalEmail({
       to: buyerEmail,
-      subject: `Payment Confirmed: Access to Your Lecture Notes (${order.transfer_reference || "Order"})`,
+      subject: `Your Downloads Are Ready: Order ${order.transfer_reference || order.paystack_reference || order.id.slice(0, 8)}`,
       html: `
-        <div style="font-family:sans-serif;line-height:1.6;color:#222;max-width:600px;margin:auto;">
-          <h2 style="color:#111;">Payment Confirmed!</h2>
+        <div style="font-family:sans-serif;line-height:1.6;color:#1e293b;max-width:600px;margin:auto;padding:20px;border:1px solid #e2e8f0;border-radius:12px;">
+          <h2 style="color:#0f172a;margin-top:0;">Your Digital Downloads Are Ready!</h2>
           <p>Hi ${buyerName},</p>
-          <p>Your direct bank transfer for Order <strong>${order.transfer_reference}</strong> has been verified and confirmed.</p>
-          <p>Here are your digital materials and license credentials:</p>
+          <p>Thank you for your order. Your digital publication licenses have been generated and authenticated.</p>
           ${licensesHtml}
-          <p style="margin-top:20px;">
-            <a href="${site}/dashboard/library" style="display:inline-block;padding:12px 24px;background:#D4AF37;color:#111;text-decoration:none;font-weight:bold;border-radius:30px;">
-              Go to Your Library to Download
+          <div style="margin:24px 0;">
+            <a href="${deliveryUrl}" style="display:inline-block;padding:14px 28px;background:#00D2FF;color:#0a0e2a;text-decoration:none;font-weight:bold;border-radius:10px;font-size:14px;">
+              Download Your Files Now →
             </a>
-          </p>
-          <p style="font-size:12px;color:#777;margin-top:30px;">
-            Each PDF will be forensically watermarked with your name and email upon download. Thank you for your support!
+          </div>
+          <p style="font-size:12px;color:#64748b;margin-top:24px;border-top:1px solid #e2e8f0;padding-top:16px;">
+            You can also access your licensed toolkits anytime from your MLA Member Library. Each PDF document contains a forensic cryptographic watermark embedding your buyer credentials.
           </p>
         </div>
       `,
@@ -367,11 +437,15 @@ export async function approveBankTransferOrder(orderId: string): Promise<{ succe
     category: "shop",
     severity: "notice",
     details: {
-      type: "bank_transfer_approved",
-      reference: order.transfer_reference,
+      type: order.transfer_reference ? "bank_transfer" : (order.paystack_reference ? "paystack" : "free_or_direct"),
+      reference: order.transfer_reference || order.paystack_reference || "N/A",
       licensesIssued: issuedLicenses.length,
     },
   });
 
   return { success: true };
+}
+
+export async function approveBankTransferOrder(orderId: string): Promise<{ success: boolean; error?: string }> {
+  return await fulfillOrder(orderId);
 }

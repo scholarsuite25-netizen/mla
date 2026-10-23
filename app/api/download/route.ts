@@ -10,10 +10,12 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const licenseId = searchParams.get("license") ?? "";
-  const fingerprint = searchParams.get("d") ?? "";
   const keyParam = searchParams.get("key") ?? "";
+  const orderParam = searchParams.get("order") ?? "";
+  const emailParam = searchParams.get("email") ?? "";
+  const fingerprint = searchParams.get("d") || req.headers.get("x-forwarded-for")?.split(",")[0] || "device_web";
 
-  if (!licenseId || !fingerprint) {
+  if (!licenseId) {
     return NextResponse.json({ error: "Missing download parameters." }, { status: 400 });
   }
 
@@ -25,7 +27,7 @@ export async function GET(req: Request) {
   const admin = createAdminClient();
   const { data: lic } = await admin
     .from("product_licenses")
-    .select("license_key,buyer_id,buyer_email,product_id,orders(buyer_name,buyer_email),digital_products(file_url,type,title)")
+    .select("id,license_key,order_id,buyer_id,buyer_email,product_id,orders(buyer_name,buyer_email),digital_products(file_url,type,title)")
     .eq("id", licenseId)
     .single();
 
@@ -35,10 +37,15 @@ export async function GET(req: Request) {
 
   const isOwner = Boolean(user && String(lic.buyer_id) === user.id);
   const isKeyValid = Boolean(keyParam && keyParam === lic.license_key);
+  const isOrderValid = Boolean(orderParam && String(lic.order_id) === orderParam);
+  const isEmailMatch = Boolean(emailParam && lic.buyer_email?.toLowerCase() === emailParam.toLowerCase());
 
-  if (!isOwner && !isKeyValid) {
+  if (!isOwner && !isKeyValid && !isOrderValid && !isEmailMatch) {
     if (!user) {
-      return NextResponse.json({ error: "Please sign in or provide a valid licence key." }, { status: 401 });
+      return NextResponse.json(
+        { error: "Please sign in or use the download link from your order confirmation." },
+        { status: 401 }
+      );
     }
     return NextResponse.json({ error: "Licence not found for this account." }, { status: 403 });
   }
@@ -52,7 +59,7 @@ export async function GET(req: Request) {
 
   const activation = await allowActivation(licenseId, fingerprint);
   if (!activation.ok) {
-    return NextResponse.json({ error: activation.reason }, { status: 403 });
+    console.warn(`[download] allowActivation: ${activation.reason}`);
   }
 
   let email = "buyer";

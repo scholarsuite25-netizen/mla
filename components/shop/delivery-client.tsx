@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, KeyRound, ShieldCheck, BookOpen, FileCheck } from "lucide-react";
+import { Check, Copy, KeyRound, ShieldCheck, Download, ArrowRight, Library, FileText, CheckCircle2 } from "lucide-react";
 import { DownloadLink } from "@/components/shop/download-link";
 import Link from "next/link";
 
@@ -25,13 +25,16 @@ interface DeliveryClientProps {
     status: string;
     buyer_name: string | null;
     buyer_email: string | null;
+    payment_method?: string | null;
     paystack_reference: string | null;
+    transfer_reference?: string | null;
     created_at: string;
   };
   licenses: LicenseItem[];
+  buyerEmail?: string;
 }
 
-export function DeliveryClient({ order, licenses }: DeliveryClientProps) {
+export function DeliveryClient({ order, licenses, buyerEmail }: DeliveryClientProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   function copyToClipboard(key: string) {
@@ -43,126 +46,164 @@ export function DeliveryClient({ order, licenses }: DeliveryClientProps) {
   }
 
   const isFree = Number(order.amount) === 0;
+  const isPaid = order.status === "paid";
+  const orderRef = order.transfer_reference || order.paystack_reference || order.id.slice(0, 10).toUpperCase();
+  const effectiveEmail = buyerEmail || order.buyer_email || "";
 
   return (
-    <div className="space-y-8">
-      {/* Status Hero Card */}
-      <div className="relative overflow-hidden rounded-3xl border border-gold/30 bg-gradient-to-br from-[#1A1208] via-[#120D09] to-[#0A0705] p-6 sm:p-8 text-center shadow-2xl">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-gold/10 blur-3xl pointer-events-none" />
-        
-        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mb-4 shadow-lg shadow-emerald-950/40">
-          <FileCheck size={32} />
+    <div className="space-y-8 animate-in fade-in duration-300">
+      {/* WooCommerce-Style Order Received Notice Card */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b border-slate-100 pb-6 mb-6">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
+            <CheckCircle2 size={32} />
+          </div>
+          <div>
+            <span className="inline-block rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider mb-1.5">
+              {isFree ? "Complimentary Access" : isPaid ? "Payment Verified" : "Order Placed"}
+            </span>
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">
+              {isPaid || isFree ? "Your Downloads Are Ready!" : "Order Awaiting Confirmation"}
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
+              Thank you, <strong className="text-slate-900 font-semibold">{order.buyer_name || "Valued Reader"}</strong>.
+              Your digital publication licenses have been issued.
+            </p>
+          </div>
         </div>
 
-        <h1 className="font-display text-2xl sm:text-3xl font-bold text-parchment">
-          {isFree ? "Your Complimentary Material is Ready!" : "Payment Confirmed & Delivered!"}
-        </h1>
-        <p className="mt-2 text-xs sm:text-sm text-parchment/70 max-w-lg mx-auto">
-          Thank you, <strong className="text-parchment font-semibold">{order.buyer_name || "Valued Reader"}</strong>.
-          Your delivery has been authenticated, and an HMAC DRM licence has been generated for your device.
-        </p>
+        {/* Order Details Strip */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+          <div className="border-r border-slate-100 pr-3 last:border-r-0">
+            <span className="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Order Reference</span>
+            <span className="font-mono font-bold text-slate-800 break-all">{orderRef}</span>
+          </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-[11px] text-parchment/60">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono">
-            Ref: {order.paystack_reference || order.id.slice(0, 12)}
-          </span>
-          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-3 py-1 font-semibold">
-            Status: {order.status.toUpperCase()}
-          </span>
-          <span className="rounded-full border border-gold/30 bg-gold/10 text-gold px-3 py-1 font-semibold">
-            {isFree ? "Complimentary (₦0.00)" : `Total: ₦${Number(order.amount).toLocaleString()}`}
-          </span>
+          <div className="border-r border-slate-100 pr-3 last:border-r-0">
+            <span className="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Date</span>
+            <span className="font-semibold text-slate-800">
+              {new Date(order.created_at).toLocaleDateString("en-NG", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
+          </div>
+
+          <div className="border-r border-slate-100 pr-3 last:border-r-0">
+            <span className="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Delivery Email</span>
+            <span className="font-semibold text-slate-800 truncate block">{effectiveEmail || "Sent to your email"}</span>
+          </div>
+
+          <div>
+            <span className="block text-[10px] uppercase font-bold tracking-wider text-slate-400">Total</span>
+            <span className="font-bold text-slate-900">
+              {isFree ? "Free (₦0.00)" : `₦${Number(order.amount).toLocaleString()}`}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Forensic Anti-Piracy Watermark Notice */}
-      <div className="rounded-2xl border border-gold/20 bg-gold/5 p-4 sm:p-5 flex items-start gap-4 text-xs text-parchment/80">
-        <ShieldCheck size={22} className="text-gold shrink-0 mt-0.5" />
-        <div>
-          <h2 className="font-semibold text-gold text-sm">Forensic Anti-Piracy Watermarking Active</h2>
-          <p className="mt-1 leading-relaxed text-parchment/70">
-            Every downloaded PDF contains an invisible, cryptographically signed watermark embedding your legal name (
-            <strong className="text-parchment font-semibold">{order.buyer_name || "Registered User"}</strong>) and email address (
-            <strong className="text-parchment font-semibold">{order.buyer_email}</strong>). Unauthorised distribution or public uploading is traceable and strictly prohibited.
-          </p>
+      {/* WooCommerce-Standard Downloads Table Section */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm space-y-6">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-[#0284C7] border border-cyan-200">
+              <Download size={18} />
+            </div>
+            <div>
+              <h2 className="font-display text-lg font-bold text-slate-900">
+                Downloads ({licenses.length})
+              </h2>
+              <p className="text-xs text-slate-500">
+                Click below to begin your direct high-speed download.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Available Downloads Section */}
-      <div className="space-y-4">
-        <h2 className="font-display text-lg font-bold text-parchment flex items-center gap-2">
-          <BookOpen size={18} className="text-gold" />
-          <span>Licensed Materials &amp; Instant Downloads</span>
-        </h2>
 
         {licenses.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-[#120D09] p-8 text-center text-xs text-parchment/60">
-            Generating your digital delivery links... Please refresh in a few moments.
+          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/70 p-8 text-center text-xs text-slate-500 space-y-2">
+            <p className="font-semibold text-slate-700">Verifying and generating your digital licenses...</p>
+            <p className="text-[11px] text-slate-400">Please refresh this page in a moment if your files do not appear immediately.</p>
           </div>
         ) : (
           <div className="space-y-4">
             {licenses.map((lic) => {
               const isCopied = copiedKey === lic.license_key;
               const title = lic.product?.title || "Digital Publication";
+              const type = lic.product?.type || "pdf";
+
               return (
                 <div
                   key={lic.id}
-                  className="rounded-2xl border border-white/10 bg-[#120D09] p-5 sm:p-6 transition-all hover:border-gold/30 space-y-4"
+                  className="rounded-xl border border-slate-200 bg-slate-50/50 p-5 transition hover:border-cyan-300 hover:bg-slate-50 space-y-4"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div>
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-gold/80 font-semibold">
-                        Type: {lic.product?.type?.replace("_", " ") || "Material"}
-                      </span>
-                      <h3 className="font-display text-base sm:text-lg font-bold text-parchment mt-0.5">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full bg-cyan-50 text-[#0284C7] border border-cyan-200/80 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+                          {type.replace("_", " ")}
+                        </span>
+                        <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                          <Check size={12} /> Ready for Download
+                        </span>
+                      </div>
+                      <h3 className="font-display text-base font-bold text-slate-900 leading-snug">
                         {title}
                       </h3>
                     </div>
-                    {lic.product?.file_url ? (
-                      <DownloadLink
-                        licenseId={lic.id}
-                        licenseKey={lic.license_key}
-                        title={title}
-                        label="Download Personalised Copy"
-                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-crest-red to-amber-700 px-5 py-2.5 text-xs font-semibold text-white shadow-lg hover:brightness-110 active:scale-95 transition-all self-start sm:self-auto"
-                      />
-                    ) : (
-                      <span className="text-xs text-amber-400 italic">File processing by publisher</span>
-                    )}
+
+                    <div className="shrink-0">
+                      {lic.product?.file_url ? (
+                        <DownloadLink
+                          licenseId={lic.id}
+                          licenseKey={lic.license_key}
+                          orderId={order.id}
+                          buyerEmail={effectiveEmail}
+                          title={title}
+                          label="Download File"
+                          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#00D2FF] px-6 py-2.5 text-xs font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 hover:bg-[#38BDF8] active:scale-[0.98] transition cursor-pointer"
+                        />
+                      ) : (
+                        <span className="text-xs text-amber-600 italic">File processing by publisher</span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Licence Key Box */}
-                  <div className="rounded-xl border border-white/5 bg-black/40 p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                    <div className="space-y-1">
-                      <p className="text-[10px] uppercase font-semibold tracking-wider text-parchment/40 flex items-center gap-1.5">
-                        <KeyRound size={11} className="text-gold" />
-                        <span>Cryptographic Licence Key</span>
-                      </p>
-                      <code className="block font-mono text-[11px] sm:text-xs text-gold/90 break-all select-all">
+                  {/* License Key Box */}
+                  <div className="rounded-xl border border-slate-200 bg-white p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+                    <div className="space-y-0.5 min-w-0">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 flex items-center gap-1">
+                        <KeyRound size={11} className="text-[#0284C7]" />
+                        Cryptographic License Key
+                      </span>
+                      <code className="block font-mono text-xs font-bold text-slate-800 select-all truncate">
                         {lic.license_key}
                       </code>
                     </div>
+
                     <button
                       type="button"
                       onClick={() => copyToClipboard(lic.license_key)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-parchment hover:bg-white/10 transition-colors self-start sm:self-auto shrink-0"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-cyan-400 hover:text-[#0284C7] transition cursor-pointer shrink-0 self-start sm:self-auto"
                     >
                       {isCopied ? (
                         <>
-                          <Check size={12} className="text-emerald-400" />
-                          <span className="text-emerald-400">Copied!</span>
+                          <Check size={13} className="text-emerald-500" />
+                          <span className="text-emerald-600">Copied</span>
                         </>
                       ) : (
                         <>
-                          <Copy size={12} className="text-parchment/60" />
+                          <Copy size={13} />
                           <span>Copy Key</span>
                         </>
                       )}
                     </button>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-parchment/50 pt-1 border-t border-white/5">
-                    <span>Device Activation Limit: {lic.max_activations} devices</span>
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                    <span>Personal License: Up to {lic.max_activations} devices</span>
                     <span>Activations Used: {lic.activation_count} of {lic.max_activations}</span>
                   </div>
                 </div>
@@ -172,19 +213,36 @@ export function DeliveryClient({ order, licenses }: DeliveryClientProps) {
         )}
       </div>
 
+      {/* Forensic Anti-Piracy Watermark Notice */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 flex items-start gap-3.5 text-xs text-slate-600 shadow-sm">
+        <ShieldCheck size={20} className="text-emerald-600 shrink-0 mt-0.5" />
+        <div>
+          <h4 className="font-bold text-slate-900 text-sm">Forensic Anti-Piracy Protection Active</h4>
+          <p className="mt-1 leading-relaxed text-slate-600">
+            Each downloaded publication includes an invisible cryptographic digital watermark embedding your buyer credentials (
+            <strong className="text-slate-800">{order.buyer_name || "Registered User"}</strong> ·{" "}
+            <strong className="text-slate-800">{effectiveEmail}</strong>). You retain permanent lifetime access to re-download this material.
+          </p>
+        </div>
+      </div>
+
       {/* Navigation Actions */}
-      <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
         <Link
           href="/shop"
-          className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-xs font-semibold text-parchment hover:bg-white/10 transition-colors"
+          className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-semibold text-slate-700 hover:border-cyan-400 hover:text-[#0284C7] transition shadow-sm"
         >
-          Explore More Publications
+          <FileText size={14} />
+          <span>Browse More Materials</span>
         </Link>
+
         <Link
-          href="/speaking"
-          className="rounded-xl border border-gold/30 bg-gold/10 px-5 py-2.5 text-xs font-semibold text-gold hover:bg-gold/20 transition-colors"
+          href="/dashboard/library"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#00D2FF] px-6 py-2.5 text-xs font-bold text-[#0A0E2A] hover:bg-[#38BDF8] shadow-md shadow-cyan-500/20 transition"
         >
-          Invite S. B. Omotoso for Speaking
+          <Library size={14} />
+          <span>Access My Member Library</span>
+          <ArrowRight size={14} />
         </Link>
       </div>
     </div>

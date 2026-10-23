@@ -1,12 +1,13 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DeliveryClient } from "@/components/shop/delivery-client";
+import { verifyOrderPaymentAction } from "@/app/shop/actions";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Order Delivery & Downloads | Scholar Suite Store",
+  title: "Order Confirmed & Downloads | MLA Academy",
   description: "Access your licensed digital publication downloads and cryptographic keys.",
 };
 
@@ -15,19 +16,33 @@ interface DeliveryPageProps {
   searchParams: Promise<{ email?: string }>;
 }
 
-export default async function DeliveryPage({ params }: DeliveryPageProps) {
+export default async function DeliveryPage({ params, searchParams }: DeliveryPageProps) {
   const { orderId } = await params;
+  const { email } = await searchParams;
 
   const admin = createAdminClient();
 
-  const { data: order } = await admin
+  let { data: order } = await admin
     .from("orders")
-    .select("id, amount, status, buyer_name, buyer_email, paystack_reference, created_at")
+    .select("id, amount, status, buyer_name, buyer_email, payment_method, paystack_reference, transfer_reference, created_at")
     .eq("id", orderId)
     .maybeSingle();
 
   if (!order) {
     notFound();
+  }
+
+  // If order is still pending and has paystack_reference, attempt instant synchronous verification
+  if (order.status !== "paid" && order.paystack_reference) {
+    const vRes = await verifyOrderPaymentAction(order.id);
+    if (vRes.success) {
+      const { data: updatedOrder } = await admin
+        .from("orders")
+        .select("id, amount, status, buyer_name, buyer_email, payment_method, paystack_reference, transfer_reference, created_at")
+        .eq("id", orderId)
+        .maybeSingle();
+      if (updatedOrder) order = updatedOrder;
+    }
   }
 
   // Load product licenses associated with this order
@@ -56,9 +71,9 @@ export default async function DeliveryPage({ params }: DeliveryPageProps) {
   }));
 
   return (
-    <div className="min-h-screen bg-[#070503] py-12 px-4 sm:px-6">
-      <div className="mx-auto max-w-3xl">
-        <DeliveryClient order={order} licenses={formattedLicenses} />
+    <div className="min-h-screen bg-[#FAFAFD] text-slate-800 py-10 sm:py-14 px-4 sm:px-6 w-full">
+      <div className="mx-auto max-w-4xl">
+        <DeliveryClient order={order} licenses={formattedLicenses} buyerEmail={email ?? order.buyer_email ?? undefined} />
       </div>
     </div>
   );

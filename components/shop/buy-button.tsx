@@ -82,7 +82,7 @@ export function BuyButton({
         <button
           type="button"
           onClick={() => setModalOpen(true)}
-          className="flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-gold-dark to-gold px-8 py-4 font-bold text-ink shadow-[0_0_20px_rgba(212,175,55,0.25)] transition-all hover:shadow-[0_0_30px_rgba(212,175,55,0.45)] cursor-pointer"
+          className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#00D2FF] px-8 py-4 font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 hover:bg-[#38BDF8] active:scale-[0.99] transition-all cursor-pointer text-xs sm:text-sm"
         >
           <ShoppingBag size={18} />
           <span>
@@ -95,16 +95,16 @@ export function BuyButton({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/5 py-3 px-4 text-xs font-semibold text-parchment hover:border-gold/30 hover:bg-white/10 transition-all cursor-pointer"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white py-3 px-4 text-xs font-semibold text-slate-700 hover:border-cyan-400 hover:text-[#0284C7] transition-all cursor-pointer shadow-sm"
           >
             {addedAnim || isAlreadyInCart ? (
               <>
-                <Check size={14} className="text-green-400" />
-                <span className="text-green-400">In Vault Cart</span>
+                <Check size={14} className="text-emerald-500" />
+                <span className="text-emerald-600 font-bold">In Cart</span>
               </>
             ) : (
               <>
-                <Plus size={14} className="text-gold" />
+                <Plus size={14} className="text-[#0284C7]" />
                 <span>Add to Cart</span>
               </>
             )}
@@ -113,9 +113,9 @@ export function BuyButton({
           <button
             type="button"
             onClick={() => setPreviewOpen(true)}
-            className="flex items-center justify-center gap-1.5 rounded-full border border-gold/30 bg-gold/5 py-3 px-4 text-xs font-semibold text-gold hover:bg-gold/15 transition-all cursor-pointer"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white py-3 px-4 text-xs font-semibold text-slate-700 hover:border-cyan-400 hover:text-[#0284C7] transition-all cursor-pointer shadow-sm"
           >
-            <BookOpen size={14} />
+            <BookOpen size={14} className="text-[#0284C7]" />
             <span>Look Inside (Sample)</span>
           </button>
         </div>
@@ -125,10 +125,10 @@ export function BuyButton({
           href={directWaUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-2.5 text-xs font-medium text-parchment/70 hover:bg-[#25D366]/10 hover:border-[#25D366]/40 hover:text-[#25D366] transition-all text-center"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-xs font-semibold text-slate-600 hover:border-emerald-400 hover:text-emerald-700 hover:bg-emerald-50/30 transition-all text-center shadow-sm"
         >
-          <MessageCircle size={15} className="text-[#25D366]" />
-          <span>Order directly via WhatsApp</span>
+          <MessageCircle size={15} className="text-emerald-600" />
+          <span>Order directly via WhatsApp (+234 803 471 0699)</span>
         </a>
       </div>
 

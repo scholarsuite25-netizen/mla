@@ -132,7 +132,12 @@ export default async function LibraryPage() {
                       Revoked
                     </span>
                   ) : (
-                    <DownloadLink licenseId={lic.id} title={product?.title ?? "product"} />
+                    <DownloadLink
+                      licenseId={lic.id}
+                      licenseKey={lic.license_key}
+                      title={product?.title ?? "product"}
+                      label="Download File"
+                    />
                   )}
                 </div>
               </div>

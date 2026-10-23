@@ -4,13 +4,13 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { initializeTransaction, paystackConfigured } from "@/lib/paystack";
-import { generateLicenseKey } from "@/lib/licenses";
+import { initializeTransaction, paystackConfigured, fetchTransaction } from "@/lib/paystack";
 import { logAuditEvent } from "@/lib/audit";
 import { checkIsMember } from "@/lib/membership";
 import {
   validateCoupon,
   createBankTransferOrder,
+  fulfillOrder,
   getStoreSettings,
   type CouponValidationResult,
   type BankTransferOrderResult,
@@ -26,11 +26,19 @@ export type ActionResult = {
   whatsappUrl?: string;
 };
 
+export type CartItemInput = {
+  id: string;
+  type: "product" | "bundle";
+  price: number;
+  title: string;
+};
+
 export type CheckoutInput =
   | string
   | {
       productId?: string;
       bundleId?: string;
+      cartItems?: CartItemInput[];
       buyerName?: string;
       buyerEmail?: string;
       couponCode?: string;
@@ -47,9 +55,39 @@ export async function validateCouponAction(
   return await validateCoupon(code, subtotal);
 }
 
+export async function verifyOrderPaymentAction(
+  orderId: string
+): Promise<{ success: boolean; error?: string }> {
+  const admin = createAdminClient();
+  const { data: order } = await admin
+    .from("orders")
+    .select("id, status, paystack_reference")
+    .eq("id", orderId)
+    .maybeSingle();
+
+  if (!order) return { success: false, error: "Order not found." };
+  if (order.status === "paid") return { success: true };
+
+  if (order.paystack_reference) {
+    try {
+      const data = await fetchTransaction(order.paystack_reference);
+      if (data?.status === "success") {
+        await fulfillOrder(order.id);
+        revalidatePath(`/shop/delivery/${order.id}`);
+        return { success: true };
+      }
+    } catch (e) {
+      console.error("Paystack verify error:", e);
+    }
+  }
+
+  return { success: false, error: "Payment not verified yet." };
+}
+
 export async function startBankTransferAction(input: {
   productId?: string;
   bundleId?: string;
+  cartItems?: CartItemInput[];
   buyerName: string;
   buyerEmail: string;
   couponCode?: string;
@@ -77,7 +115,10 @@ export async function startCheckoutAction(
   const isObj = typeof input === "object" && input !== null;
   const productId = isObj ? input.productId : input;
   const bundleId = isObj ? input.bundleId : undefined;
+  const cartItems = isObj ? input.cartItems : undefined;
   const couponCode = isObj ? input.couponCode : undefined;
+
+  const hasCart = Array.isArray(cartItems) && cartItems.length > 0;
 
   const admin = createAdminClient();
 
@@ -105,7 +146,13 @@ export async function startCheckoutAction(
   let basePrice = 0;
   let isMembershipDeal = false;
 
-  if (bundleId) {
+  if (hasCart) {
+    basePrice = cartItems.reduce((acc, i) => acc + Number(i.price), 0);
+    itemTitle =
+      cartItems.length === 1
+        ? cartItems[0].title
+        : `${cartItems[0].title} (+${cartItems.length - 1} more items)`;
+  } else if (bundleId) {
     const { data: bundle } = await admin
       .from("product_bundles")
       .select("id, title, price, status")
@@ -165,8 +212,8 @@ export async function startCheckoutAction(
         buyer_id: user?.id || null,
         buyer_name: buyerName || "Guest",
         buyer_email: email,
-        product_id: productId || null,
-        bundle_id: bundleId || null,
+        product_id: hasCart ? (cartItems[0].type === "product" ? cartItems[0].id : null) : productId || null,
+        bundle_id: hasCart ? (cartItems[0].type === "bundle" ? cartItems[0].id : null) : bundleId || null,
         amount: 0,
         status: "paid",
         coupon_id: couponId,
@@ -177,30 +224,22 @@ export async function startCheckoutAction(
       .single();
     if (oErr) return { error: oErr.message };
 
-    const buyerIdentifier = user?.id || email;
-    const pids: string[] = [];
-    if (bundleId) {
-      const { data: bItems } = await admin
-        .from("product_bundle_items")
-        .select("product_id")
-        .eq("bundle_id", bundleId);
-      for (const bi of bItems ?? []) pids.push(bi.product_id);
-    } else if (productId) {
-      pids.push(productId);
+    // Record order_items for cart
+    if (hasCart) {
+      for (const it of cartItems) {
+        await admin.from("order_items").insert({
+          order_id: order.id,
+          product_id: it.type === "product" ? it.id : null,
+          bundle_id: it.type === "bundle" ? it.id : null,
+          title: it.title,
+          unit_price: it.price,
+          quantity: 1,
+        });
+      }
     }
 
-    for (const pid of pids) {
-      const licenseKey = generateLicenseKey(pid, buyerIdentifier);
-      await admin.from("product_licenses").insert({
-        order_id: order.id,
-        product_id: pid,
-        bundle_id: bundleId || null,
-        buyer_id: user?.id || null,
-        buyer_email: email,
-        license_key: licenseKey,
-        max_activations: 5,
-      });
-    }
+    // Fulfill order & issue licenses
+    await fulfillOrder(order.id);
 
     revalidatePath("/shop");
     return { url: `/shop/delivery/${order.id}?email=${encodeURIComponent(email)}` };
@@ -225,8 +264,8 @@ export async function startCheckoutAction(
       buyer_id: user?.id || null,
       buyer_name: buyerName || "Guest",
       buyer_email: email,
-      product_id: productId || null,
-      bundle_id: bundleId || null,
+      product_id: hasCart ? (cartItems[0].type === "product" ? cartItems[0].id : null) : productId || null,
+      bundle_id: hasCart ? (cartItems[0].type === "bundle" ? cartItems[0].id : null) : bundleId || null,
       amount: finalAmount,
       coupon_id: couponId,
       discount_amount: discountAmount,
@@ -237,6 +276,19 @@ export async function startCheckoutAction(
     .single();
 
   if (oErr) return { error: oErr.message };
+
+  if (hasCart) {
+    for (const it of cartItems) {
+      await admin.from("order_items").insert({
+        order_id: order.id,
+        product_id: it.type === "product" ? it.id : null,
+        bundle_id: it.type === "bundle" ? it.id : null,
+        title: it.title,
+        unit_price: it.price,
+        quantity: 1,
+      });
+    }
+  }
 
   await logAuditEvent({
     action: "order.created",
@@ -269,7 +321,7 @@ export async function startCheckoutAction(
       email,
       amountKobo: Math.round(finalAmount * 100),
       reference,
-      callbackUrl: `${origin}/dashboard/library`,
+      callbackUrl: `${origin}/shop/delivery/${order.id}?email=${encodeURIComponent(email)}`,
       metadata: { order_id: order.id, product_id: productId, bundle_id: bundleId },
     });
     revalidatePath("/shop");
