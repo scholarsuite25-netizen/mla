@@ -159,6 +159,7 @@ export async function Footer() {
             </p>
             <FooterLinks
               links={[
+                { label: "Careers & ATS CV Builder", href: "/careers" },
                 { label: "Course Catalog", href: "/courses" },
                 { label: "AI & Vibe Coding", href: "/courses" },
                 { label: "Academy Blog & Dispatches", href: "/blog" },

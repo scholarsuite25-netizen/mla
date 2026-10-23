@@ -17,6 +17,7 @@ const publicLinks: NavLink[] = [
     label: "Services",
     href: "/courses",
     children: [
+      { label: "Careers & CV Builder", href: "/careers", description: "Free ATS CV builder, graduate trainee jobs & interview prep" },
       { label: "AI & Vibe Coding", href: "/courses", description: "Applied AI literacy, agentic automation & coding" },
       { label: "Course Catalog", href: "/courses", description: "Executive leadership & career acceleration syllabi" },
       { label: "Digital Toolkits", href: "/shop", description: "Keynote notes, slides & licensed materials" },
