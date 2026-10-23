@@ -27,7 +27,7 @@ export function CommentSection({
 
   if (!allowComments) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-[#120D09] p-6 text-center text-xs text-parchment/50">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-xs text-slate-500">
         Comments are closed for this article.
       </div>
     );
@@ -74,16 +74,18 @@ export function CommentSection({
   }
 
   return (
-    <section id="comments" className="mt-16 border-t border-white/10 pt-12 space-y-10">
+    <section id="comments" className="mt-16 border-t border-slate-200 pt-12 space-y-10">
       {/* Comments Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <MessageSquare size={20} className="text-gold" />
-          <h3 className="font-display text-2xl font-bold text-parchment">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-[#0284C7] border border-cyan-200">
+            <MessageSquare size={18} />
+          </div>
+          <h3 className="font-display text-xl sm:text-2xl font-bold text-slate-900">
             Discussion &amp; Perspectives ({comments.length})
           </h3>
         </div>
-        <span className="text-xs text-parchment/40">WordPress-verified thread</span>
+        <span className="text-xs text-slate-400">Academy thread</span>
       </div>
 
       {/* Existing Comments List */}
@@ -106,58 +108,58 @@ export function CommentSection({
             return (
               <div
                 key={comment.id}
-                className="rounded-2xl border border-white/10 bg-[#140E0A] p-5 shadow-md space-y-2.5 transition hover:border-gold/30"
+                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-2.5 transition hover:border-cyan-300"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/15 border border-gold/30 text-gold text-xs font-bold font-display">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-cyan-50 border border-cyan-200 text-[#0284C7] text-xs font-bold font-display">
                       {initials || <User size={14} />}
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-parchment">
+                      <h4 className="text-sm font-semibold text-slate-900">
                         {comment.author_name}
                       </h4>
-                      <div className="flex items-center gap-1.5 text-[11px] text-parchment/40">
-                        <Clock size={11} className="text-gold/60" />
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+                        <Clock size={11} className="text-slate-400" />
                         <span>{dateStr}</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-xs sm:text-sm leading-relaxed text-parchment/80 whitespace-pre-wrap pl-11">
+                <p className="text-xs sm:text-sm leading-relaxed text-slate-700 whitespace-pre-wrap pl-11">
                   {comment.content}
                 </p>
               </div>
             );
           })
         ) : (
-          <div className="rounded-2xl border border-white/10 bg-[#120D09]/50 p-8 text-center text-xs text-parchment/50">
+          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-xs text-slate-500">
             Be the first to share a perspective on this dispatch.
           </div>
         )}
       </div>
 
       {/* Leave a Reply Form */}
-      <div className="rounded-3xl border border-white/15 bg-[#120D09] p-6 sm:p-8 shadow-xl space-y-5">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-md space-y-5">
         <div>
-          <h4 className="font-display text-xl font-bold text-parchment">
+          <h4 className="font-display text-lg sm:text-xl font-bold text-slate-900">
             Leave a Reply
           </h4>
-          <p className="text-xs text-parchment/50 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Your email address will not be published. Required fields are marked *
           </p>
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 rounded-xl border border-crest-red/30 bg-crest-red/10 p-3 text-xs text-crest-red">
+          <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-600 font-medium">
             <AlertCircle size={15} className="shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-400">
+          <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-700 font-medium">
             <CheckCircle2 size={15} className="shrink-0" />
             <span>Thank you! Your comment has been published.</span>
           </div>
@@ -177,7 +179,7 @@ export function CommentSection({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-parchment/70">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700">
                 Name *
               </label>
               <input
@@ -186,12 +188,12 @@ export function CommentSection({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Dr. Jane Doe"
-                className="w-full rounded-xl border border-white/10 bg-[#0E0A08] p-3 text-xs text-parchment placeholder-parchment/40 focus:border-gold focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white p-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:outline-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-parchment/70">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700">
                 Email Address *
               </label>
               <input
@@ -200,13 +202,13 @@ export function CommentSection({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="jane@university.edu"
-                className="w-full rounded-xl border border-white/10 bg-[#0E0A08] p-3 text-xs text-parchment placeholder-parchment/40 focus:border-gold focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white p-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:outline-none transition-all"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-parchment/70">
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-700">
               Your Perspective / Comment *
             </label>
             <textarea
@@ -215,16 +217,16 @@ export function CommentSection({
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Contribute constructive insights, counter-perspectives, or questions on this article..."
-              className="w-full rounded-xl border border-white/10 bg-[#0E0A08] p-3 text-xs sm:text-sm text-parchment placeholder-parchment/40 focus:border-gold focus:outline-none leading-relaxed"
+              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:outline-none leading-relaxed transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={pending}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-gold to-amber-500 px-6 py-3 text-xs font-bold text-midnight hover:brightness-110 shadow-lg disabled:opacity-50 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#00D2FF] px-6 py-3 text-xs sm:text-sm font-bold text-[#0A0E2A] hover:bg-[#38BDF8] shadow-md shadow-cyan-500/20 disabled:opacity-50 transition-all cursor-pointer"
           >
-            <Send size={13} />
+            <Send size={14} />
             <span>{pending ? "Submitting..." : "Post Comment"}</span>
           </button>
         </form>

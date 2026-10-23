@@ -4,7 +4,6 @@ import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { FloatingContact } from "@/components/floating-contact";
-import { RegistrationPopup } from "@/components/registration-popup";
 import { AppProviders } from "@/components/providers/app-providers";
 
 const poppins = Poppins({
@@ -61,7 +60,6 @@ export default function RootLayout({
           <Nav />
           <main className="flex-1">{children}</main>
           <Footer />
-          <RegistrationPopup />
           <FloatingContact />
         </AppProviders>
       </body>

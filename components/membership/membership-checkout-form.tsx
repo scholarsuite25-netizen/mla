@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { joinMembershipAction, type MembershipActionResult } from "@/app/membership/actions";
 import type { StoreSettings } from "@/lib/store";
+import { inputClass } from "@/components/login-form";
 
 export function MembershipCheckoutForm({
   initialUser,
@@ -69,69 +70,69 @@ export function MembershipCheckoutForm({
   if (transferResult) {
     return (
       <div className="space-y-6 text-center animate-in fade-in duration-300">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold/20 text-gold mb-2">
-          <Building2 size={32} />
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-50 text-[#0284C7] mb-2 border border-cyan-200 shadow-sm">
+          <Building2 size={28} />
         </div>
 
         <div>
-          <h3 className="font-display text-2xl font-bold text-parchment">
+          <h3 className="font-display text-xl sm:text-2xl font-bold text-slate-900">
             Transfer Instructions
           </h3>
-          <p className="text-xs text-parchment/70 mt-1">
-            Please transfer exactly <strong>₦20,000</strong> to complete your Lifetime Membership.
+          <p className="text-xs text-slate-600 mt-1">
+            Please transfer exactly <strong className="text-slate-900 font-bold">₦20,000</strong> to complete your Lifetime Membership.
           </p>
         </div>
 
         {/* Bank Account Details Card */}
-        <div className="rounded-2xl border border-gold/30 bg-[#140F0B] p-5 text-left space-y-4">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="rounded-2xl border border-slate-200/90 bg-slate-50/70 p-5 text-left space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
             <div>
-              <p className="text-[10px] uppercase font-bold tracking-widest text-parchment/50">
+              <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500">
                 Bank Name
               </p>
-              <p className="text-sm font-bold text-parchment">{bankName}</p>
+              <p className="text-sm font-bold text-slate-900">{bankName}</p>
             </div>
-            <span className="text-[10px] font-bold text-gold bg-gold/10 px-2.5 py-0.5 rounded-full border border-gold/30">
-              Official Account
+            <span className="text-[10px] font-bold text-[#0284C7] bg-cyan-50 px-2.5 py-0.5 rounded-full border border-cyan-200/80">
+              Verified Corporate Account
             </span>
           </div>
 
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
             <div>
-              <p className="text-[10px] uppercase font-bold tracking-widest text-parchment/50">
+              <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500">
                 Account Name
               </p>
-              <p className="text-sm font-bold text-parchment">{accName}</p>
+              <p className="text-sm font-bold text-slate-900">{accName}</p>
             </div>
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[10px] uppercase font-bold tracking-widest text-parchment/50">
+              <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500">
                 Account Number
               </p>
-              <p className="text-lg font-mono font-bold text-gold tracking-wider">
+              <p className="text-lg font-mono font-bold text-slate-900 tracking-wider">
                 {accNumber}
               </p>
             </div>
             <button
               type="button"
               onClick={copyAccount}
-              className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-parchment hover:border-gold/40 hover:text-gold transition cursor-pointer"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:border-cyan-400 hover:text-[#0284C7] transition cursor-pointer shadow-sm"
             >
-              {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+              {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
               <span>{copied ? "Copied" : "Copy"}</span>
             </button>
           </div>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-xs text-parchment/80 text-left space-y-1">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 text-xs text-slate-700 text-left space-y-1 shadow-sm">
           <p>
             <strong>Payment Reference:</strong>{" "}
-            <span className="font-mono text-gold font-bold">{transferResult.reference}</span>
+            <span className="font-mono text-[#0284C7] font-bold">{transferResult.reference}</span>
           </p>
-          <p className="text-[11px] text-parchment/60">
-            Use this reference in your transfer narration or attach it in your WhatsApp verification below.
+          <p className="text-[11px] text-slate-500">
+            Use this reference in your transfer narration or attach it in your WhatsApp confirmation below.
           </p>
         </div>
 
@@ -141,18 +142,18 @@ export function MembershipCheckoutForm({
             href={transferResult.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 py-4 font-bold text-ink shadow-lg hover:bg-[#20BA5A] transition"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 font-bold text-white shadow-md hover:bg-emerald-500 transition cursor-pointer text-xs sm:text-sm"
           >
-            <MessageCircle size={20} />
-            <span>Send Receipt via WhatsApp (+2348034710699)</span>
-            <ExternalLink size={16} />
+            <MessageCircle size={18} />
+            <span>Confirm Transfer via WhatsApp (+234 803 471 0699)</span>
+            <ExternalLink size={15} />
           </a>
         )}
 
         <button
           type="button"
           onClick={() => setTransferResult(null)}
-          className="text-xs text-parchment/50 hover:text-parchment underline cursor-pointer"
+          className="text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer"
         >
           ← Change Details or Payment Method
         </button>
@@ -161,16 +162,17 @@ export function MembershipCheckoutForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {errorMsg && (
-        <div className="rounded-xl border border-crest-red/30 bg-crest-red/10 p-4 text-xs text-crest-red font-medium">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-600 font-medium">
           {errorMsg}
         </div>
       )}
 
       <div className="space-y-4">
+        {/* Full Name Input */}
         <div>
-          <label className="block text-xs uppercase font-bold tracking-widest text-parchment/60 mb-1.5">
+          <label className="block text-xs uppercase font-bold tracking-wider text-slate-700 mb-1.5">
             Full Name *
           </label>
           <input
@@ -178,13 +180,14 @@ export function MembershipCheckoutForm({
             required
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            placeholder="Dr. / Mr. / Mrs. Full Name"
-            className="w-full rounded-xl border border-white/10 bg-[#0E0A08] px-4 py-3 text-sm text-parchment placeholder:text-parchment/30 focus:border-gold focus:outline-none"
+            placeholder="e.g. Dr. Adebayo Mustapha"
+            className={inputClass}
           />
         </div>
 
+        {/* Email Address Input */}
         <div>
-          <label className="block text-xs uppercase font-bold tracking-widest text-parchment/60 mb-1.5">
+          <label className="block text-xs uppercase font-bold tracking-wider text-slate-700 mb-1.5">
             Email Address for Delivery &amp; Membership ID *
           </label>
           <input
@@ -192,83 +195,106 @@ export function MembershipCheckoutForm({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="your.email@university.edu.ng"
-            className="w-full rounded-xl border border-white/10 bg-[#0E0A08] px-4 py-3 text-sm text-parchment placeholder:text-parchment/30 focus:border-gold focus:outline-none"
+            placeholder="your.email@example.com"
+            className={inputClass}
           />
-          <p className="text-[11px] text-parchment/40 mt-1">
-            Your 50% discount and Membership Deal access will be tied directly to this email address.
+          <p className="text-[11px] text-slate-500 mt-1.5">
+            Your permanent 50% discount and complimentary Membership Deals will be linked to this email.
           </p>
         </div>
 
         {/* Payment Method Selector */}
         <div>
-          <label className="block text-xs uppercase font-bold tracking-widest text-parchment/60 mb-2">
+          <label className="block text-xs uppercase font-bold tracking-wider text-slate-700 mb-2">
             Select Payment Method
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => setPaymentMethod("paystack")}
-              className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-xs font-semibold transition cursor-pointer ${
+              className={`flex items-center gap-3 rounded-2xl border p-4 text-xs font-semibold transition cursor-pointer text-left ${
                 paymentMethod === "paystack"
-                  ? "border-gold bg-gold/15 text-gold shadow-[0_0_15px_rgba(212,175,55,0.2)]"
-                  : "border-white/10 bg-[#0E0A08] text-parchment/60 hover:border-white/20 hover:text-parchment"
+                  ? "border-2 border-cyan-400 bg-cyan-50/70 text-[#0284C7] shadow-sm font-bold"
+                  : "border border-slate-200 bg-white text-slate-700 hover:border-cyan-300 hover:bg-slate-50/50"
               }`}
             >
-              <CreditCard size={20} />
-              <span>Card / Online Paystack</span>
+              <div
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                  paymentMethod === "paystack"
+                    ? "bg-[#00D2FF] text-[#0A0E2A]"
+                    : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                <CreditCard size={18} />
+              </div>
+              <div>
+                <p className="font-bold text-slate-900 text-xs">Card / Online Paystack</p>
+                <p className="text-[10px] text-slate-500">Instant automatic activation</p>
+              </div>
             </button>
 
             <button
               type="button"
               onClick={() => setPaymentMethod("bank_transfer")}
-              className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-xs font-semibold transition cursor-pointer ${
+              className={`flex items-center gap-3 rounded-2xl border p-4 text-xs font-semibold transition cursor-pointer text-left ${
                 paymentMethod === "bank_transfer"
-                  ? "border-gold bg-gold/15 text-gold shadow-[0_0_15px_rgba(212,175,55,0.2)]"
-                  : "border-white/10 bg-[#0E0A08] text-parchment/60 hover:border-white/20 hover:text-parchment"
+                  ? "border-2 border-cyan-400 bg-cyan-50/70 text-[#0284C7] shadow-sm font-bold"
+                  : "border border-slate-200 bg-white text-slate-700 hover:border-cyan-300 hover:bg-slate-50/50"
               }`}
             >
-              <Building2 size={20} />
-              <span>Direct GTBank Transfer</span>
+              <div
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
+                  paymentMethod === "bank_transfer"
+                    ? "bg-[#00D2FF] text-[#0A0E2A]"
+                    : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                <Building2 size={18} />
+              </div>
+              <div>
+                <p className="font-bold text-slate-900 text-xs">Direct GTBank Transfer</p>
+                <p className="text-[10px] text-slate-500">Invoice &amp; bank receipt</p>
+              </div>
             </button>
           </div>
         </div>
 
         {paymentMethod === "bank_transfer" && (
-          <div>
-            <label className="block text-xs uppercase font-bold tracking-widest text-parchment/60 mb-1.5">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-1.5 animate-in fade-in duration-200">
+            <label className="block text-xs uppercase font-bold tracking-wider text-slate-700">
               Optional Transfer Note / Sender Name
             </label>
             <input
               type="text"
               value={transferNote}
               onChange={(e) => setTransferNote(e.target.value)}
-              placeholder="e.g. Sent from GTBank mobile app"
-              className="w-full rounded-xl border border-white/10 bg-[#0E0A08] px-4 py-2.5 text-xs text-parchment placeholder:text-parchment/30 focus:border-gold focus:outline-none"
+              placeholder="e.g. Transfer from GTBank mobile app / Adebayo Mustapha"
+              className={inputClass}
             />
           </div>
         )}
       </div>
 
+      {/* Primary Submit CTA */}
       <button
         type="submit"
         disabled={pending}
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-dark to-gold px-8 py-4 font-bold text-ink shadow-[0_0_25px_rgba(212,175,55,0.3)] transition-all hover:shadow-[0_0_35px_rgba(212,175,55,0.5)] cursor-pointer disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#00D2FF] py-4 text-xs sm:text-sm font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 hover:bg-[#38BDF8] active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50"
       >
-        <Lock size={18} />
+        <Lock size={16} />
         <span>
           {pending
             ? "Processing..."
             : paymentMethod === "paystack"
-            ? "Pay ₦20,000 via Paystack (Instant Access)"
+            ? "Pay ₦20,000 via Paystack (Instant Activation)"
             : "Generate GTBank Transfer Invoice"}
         </span>
-        <ArrowRight size={18} />
+        <ArrowRight size={16} />
       </button>
 
-      <div className="flex items-center justify-center gap-2 text-center text-xs text-parchment/50">
-        <ShieldCheck size={16} className="text-gold" />
-        <span>Secure 256-bit encryption · Official Tintol Business Services Account</span>
+      <div className="flex items-center justify-center gap-2 text-center text-[11px] text-slate-500">
+        <ShieldCheck size={15} className="text-emerald-600" />
+        <span>Secure 256-bit encrypted checkout · Official Tintol Business Services Account</span>
       </div>
     </form>
   );

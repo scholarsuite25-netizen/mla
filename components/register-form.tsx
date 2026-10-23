@@ -1,131 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { signUpAction } from "@/app/auth/actions";
 import { inputClass } from "@/components/login-form";
-import {
-  Briefcase,
-  GraduationCap,
-  Rocket,
-  Zap,
-  Building,
-  User,
-  Award,
-} from "lucide-react";
-
-type Pathway =
-  | "working_professional"
-  | "fresh_graduate"
-  | "self_employed"
-  | "job_seeker"
-  | "retiree_executive"
-  | "campus_student"
-  | "independent_scholar";
-
-interface PathwayOption {
-  id: Pathway;
-  label: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
-  defaultAffiliation: string;
-  placeholder: string;
-  helperText: string;
-}
-
-const pathways: PathwayOption[] = [
-  {
-    id: "working_professional",
-    label: "Working Professional",
-    icon: Briefcase,
-    defaultAffiliation: "Corporate Professional",
-    placeholder: "e.g. Banking, Tech, Telecom, or your Company Name",
-    helperText: "For managers, executives, engineers, and corporate staff upskilling in AI.",
-  },
-  {
-    id: "fresh_graduate",
-    label: "Fresh Graduate / NYSC",
-    icon: GraduationCap,
-    defaultAffiliation: "Fresh Graduate / NYSC",
-    placeholder: "e.g. NYSC Corps Member, Alum of UNILAG, UI, etc.",
-    helperText: "Bridge the gap to high-demand corporate & tech careers with proof-of-work.",
-  },
-  {
-    id: "self_employed",
-    label: "Self-Employed / Founder",
-    icon: Zap,
-    defaultAffiliation: "Self-Employed / Entrepreneur",
-    placeholder: "e.g. Digital Agency, E-commerce, Freelance Consultant",
-    helperText: "Automate your workflows, launch AI products, and scale your business.",
-  },
-  {
-    id: "job_seeker",
-    label: "Job Seeker / Switcher",
-    icon: Rocket,
-    defaultAffiliation: "Career Switcher / Job Seeker",
-    placeholder: "e.g. Career Transition to AI, Tech, Product, or Remote Work",
-    helperText: "Acquire high-income digital capabilities and 1-on-1 career coaching.",
-  },
-  {
-    id: "retiree_executive",
-    label: "Retirement & Second-Act",
-    icon: Award,
-    defaultAffiliation: "Retiree / Executive Advisory",
-    placeholder: "e.g. Retired Director, Board Advisor, Senior Consultant, Second-Act Founder",
-    helperText: "Post-retirement occupation, board advisory, wealth preservation, and mentorship.",
-  },
-  {
-    id: "campus_student",
-    label: "Campus Scholar (Tertiary)",
-    icon: Building,
-    defaultAffiliation: "University Student",
-    placeholder: "e.g. UNILAG, UI, ABU, FUTO, or type your school",
-    helperText: "Connect with fellows across Nigerian universities and gain practical skills.",
-  },
-  {
-    id: "independent_scholar",
-    label: "Independent Scholar",
-    icon: User,
-    defaultAffiliation: "Independent Scholar",
-    placeholder: "e.g. Self-Taught Innovator, Lifelong Learner",
-    helperText: "Open membership with full access to all courses and mentor directories.",
-  },
-];
+import { Sparkles, User, Mail, Lock, ArrowRight } from "lucide-react";
 
 export function RegisterForm() {
-  const [selectedPathway, setSelectedPathway] = useState<Pathway>("working_professional");
-  const [query, setQuery] = useState("Corporate Professional");
-  const [matches, setMatches] = useState<string[]>([]);
-  const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const dirty = useRef(false);
-
-  const currentPathway = pathways.find((p) => p.id === selectedPathway) || pathways[0];
-
-  useEffect(() => {
-    if (!dirty.current) return;
-    const t = setTimeout(async () => {
-      if (query.trim().length < 2) {
-        setMatches([]);
-        return;
-      }
-      const res = await fetch(`/api/institutions?q=${encodeURIComponent(query)}`);
-      const json = await res.json().catch(() => ({ institutions: [] }));
-      setMatches(json.institutions ?? []);
-      setOpen(true);
-    }, 250);
-    return () => clearTimeout(t);
-  }, [query]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setPending(true);
     setError(null);
     const formData = new FormData(e.currentTarget);
-    // Ensure the affiliation is never blank
-    if (!formData.get("institution") || (formData.get("institution") as string).trim() === "") {
-      formData.set("institution", currentPathway.defaultAffiliation);
-    }
     const result = await signUpAction(formData);
     if (result?.error) {
       setError(result.error);
@@ -133,134 +22,44 @@ export function RegisterForm() {
     }
   }
 
-  function handleSelectPathway(p: PathwayOption) {
-    setSelectedPathway(p.id);
-    setQuery(p.defaultAffiliation);
-    setMatches([]);
-    setOpen(false);
-    dirty.current = false;
-  }
-
   return (
-    <form onSubmit={onSubmit} className="mt-5 space-y-4">
-      {/* 1. PATHWAY SELECTOR */}
-      <div>
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs uppercase tracking-wider text-slate-600 font-semibold">
-            Choose Your Track / Background
-          </span>
-          <span className="text-[11px] text-[#0284C7] font-semibold">
-            Personalized for your goals
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {pathways.map((p) => {
-            const Icon = p.icon;
-            const isSelected = selectedPathway === p.id;
-            return (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => handleSelectPathway(p)}
-                className={`group flex items-center gap-2 rounded-xl p-2.5 text-left text-xs font-medium transition-all ${
-                  isSelected
-                    ? "border border-cyan-400 bg-cyan-50 text-[#0284C7] shadow-sm font-semibold"
-                    : "border border-slate-200 bg-slate-50/70 text-slate-700 hover:border-cyan-300 hover:text-slate-900 hover:bg-white"
-                }`}
-              >
-                <div
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${
-                    isSelected ? "bg-[#00D2FF] text-[#0A0E2A]" : "bg-slate-200/70 text-slate-500 group-hover:text-slate-800"
-                  }`}
-                >
-                  <Icon size={13} />
-                </div>
-                <span className="truncate leading-tight">{p.label}</span>
-              </button>
-            );
-          })}
-        </div>
-        <p className="mt-2 text-xs text-slate-500 leading-relaxed">
-          {currentPathway.helperText}
-        </p>
-      </div>
-
-      {/* 2. PERSONAL DETAILS */}
-      <div className="grid gap-3.5 sm:grid-cols-2">
-        <label className="block">
-          <span className="mb-1 block text-xs uppercase tracking-wider text-slate-600 font-semibold">
-            Full Name
-          </span>
-          <input name="full_name" required autoComplete="name" placeholder="Adebayo Ogunlesi" className={inputClass} />
-        </label>
-
-        <label className="block">
-          <span className="mb-1 block text-xs uppercase tracking-wider text-slate-600 font-semibold">
-            Email Address
-          </span>
-          <input
-            type="email"
-            name="email"
-            required
-            autoComplete="email"
-            placeholder="adebayo@example.com"
-            className={inputClass}
-          />
-        </label>
-      </div>
-
-      {/* 3. AFFILIATION / ORGANIZATION / SCHOOL */}
-      <div className="block">
-        <label className="mb-1 block text-xs uppercase tracking-wider text-slate-600 font-semibold">
-          Organization, Company, Institution, or Field
-        </label>
-
-        <div className="relative">
-          <input
-            name="institution"
-            required
-            value={query}
-            onChange={(e) => {
-              dirty.current = true;
-              setQuery(e.target.value);
-            }}
-            onFocus={() => matches.length > 0 && setOpen(true)}
-            placeholder={currentPathway.placeholder}
-            autoComplete="off"
-            className={inputClass}
-          />
-
-          {open && matches.length > 0 && (
-            <ul className="absolute z-10 mt-1 max-h-48 overflow-y-auto w-full rounded-xl border border-slate-200 bg-white shadow-xl">
-              {matches.map((m) => (
-                <li key={m}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuery(m);
-                      setMatches([]);
-                      setOpen(false);
-                      dirty.current = false;
-                    }}
-                    className="block w-full px-3.5 py-2 text-left text-xs sm:text-sm text-slate-700 hover:bg-cyan-50 hover:text-[#0284C7] transition-colors"
-                  >
-                    {m}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <p className="mt-1 text-[11px] text-slate-500">
-          Tip: You can keep <span className="text-[#0284C7] font-semibold">&quot;{query}&quot;</span> or type your specific company, school, or industry.
-        </p>
-      </div>
-
-      {/* 4. PASSWORD */}
+    <form onSubmit={onSubmit} className="mt-6 space-y-4">
+      {/* 1. Full Name */}
       <label className="block">
-        <span className="mb-1 block text-xs uppercase tracking-wider text-slate-600 font-semibold">
-          Create Password
+        <span className="mb-1.5 flex items-center gap-1.5 text-xs uppercase tracking-wider text-slate-700 font-semibold">
+          <User size={13} className="text-[#0284C7]" />
+          <span>Full Name</span>
+        </span>
+        <input
+          name="full_name"
+          required
+          autoComplete="name"
+          placeholder="e.g. Adebayo Ogunlesi"
+          className={inputClass}
+        />
+      </label>
+
+      {/* 2. Email Address */}
+      <label className="block">
+        <span className="mb-1.5 flex items-center gap-1.5 text-xs uppercase tracking-wider text-slate-700 font-semibold">
+          <Mail size={13} className="text-[#0284C7]" />
+          <span>Email Address</span>
+        </span>
+        <input
+          type="email"
+          name="email"
+          required
+          autoComplete="email"
+          placeholder="adebayo@example.com"
+          className={inputClass}
+        />
+      </label>
+
+      {/* 3. Password */}
+      <label className="block">
+        <span className="mb-1.5 flex items-center gap-1.5 text-xs uppercase tracking-wider text-slate-700 font-semibold">
+          <Lock size={13} className="text-[#0284C7]" />
+          <span>Create Password</span>
         </span>
         <input
           type="password"
@@ -273,17 +72,13 @@ export function RegisterForm() {
         />
       </label>
 
-      {/* NOTIFICATIONS CHECKBOX */}
-      <label className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer pt-0.5">
-        <input
-          type="checkbox"
-          name="email_notifications"
-          value="on"
-          defaultChecked
-          className="h-4 w-4 accent-cyan-500 rounded"
-        />
-        Send me announcements when new courses, masterclasses, or mentor cohorts launch
-      </label>
+      {/* Helper notice */}
+      <div className="flex items-center gap-2 rounded-xl border border-cyan-100 bg-cyan-50/70 p-3 text-[11px] text-slate-600">
+        <Sparkles size={14} className="text-[#00D2FF] shrink-0" />
+        <span>
+          Instant access. You can select your specialized career track and affiliate institution inside your member profile right after joining.
+        </span>
+      </div>
 
       {error && (
         <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-600 font-medium">
@@ -291,16 +86,17 @@ export function RegisterForm() {
         </div>
       )}
 
-      {/* SUBMIT BUTTON */}
+      {/* Submit CTA */}
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-lg bg-[#00D2FF] py-3 text-xs sm:text-sm font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 transition-all hover:bg-[#38BDF8] active:scale-[0.99] disabled:opacity-60 cursor-pointer"
+        className="w-full rounded-xl bg-[#00D2FF] py-3.5 text-xs sm:text-sm font-bold text-[#0A0E2A] shadow-md shadow-cyan-500/20 transition-all hover:bg-[#38BDF8] active:scale-[0.99] disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2"
       >
-        {pending ? "Creating member account…" : "Join MLA Academy"}
+        <span>{pending ? "Creating your account…" : "Create Member Account"}</span>
+        {!pending && <ArrowRight size={15} />}
       </button>
 
-      <p className="text-center text-xs text-slate-500 pt-1">
+      <p className="text-center text-xs text-slate-500 pt-2">
         Already registered?{" "}
         <Link href="/login" className="font-semibold text-[#0284C7] hover:underline">
           Sign in to your member dashboard

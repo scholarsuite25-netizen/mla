@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -25,15 +26,98 @@ export async function markAllNotificationsReadAction(): Promise<void> {
   revalidatePath("/dashboard/notifications");
 }
 
+export async function completeOnboardingAction(formData: FormData): Promise<ActionResult> {
+  const isSkipped = formData.get("skipped") === "true";
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not signed in." };
+
+  if (isSkipped) {
+    // If skipped, set default pathway to independent_scholar so onboarding is completed
+    const { error } = await supabase
+      .from("profiles")
+      .update({ pathway: "independent_scholar" })
+      .eq("id", user.id);
+    if (error) return { error: error.message };
+
+    revalidatePath("/dashboard");
+    redirect("/dashboard");
+  }
+
+  const pathway = formData.get("pathway") as string;
+  const institutionName = (formData.get("institution") as string)?.trim();
+
+  const validPathways = [
+    "working_professional",
+    "fresh_graduate",
+    "self_employed",
+    "job_seeker",
+    "retiree_executive",
+    "campus_student",
+    "independent_scholar",
+  ];
+
+  if (!validPathways.includes(pathway)) {
+    return { error: "Please choose a valid learning track." };
+  }
+
+  let institutionId: string | null = null;
+  if (institutionName && institutionName.length >= 2) {
+    const { data: existing } = await supabase
+      .from("institutions")
+      .select("id")
+      .ilike("name", institutionName)
+      .limit(1)
+      .maybeSingle();
+
+    if (existing?.id) {
+      institutionId = existing.id;
+    } else {
+      const { data: created } = await supabase
+        .from("institutions")
+        .insert({ name: institutionName })
+        .select("id")
+        .single();
+      if (created?.id) {
+        institutionId = created.id;
+      }
+    }
+  }
+
+  const updateData: { pathway: string; institution_id?: string | null } = {
+    pathway,
+  };
+  if (institutionId) {
+    updateData.institution_id = institutionId;
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update(updateData)
+    .eq("id", user.id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/dashboard");
+  revalidatePath("/settings");
+  redirect("/dashboard");
+}
+
 export async function updateSettingsAction(formData: FormData): Promise<ActionResult> {
   const parsed = z
     .object({
       fullName: z.string().trim().min(1, "Name can't be empty."),
       emailNotifications: z.boolean(),
+      pathway: z.string().optional(),
+      institution: z.string().optional(),
     })
     .safeParse({
       fullName: formData.get("full_name"),
       emailNotifications: formData.get("email_notifications") === "on",
+      pathway: formData.get("pathway") || undefined,
+      institution: formData.get("institution") || undefined,
     });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
@@ -43,12 +127,42 @@ export async function updateSettingsAction(formData: FormData): Promise<ActionRe
   } = await supabase.auth.getUser();
   if (!user) return { error: "Not signed in." };
 
+  let institutionId: string | undefined = undefined;
+  if (parsed.data.institution && parsed.data.institution.trim().length >= 2) {
+    const institutionName = parsed.data.institution.trim();
+    const { data: existing } = await supabase
+      .from("institutions")
+      .select("id")
+      .ilike("name", institutionName)
+      .limit(1)
+      .maybeSingle();
+
+    if (existing?.id) {
+      institutionId = existing.id;
+    } else {
+      const { data: created } = await supabase
+        .from("institutions")
+        .insert({ name: institutionName })
+        .select("id")
+        .single();
+      if (created?.id) institutionId = created.id;
+    }
+  }
+
+  const updatePayload: Record<string, string | boolean | null | undefined> = {
+    full_name: parsed.data.fullName,
+    email_notifications_enabled: parsed.data.emailNotifications,
+  };
+  if (parsed.data.pathway) {
+    updatePayload.pathway = parsed.data.pathway;
+  }
+  if (institutionId !== undefined) {
+    updatePayload.institution_id = institutionId;
+  }
+
   const { error } = await supabase
     .from("profiles")
-    .update({
-      full_name: parsed.data.fullName,
-      email_notifications_enabled: parsed.data.emailNotifications,
-    })
+    .update(updatePayload)
     .eq("id", user.id);
   if (error) return { error: error.message };
 

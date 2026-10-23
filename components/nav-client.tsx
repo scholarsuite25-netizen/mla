@@ -16,6 +16,7 @@ import {
   BookOpen,
   GraduationCap,
   Users,
+  User,
   Compass,
   Award,
   Sparkles,
@@ -39,6 +40,8 @@ export type NavLink = {
 
 const iconMap: Record<string, React.ReactNode> = {
   "About": <BookOpen size={16} className="text-cyan-400" />,
+  "Profile": <User size={16} className="text-cyan-400" />,
+  "Executive Profile": <Award size={16} className="text-cyan-400" />,
   "Shop": <ShoppingBag size={16} className="text-cyan-400" />,
   "Materials": <FileText size={16} className="text-cyan-400" />,
   "Downloads": <FileText size={16} className="text-cyan-400" />,
@@ -226,6 +229,7 @@ export function NavClient({
                   </div>
                   <div className="py-1 space-y-0.5">
                     <AvatarLink href="/dashboard" icon={<LayoutDashboard size={14} />} label="Dashboard" onClose={() => setAvatarOpen(false)} />
+                    <AvatarLink href="/profile" icon={<User size={14} />} label="Executive Profile" onClose={() => setAvatarOpen(false)} />
                     <AvatarLink href="/dashboard/licenses" icon={<KeyRound size={14} />} label="Licenses" onClose={() => setAvatarOpen(false)} />
                     <AvatarLink href="/settings" icon={<Settings size={14} />} label="Settings" onClose={() => setAvatarOpen(false)} />
                   </div>

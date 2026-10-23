@@ -4,7 +4,15 @@ import { NavClient, NavLink } from "@/components/nav-client";
 
 const publicLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "About us", href: "/about" },
+  { label: "Profile", href: "/profile" },
+  {
+    label: "About us",
+    href: "/about",
+    children: [
+      { label: "Our Mission", href: "/about", description: "Academy vision, governance & leadership" },
+      { label: "Executive Profile", href: "/profile", description: "S. B. Omotoso, FCIA — Leadership & Achievements" },
+    ],
+  },
   {
     label: "Services",
     href: "/courses",

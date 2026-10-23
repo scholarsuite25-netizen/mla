@@ -32,12 +32,17 @@ export async function signInAction(formData: FormData): Promise<ActionResult> {
   if (authData?.user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, pathway")
       .eq("id", authData.user.id)
       .single();
 
     if (profile?.role === "super_admin") {
       redirect("/admin");
+    }
+
+    // Guide new members who haven't completed their learning track to onboarding
+    if (!profile?.pathway) {
+      redirect("/dashboard/onboarding");
     }
   }
 
@@ -56,39 +61,15 @@ export async function signUpAction(formData: FormData): Promise<ActionResult> {
       email,
       password,
       fullName,
-      institution: z.string().trim().min(2, "Institution name is required."),
-      emailNotifications: z.boolean().optional().default(true),
     })
     .safeParse({
       email: formData.get("email"),
       password: formData.get("password"),
       fullName: formData.get("full_name"),
-      institution: formData.get("institution"),
-      emailNotifications:
-        formData.get("email_notifications") === "on",
     });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
   const supabase = await createClient();
-
-  // Resolve the institution: match case-insensitively or create immediately.
-  const { data: existing } = await supabase
-    .from("institutions")
-    .select("id")
-    .ilike("name", parsed.data.institution)
-    .limit(1)
-    .maybeSingle();
-
-  let institutionId = existing?.id ?? null;
-  if (!institutionId) {
-    const { data: created, error: createError } = await supabase
-      .from("institutions")
-      .insert({ name: parsed.data.institution.trim() })
-      .select("id")
-      .single();
-    if (createError) return { error: "Could not create that institution." };
-    institutionId = created!.id;
-  }
 
   const { error } = await supabase.auth.signUp({
     email: parsed.data.email,
@@ -96,8 +77,7 @@ export async function signUpAction(formData: FormData): Promise<ActionResult> {
     options: {
       data: {
         full_name: parsed.data.fullName,
-        institution_id: institutionId,
-        email_notifications_enabled: parsed.data.emailNotifications,
+        email_notifications_enabled: true,
       },
     },
   });

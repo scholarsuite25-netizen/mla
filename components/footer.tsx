@@ -175,6 +175,7 @@ export async function Footer() {
             </p>
             <FooterLinks
               links={[
+                { label: "Executive Profile (S. B. Omotoso)", href: "/profile" },
                 { label: "Find a Mentor", href: "/mentorship/find" },
                 { label: "Become a Mentor", href: "/mentorship/become" },
                 { label: "Institutions Directory", href: "/institutions" },
