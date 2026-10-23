@@ -17,7 +17,7 @@ export type JobListing = {
   postedAt: string;
 };
 
-interface ArbeitnowJob {
+interface ExternalJobItem {
   slug?: string;
   title?: string;
   company_name?: string;
@@ -28,7 +28,22 @@ interface ArbeitnowJob {
   url?: string;
 }
 
-// Curated verified Nigerian graduate trainee and entry-level positions
+// Helper to sanitize HTML tags and decode common HTML entities from feeds
+function sanitizeText(raw: string): string {
+  if (!raw) return "";
+  return raw
+    .replace(/<[^>]+>/g, " ") // remove HTML tags
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Curated verified Nigerian graduate trainee schemes and junior career launchpads
 const CURATED_NIGERIAN_JOBS: JobListing[] = [
   {
     id: "gt-access-2026",
@@ -82,7 +97,9 @@ const CURATED_NIGERIAN_JOBS: JobListing[] = [
     salarySnippet: "₦250,000 – ₦450,000 / month",
     description:
       "Build web applications, automated business pipelines, and customer portals using LLM-assisted coding, Next.js, and Supabase. Perfect for MLA graduates with verified vibe coding portfolios.",
-    url: "https://wa.me/2348034710699?text=" + encodeURIComponent("Hello! I am applying for the Junior Vibe Coder role via MLA Career Hub."),
+    url:
+      "https://wa.me/2348034710699?text=" +
+      encodeURIComponent("Hello! I am applying for the Junior Vibe Coder role via MLA Career Hub."),
     isVerifiedGraduateScheme: true,
     postedAt: "3 days ago",
   },
@@ -129,6 +146,48 @@ const CURATED_NIGERIAN_JOBS: JobListing[] = [
     postedAt: "6 days ago",
   },
   {
+    id: "gt-nestle-2026",
+    title: "Management Trainee Programme (Supply Chain & Commercial Operations)",
+    company: "Nestlé Nigeria Plc",
+    location: "Ilupeju, Lagos / Agbara, Ogun",
+    category: "Graduate Trainee",
+    jobType: "Graduate Trainee",
+    salarySnippet: "Multinational FMCG Allowance + Health Plan",
+    description:
+      "Fast-track leadership development in manufacturing optimization, demand planning, route-to-market distribution, and consumer brand management for ambitious Nigerian graduates.",
+    url: "https://www.nestle-cwa.com/en/jobs",
+    isVerifiedGraduateScheme: true,
+    postedAt: "1 week ago",
+  },
+  {
+    id: "gt-stanbic-2026",
+    title: "Graduate Trainee Scheme (Wealth Management, Personal & Private Banking)",
+    company: "Stanbic IBTC Bank",
+    location: "Victoria Island, Lagos",
+    category: "Corporate & Finance",
+    jobType: "Graduate Trainee",
+    salarySnippet: "Standard Banking Trainee Band + Benefits",
+    description:
+      "Rigorous rotational exposure across wealth management, pension fund administration, portfolio analysis, and client relationship management within standard banking regulations.",
+    url: "https://www.stanbicibtc.com/stanbicibtc/About-Us/Careers",
+    isVerifiedGraduateScheme: true,
+    postedAt: "1 week ago",
+  },
+  {
+    id: "gt-interswitch-2026",
+    title: "Junior Cloud & Payment Integration Specialist (Associate Track)",
+    company: "Interswitch Group",
+    location: "Lagos, Nigeria (Hybrid)",
+    category: "Tech & AI",
+    jobType: "Entry-Level Associate",
+    salarySnippet: "Competitive Fintech Entry Scale",
+    description:
+      "Work alongside cloud architects and merchant solutions engineers to support POS switching, Verve card tokenization, and Quickteller API reliability. Open to candidates with solid software literacy.",
+    url: "https://www.interswitchgroup.com/careers",
+    isVerifiedGraduateScheme: true,
+    postedAt: "1 week ago",
+  },
+  {
     id: "rem-content-ai-2026",
     title: "Remote Digital Content & AI Prompt Editor",
     company: "Tintol Business Services",
@@ -138,46 +197,101 @@ const CURATED_NIGERIAN_JOBS: JobListing[] = [
     salarySnippet: "₦150,000 – ₦250,000 / month",
     description:
       "Review academic transcripts, optimize educational course materials with generative AI, and format executive slide decks for corporate clients. Fresh graduates and NYSC corps members welcome.",
-    url: "https://wa.me/2348034710699?text=" + encodeURIComponent("Hello! I am inquiring about the Remote Digital Content & AI Prompt Editor opening via MLA."),
+    url:
+      "https://wa.me/2348034710699?text=" +
+      encodeURIComponent("Hello! I am inquiring about the Remote Digital Content & AI Prompt Editor opening via MLA."),
     isVerifiedGraduateScheme: true,
     postedAt: "1 week ago",
+  },
+  {
+    id: "rem-qa-analyst-2026",
+    title: "Remote Junior QA & User Acceptance Tester",
+    company: "Remotive Global Talent Network",
+    location: "Remote (Worldwide / Nigeria Accepted)",
+    category: "Remote Entry-Level",
+    jobType: "Contract / Remote",
+    salarySnippet: "$800 – $1,200 / month (USD Paid)",
+    description:
+      "Test responsive web interfaces, verify API webhooks, document software issues, and execute test matrices on client web portals. Great entry-level opportunity for self-taught vibe coders.",
+    url: "https://remotive.com/",
+    isVerifiedGraduateScheme: false,
+    postedAt: "2 weeks ago",
   },
 ];
 
 export async function GET(req: Request) {
+  // If a human visitor navigates directly to this API endpoint in their web browser,
+  // seamlessly redirect them to the visual Careers Hub page rather than displaying raw JSON code.
+  const acceptHeader = req.headers.get("accept") || "";
+  if (acceptHeader.includes("text/html") && !acceptHeader.includes("application/json")) {
+    return NextResponse.redirect(new URL("/careers", req.url));
+  }
+
   const { searchParams } = new URL(req.url);
   const category = searchParams.get("category");
   const query = searchParams.get("q")?.toLowerCase();
 
   let jobs = [...CURATED_NIGERIAN_JOBS];
 
-  // Optional: Attempt to pull additional live remote developer / tech listings from Arbeitnow public open API
+  // Optional: Fetch live remote entry-level tech roles from Arbeitnow,
+  // but STRICTLY filter for genuine junior/entry/trainee roles and exclude senior/lead roles.
   try {
     const res = await fetch("https://www.arbeitnow.com/api/job-board-api", {
       next: { revalidate: 3600 },
-      signal: AbortSignal.timeout(3000),
+      signal: AbortSignal.timeout(2500),
     });
     if (res.ok) {
       const json = await res.json();
       if (Array.isArray(json?.data)) {
-        const liveRemote = (json.data.slice(0, 8) as ArbeitnowJob[]).map((j) => ({
-          id: `ext-${j.slug || Math.random().toString(36).slice(2)}`,
-          title: j.title || "Remote Specialist",
-          company: j.company_name || "Global Remote Partner",
-          location: j.remote ? "Remote (Worldwide)" : (j.location || "Remote"),
-          category: "Remote Entry-Level" as const,
-          jobType: j.job_types?.[0] || "Full-Time / Remote",
-          salarySnippet: "Global Remote Compensation",
-          description: j.description ? j.description.replace(/<[^>]+>/g, "").slice(0, 220) + "..." : "Global remote opportunity accepting international applicants.",
-          url: j.url || "https://www.arbeitnow.com",
-          isVerifiedGraduateScheme: false,
-          postedAt: "Recent",
-        }));
-        jobs = [...CURATED_NIGERIAN_JOBS, ...liveRemote];
+        const excludedSeniorKeywords = [
+          "senior",
+          "principal",
+          "lead",
+          "head of",
+          "director",
+          "vp",
+          "manager",
+          "architect",
+          "expert",
+        ];
+
+        const filteredExternal = (json.data as ExternalJobItem[])
+          .filter((j) => {
+            const title = (j.title || "").toLowerCase();
+            const isSenior = excludedSeniorKeywords.some((w) => title.includes(w));
+            if (isSenior) return false;
+            // Only include if remote or explicitly marked entry/intern/junior/associate/trainee
+            const isEntryLevel =
+              title.includes("junior") ||
+              title.includes("intern") ||
+              title.includes("trainee") ||
+              title.includes("associate") ||
+              title.includes("entry") ||
+              title.includes("specialist") ||
+              title.includes("developer") ||
+              title.includes("analyst");
+            return isEntryLevel;
+          })
+          .slice(0, 4)
+          .map((j) => ({
+            id: `ext-${j.slug || Math.random().toString(36).slice(2)}`,
+            title: j.title || "Remote Junior Specialist",
+            company: j.company_name || "Global Remote Partner",
+            location: j.remote ? "Remote (Worldwide)" : (j.location || "Remote"),
+            category: "Remote Entry-Level" as const,
+            jobType: j.job_types?.[0] || "Full-Time / Remote",
+            salarySnippet: "Global Remote Compensation",
+            description: sanitizeText(j.description || "International remote opportunity accepting qualified applicants.").slice(0, 220) + "...",
+            url: j.url || "https://www.arbeitnow.com",
+            isVerifiedGraduateScheme: false,
+            postedAt: "Recent",
+          }));
+
+        jobs = [...CURATED_NIGERIAN_JOBS, ...filteredExternal];
       }
     }
   } catch {
-    // If external feed has network timeout, smoothly fall back to our curated Nigerian roles
+    // If external feed is slow or unreachable, smoothly fallback to our 12 curated Nigerian roles
   }
 
   if (category && category !== "All") {
