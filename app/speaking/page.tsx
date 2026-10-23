@@ -257,20 +257,20 @@ export default function SpeakingPage() {
         </div>
 
         {/* Booking Form Section */}
-        <div id="booking" className="scroll-mt-24 space-y-5">
-          <div className="text-center max-w-2xl mx-auto space-y-1.5">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#0284C7]">
-              Direct Speaking Inquiry
+        <div id="booking" className="scroll-mt-24 space-y-6">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#0284C7]">
+              Official Speaking Inquiries &amp; Keynote Bookings
             </span>
-            <h2 className="font-display text-xl sm:text-2xl font-bold text-slate-900">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900">
               Invite S. B. Omotoso to Speak
             </h2>
-            <p className="text-xs text-slate-500">
-              Submit your event details below or connect immediately via WhatsApp for expedited scheduling.
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Connect directly via WhatsApp for instant scheduling checks, or submit your comprehensive event brief below.
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto rounded-2xl border border-slate-200 bg-white p-6 sm:p-10 shadow-sm">
+          <div className="max-w-3xl mx-auto rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-10 shadow-lg">
             <SpeakingBookingForm />
           </div>
         </div>

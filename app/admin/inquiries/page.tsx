@@ -16,11 +16,11 @@ export default async function AdminSpeakingInquiriesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-parchment">
-          Keynote & Speaking Inquiries
+        <h1 className="font-sans text-2xl sm:text-3xl font-bold text-slate-900">
+          Keynote &amp; Speaking Inquiries
         </h1>
-        <p className="mt-1 text-xs text-parchment/60">
-          Review executive invitations, corporate training requests, and speaking honorariums submitted through your speaker portfolio.
+        <p className="mt-1 text-xs sm:text-sm text-slate-500">
+          Review executive invitations, corporate training requests, and speaking honorariums. Connect with organizers directly via WhatsApp.
         </p>
       </div>
 
