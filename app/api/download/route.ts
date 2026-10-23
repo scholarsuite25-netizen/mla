@@ -84,29 +84,55 @@ export async function GET(req: Request) {
     buyerName = orderData?.buyer_name ?? "Valued Reader";
   }
 
-  const isPdf = /\.pdf$/i.test(product.file_url);
+  // Resolve actual storage path handling root vs subfolder uploads gracefully
+  const strippedPath = product.file_url.replace(/^product-files\//, "").replace(/^\/+/, "");
+  const candidates = [
+    product.file_url,
+    strippedPath,
+    product.file_url.startsWith("product-files/") ? product.file_url : `product-files/${strippedPath}`,
+  ];
+  const uniqueCandidates = Array.from(new Set(candidates)).filter(Boolean);
+
+  let resolvedPath = strippedPath;
+  for (const candidate of uniqueCandidates) {
+    const { data } = await admin.storage.from("product-files").createSignedUrl(candidate, 10);
+    if (data?.signedUrl) {
+      resolvedPath = candidate;
+      break;
+    }
+  }
+
+  const isPdf = /\.pdf$/i.test(resolvedPath) || /\.pdf$/i.test(product.file_url);
 
   // Deterministic, safe attachment filename from the product title so users
   // see a friendly name regardless of the raw object key.
-  const ext = (product.file_url.split(".").pop() ?? "file").toLowerCase();
+  const ext = (resolvedPath.split(".").pop() ?? product.file_url.split(".").pop() ?? "file").toLowerCase();
   const downloadName =
     `${product.title.replace(/[^a-z0-9._ -]/gi, "_").replace(/\s+/g, "_").slice(0, 64) || "download"}.${ext}`;
 
   if (isPdf) {
-    const blob = await admin.storage
+    let blob = await admin.storage
       .from("product-files")
-      .download(product.file_url);
+      .download(resolvedPath);
+    if (!blob.data && resolvedPath !== product.file_url) {
+      blob = await admin.storage.from("product-files").download(product.file_url);
+    }
+    if (!blob.data && resolvedPath !== strippedPath) {
+      blob = await admin.storage.from("product-files").download(strippedPath);
+    }
     if (!blob.data) {
-      return NextResponse.json({ error: "Could not fetch the product file." }, { status: 500 });
+      console.error(`[download] PDF file could not be downloaded for "${product.title}". Attempted paths:`, uniqueCandidates);
+      return NextResponse.json({ error: "Could not fetch the product file from secure storage." }, { status: 500 });
     }
 
     // If PDF is larger than 25MB, skip watermarking to prevent OOM.
     if (blob.data.size > 25 * 1024 * 1024) {
-      console.warn(`[download] PDF ${product.file_url} is too large (${blob.data.size} bytes). Skipping watermark.`);
-      const { data: signed } = await admin.storage
+      console.warn(`[download] PDF ${resolvedPath} is too large (${blob.data.size} bytes). Skipping watermark.`);
+      const { data: signed, error: sErr } = await admin.storage
         .from("product-files")
-        .createSignedUrl(product.file_url, 120, { download: downloadName });
+        .createSignedUrl(resolvedPath, 120, { download: downloadName });
       if (!signed?.signedUrl) {
+        console.error(`[download] Signed URL generation failed for large PDF ${resolvedPath}:`, sErr);
         return NextResponse.json({ error: "Could not generate download link." }, { status: 500 });
       }
       return NextResponse.redirect(signed.signedUrl);
@@ -126,10 +152,11 @@ export async function GET(req: Request) {
   // Non-PDF deliverables: ownership + activation are validated above, then the
   // browser is redirected to a short-lived (120s) signed URL from the private
   // bucket with an attachment disposition — no persistent public link exists.
-  const { data: signed } = await admin.storage
+  const { data: signed, error: sErr } = await admin.storage
     .from("product-files")
-    .createSignedUrl(product.file_url, 120, { download: downloadName });
+    .createSignedUrl(resolvedPath, 120, { download: downloadName });
   if (!signed?.signedUrl) {
+    console.error(`[download] Failed to create signed URL for non-PDF "${product.title}". Attempted: ${resolvedPath}`, sErr);
     return NextResponse.json({ error: "Could not generate download link." }, { status: 500 });
   }
   return NextResponse.redirect(signed.signedUrl);
