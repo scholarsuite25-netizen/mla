@@ -39,7 +39,6 @@ export function SpeakingBookingForm() {
     const eventDate = String(fd.get("event_date") ?? "").trim();
     const location = String(fd.get("location") ?? "").trim();
     const estimatedAttendees = String(fd.get("estimated_attendees") ?? "").trim();
-    const budgetRange = String(fd.get("budget_range") ?? "").trim();
     const message = String(fd.get("message") ?? "").trim();
 
     // Construct clean, formatted WhatsApp message
@@ -54,7 +53,6 @@ export function SpeakingBookingForm() {
       eventDate ? `📅 *Date/Period:* ${eventDate}` : null,
       location ? `📍 *Location:* ${location}` : null,
       estimatedAttendees ? `👥 *Audience:* ${estimatedAttendees}` : null,
-      budgetRange ? `💰 *Budget/Honorarium:* ${budgetRange}` : null,
       message ? `\n📝 *Event Theme & Objectives:*\n${message}` : null,
       `━━━━━━━━━━━━━━━━━━━━`,
       `_Sent from MLA Official Speaking Portal (mla.org.ng/speaking)_`,
@@ -246,7 +244,7 @@ export function SpeakingBookingForm() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
               Engagement Format
@@ -274,7 +272,9 @@ export function SpeakingBookingForm() {
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition shadow-xs"
             />
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
               Location / City (or Virtual)
@@ -286,9 +286,7 @@ export function SpeakingBookingForm() {
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition shadow-xs"
             />
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
               Estimated In-Person / Virtual Audience
@@ -297,18 +295,6 @@ export function SpeakingBookingForm() {
               name="estimated_attendees"
               type="text"
               placeholder="e.g. 500 – 1,000 attendees"
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition shadow-xs"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-              Estimated Speaker Budget / Honorarium
-            </label>
-            <input
-              name="budget_range"
-              type="text"
-              placeholder="e.g. ₦1.5M – ₦3M or $3,000 – $5,000"
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition shadow-xs"
             />
           </div>

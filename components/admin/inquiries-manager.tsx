@@ -151,12 +151,14 @@ export function SpeakingInquiriesManager({
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
-                  <p className="text-[11px] text-slate-500 uppercase font-semibold">Budget / Honorarium</p>
-                  <p className="font-semibold text-sm text-[#0284C7] mt-1">
-                    {selected.budget_range || "Negotiable"}
-                  </p>
-                </div>
+                {selected.budget_range && (
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
+                    <p className="text-[11px] text-slate-500 uppercase font-semibold">Budget / Honorarium</p>
+                    <p className="font-semibold text-sm text-[#0284C7] mt-1">
+                      {selected.budget_range}
+                    </p>
+                  </div>
+                )}
 
                 <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
                   <p className="text-[11px] text-slate-500 uppercase font-semibold">Email</p>
